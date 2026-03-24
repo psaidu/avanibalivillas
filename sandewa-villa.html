@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sandewa Villa — Avani Bali Villas, Ubud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1a1712;--cream:#f5f0e8;--sand:#e8dcc8;--terracotta:#c0714a;--jungle:#2d4a35;--gold:#b8943a;--mist:#8fa898;--white:#fefcf8;}
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Outfit',sans-serif;background:var(--ink);color:var(--cream);overflow-x:hidden;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.4rem 3rem;background:linear-gradient(to bottom,rgba(26,23,18,0.9),transparent);transition:background 0.4s;}
+  nav.scrolled{background:rgba(26,23,18,0.96);backdrop-filter:blur(12px);}
+  .nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.25rem;letter-spacing:0.12em;color:var(--gold);font-weight:300;text-transform:uppercase;text-decoration:none;}
+  .nav-links{display:flex;gap:2.5rem;list-style:none;}
+  .nav-links a{color:var(--cream);text-decoration:none;font-size:0.75rem;letter-spacing:0.18em;text-transform:uppercase;opacity:0.75;transition:opacity 0.2s,color 0.2s;}
+  .nav-links a:hover{opacity:1;color:var(--gold);}
+  .nav-cta{background:var(--terracotta)!important;color:var(--white)!important;padding:0.5rem 1.4rem;opacity:1!important;}
+  .hero{position:relative;height:100vh;min-height:640px;display:flex;flex-direction:column;justify-content:flex-end;padding:6rem 3rem;overflow:hidden;}
+  .hero-bg{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,23,18,1) 0%,rgba(26,23,18,0.3) 50%,rgba(26,23,18,0.1) 100%),url('https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/8e86bc9f-0f98-4a2d-aa26-ea1b6bab0f51.jpeg?im_w=1440') center/cover no-repeat;transform:scale(1.04);animation:heroScale 12s ease-out forwards;}
+  @keyframes heroScale{from{transform:scale(1.08)}to{transform:scale(1.0)}}
+  .hero-eyebrow{font-size:0.72rem;letter-spacing:0.32em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;opacity:0;animation:fadeUp 0.9s 0.3s ease forwards;}
+  .hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(3.5rem,8vw,7rem);font-weight:300;line-height:0.95;max-width:780px;opacity:0;animation:fadeUp 1s 0.5s ease forwards;}
+  .hero h1 em{font-style:italic;color:var(--gold);}
+  .hero-sub{margin-top:1.8rem;max-width:480px;font-size:0.92rem;font-weight:300;line-height:1.7;opacity:0;animation:fadeUp 1s 0.7s ease forwards;color:rgba(245,240,232,0.7);}
+  .hero-actions{display:flex;gap:1rem;margin-top:2.2rem;opacity:0;animation:fadeUp 1s 0.9s ease forwards;}
+  .hero-rating{position:absolute;top:50%;right:3rem;transform:translateY(-50%);text-align:center;opacity:0;animation:fadeIn 1s 1.2s ease forwards;}
+  .hero-rating-num{font-family:'Cormorant Garamond',serif;font-size:3.5rem;color:var(--gold);line-height:1;font-weight:300;}
+  .hero-rating-stars{font-size:0.85rem;color:var(--gold);letter-spacing:0.1em;margin:0.2rem 0;}
+  .hero-rating-label{font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--mist);}
+  .btn-primary{background:var(--terracotta);color:var(--white);padding:0.9rem 2.2rem;text-decoration:none;font-size:0.8rem;letter-spacing:0.18em;text-transform:uppercase;transition:background 0.2s,transform 0.15s;display:inline-block;}
+  .btn-primary:hover{background:#a85e3a;transform:translateY(-1px);}
+  .btn-outline{border:1px solid rgba(245,240,232,0.4);color:var(--cream);padding:0.9rem 2.2rem;text-decoration:none;font-size:0.8rem;letter-spacing:0.18em;text-transform:uppercase;transition:border-color 0.2s,background 0.2s;display:inline-block;}
+  .btn-outline:hover{border-color:var(--cream);background:rgba(245,240,232,0.05);}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .stats-bar{background:var(--jungle);display:flex;justify-content:center;}
+  .stat{flex:1;max-width:220px;text-align:center;padding:2rem 1.5rem;border-right:1px solid rgba(255,255,255,0.1);}
+  .stat:last-child{border-right:none;}
+  .stat-num{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;color:var(--gold);line-height:1;}
+  .stat-label{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--mist);margin-top:0.4rem;}
+  section{padding:6rem 3rem;}
+  .section-tag{font-size:0.68rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--terracotta);margin-bottom:1rem;}
+  .section-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,4.5vw,3.6rem);font-weight:300;line-height:1.1;color:var(--cream);}
+  .section-h2 em{font-style:italic;color:var(--gold);}
+  .about{background:var(--ink);display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;max-width:1280px;margin:0 auto;}
+  .about-text p{font-size:1rem;font-weight:300;line-height:1.85;color:rgba(245,240,232,0.75);margin-top:1.5rem;}
+  .about-visual{position:relative;}
+  .about-img-main{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;}
+  .about-img-inset{position:absolute;bottom:-2.5rem;left:-2.5rem;width:55%;aspect-ratio:1;object-fit:cover;border:6px solid var(--ink);}
+  .about-badge{position:absolute;top:2rem;right:-2rem;width:90px;height:90px;background:var(--gold);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--white);line-height:1.5;}
+  .gallery-section{background:#111008;padding:5rem 0;}
+  .gallery-header{padding:0 3rem 3rem;display:flex;justify-content:space-between;align-items:flex-end;}
+  .gallery-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;grid-template-rows:360px 260px;gap:6px;padding:0 3rem;}
+  .gallery-item{overflow:hidden;position:relative;cursor:pointer;}
+  .gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease;display:block;}
+  .gallery-item:hover img{transform:scale(1.05);}
+  .gallery-item.tall{grid-row:1/3;}
+  .gallery-item.wide{grid-column:2/4;}
+  .gallery-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,23,18,0.5),transparent);opacity:0;transition:opacity 0.4s;}
+  .gallery-item:hover .gallery-overlay{opacity:1;}
+  .amenities-section{background:var(--jungle);padding:6rem 3rem;}
+  .amenities-inner{max-width:1280px;margin:0 auto;}
+  .amenities-header{margin-bottom:4rem;}
+  .amenities-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-right:1px solid rgba(255,255,255,0.15);border-bottom:1px solid rgba(255,255,255,0.15);}
+  .amenity-card{padding:2.5rem 2rem;border-top:1px solid rgba(255,255,255,0.15);border-left:1px solid rgba(255,255,255,0.15);transition:background 0.3s;}
+  .amenity-card:hover{background:rgba(255,255,255,0.04);}
+  .amenity-icon{font-size:1.8rem;margin-bottom:1rem;}
+  .amenity-name{font-size:0.9rem;font-weight:500;letter-spacing:0.05em;color:var(--cream);margin-bottom:0.4rem;}
+  .amenity-desc{font-size:0.8rem;color:var(--mist);line-height:1.6;font-weight:300;}
+  .location-section{background:var(--ink);padding:6rem 3rem;}
+  .location-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;}
+  .location-places{margin-top:2.5rem;}
+  .place-row{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 0;border-bottom:1px solid rgba(245,240,232,0.1);}
+  .place-name{font-size:0.9rem;color:var(--cream);}
+  .place-dist{font-size:0.78rem;color:var(--gold);font-weight:300;}
+  .map-placeholder{aspect-ratio:4/3;position:relative;overflow:hidden;}
+  .map-placeholder iframe{position:absolute;inset:0;width:100%;height:100%;border:none;filter:grayscale(50%) contrast(0.85);}
+  .services-section{background:var(--sand);padding:6rem 3rem;}
+  .services-inner{max-width:1280px;margin:0 auto;}
+  .services-inner .section-h2{color:var(--ink);}
+  .services-inner .section-tag{color:var(--terracotta);}
+  .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5rem;margin-top:3.5rem;}
+  .service-card{background:var(--white);padding:2.5rem 2rem;position:relative;overflow:hidden;transition:transform 0.3s;}
+  .service-card:hover{transform:translateY(-4px);}
+  .service-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--terracotta);transform:scaleX(0);transform-origin:left;transition:transform 0.4s ease;}
+  .service-card:hover::before{transform:scaleX(1);}
+  .service-icon{font-size:2rem;margin-bottom:1.2rem;}
+  .service-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--ink);margin-bottom:0.7rem;}
+  .service-desc{font-size:0.85rem;color:#6b6355;line-height:1.75;font-weight:300;}
+  .booking-section{background:var(--terracotta);padding:7rem 3rem;text-align:center;position:relative;overflow:hidden;}
+  .booking-section::before{content:'BOOK';position:absolute;font-family:'Cormorant Garamond',serif;font-size:28vw;font-weight:300;color:rgba(255,255,255,0.06);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;white-space:nowrap;}
+  .booking-section .section-h2{color:var(--white);position:relative;}
+  .booking-section .section-tag{color:rgba(255,255,255,0.6);position:relative;}
+  .booking-text{font-size:1rem;color:rgba(255,255,255,0.8);max-width:540px;margin:1.5rem auto 0;line-height:1.75;font-weight:300;position:relative;}
+  .booking-actions{margin-top:2.8rem;display:flex;gap:1rem;justify-content:center;position:relative;}
+  .discount-badge{display:inline-block;background:rgba(255,255,255,0.2);color:var(--white);font-size:0.75rem;letter-spacing:0.15em;padding:0.4rem 1rem;margin-top:1rem;position:relative;}
+  .btn-white{background:var(--white);color:var(--terracotta);padding:1rem 2.8rem;text-decoration:none;font-size:0.8rem;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;transition:transform 0.15s;display:inline-block;}
+  .btn-white:hover{transform:translateY(-2px);}
+  .btn-white-outline{border:1.5px solid rgba(255,255,255,0.5);color:var(--white);padding:1rem 2.8rem;text-decoration:none;font-size:0.8rem;letter-spacing:0.18em;text-transform:uppercase;transition:border-color 0.2s,background 0.2s;display:inline-block;}
+  .btn-white-outline:hover{border-color:var(--white);background:rgba(255,255,255,0.08);}
+  footer{background:#0f0e0b;padding:4rem 3rem 2.5rem;}
+  .footer-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:4rem;padding-bottom:3rem;border-bottom:1px solid rgba(245,240,232,0.1);}
+  .footer-brand .nav-logo{font-size:1.5rem;display:block;margin-bottom:1rem;}
+  .footer-brand p{font-size:0.83rem;line-height:1.8;color:rgba(245,240,232,0.5);font-weight:300;}
+  .footer-col h4{font-size:0.68rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.4rem;}
+  .footer-col ul{list-style:none;}
+  .footer-col li{margin-bottom:0.7rem;}
+  .footer-col a{color:rgba(245,240,232,0.55);text-decoration:none;font-size:0.84rem;transition:color 0.2s;font-weight:300;}
+  .footer-col a:hover{color:var(--cream);}
+  .footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;font-size:0.75rem;color:rgba(245,240,232,0.35);max-width:1280px;margin:0 auto;}
+  .lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(10,9,7,0.96);align-items:center;justify-content:center;}
+  .lightbox.open{display:flex;}
+  .lightbox img{max-width:90vw;max-height:88vh;object-fit:contain;}
+  .lightbox-close{position:absolute;top:2rem;right:2rem;color:var(--cream);font-size:1.8rem;cursor:pointer;background:none;border:none;}
+  .lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(245,240,232,0.1);border:none;color:var(--cream);font-size:1.5rem;padding:1rem;cursor:pointer;}
+  .lightbox-nav:hover{background:rgba(245,240,232,0.2);}
+  .lightbox-prev{left:1.5rem;}
+  .lightbox-next{right:1.5rem;}
+  @media(max-width:900px){nav{padding:1.2rem 1.5rem}.nav-links{display:none}section{padding:4rem 1.5rem}.about{grid-template-columns:1fr;gap:3rem}.about-img-inset,.about-badge{display:none}.amenities-grid{grid-template-columns:repeat(2,1fr)}.services-grid{grid-template-columns:1fr}.gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}.gallery-item.tall{grid-row:auto}.gallery-item.wide{grid-column:auto}.footer-inner{grid-template-columns:1fr;gap:2rem}.stats-bar{flex-wrap:wrap}.stat{min-width:50%;border-right:none;border-bottom:1px solid rgba(255,255,255,0.1)}.location-inner{grid-template-columns:1fr;gap:3rem}.hero-rating{display:none}}
+</style>
+</head>
+<body>
+<nav id="navbar">
+  <a href="avani-bali-villas.html" class="nav-logo">Avani Bali Villas</a>
+  <ul class="nav-links">
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#amenities">Amenities</a></li>
+    <li><a href="#location">Location</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="avani-bali-villas.html">← All Villas</a></li>
+    <li><a href="https://www.airbnb.com/rooms/1576626009905712349" target="_blank" class="nav-cta">Book Now</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-eyebrow">Avani Bali Villas &nbsp;·&nbsp; Ubud, Bali, Indonesia</div>
+  <h1><em>Sandewa</em><br>Villa</h1>
+  <p class="hero-sub">An intimate 2-bedroom sanctuary with a private outdoor pool, lush garden terraces, and balcony — perfect for couples and small families seeking the true Ubud escape.</p>
+  <div class="hero-actions">
+    <a href="#booking" class="btn-primary">Book Direct — Save 5%</a>
+    <a href="https://www.airbnb.com/rooms/1576626009905712349" target="_blank" class="btn-outline">View on Airbnb</a>
+  </div>
+  <div class="hero-rating">
+    <div class="hero-rating-num">4★</div>
+    <div class="hero-rating-stars">★★★★</div>
+    <div class="hero-rating-label">4-Star Villa</div>
+    <div class="hero-rating-label" style="margin-top:0.4rem;color:var(--terracotta)">10 Yrs Hosting</div>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat"><div class="stat-num">2</div><div class="stat-label">Bedrooms</div></div>
+  <div class="stat"><div class="stat-num">4</div><div class="stat-label">Max Guests</div></div>
+  <div class="stat"><div class="stat-num">2</div><div class="stat-label">Bathrooms</div></div>
+  <div class="stat"><div class="stat-num">10</div><div class="stat-label">Yrs Hosting</div></div>
+  <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Pool Access</div></div>
+</div>
+
+<section id="about">
+  <div class="about">
+    <div class="about-text">
+      <div class="section-tag">The Villa</div>
+      <h2 class="section-h2">Intimate <em>Escape</em><br>Garden &amp; Pool</h2>
+      <p>Sandewa Villa offers a spacious 4-star 2-bedroom retreat in Ubud — designed for couples and small families seeking privacy, comfort, and authentic tropical living. The property features a private outdoor swimming pool, lush garden, terrace, and balcony that give you room to breathe and truly unwind.</p>
+      <p>The terrace is the perfect spot for outdoor dining and leisure, offering a refreshing retreat as the Bali sun sets behind the tropical canopy. Every morning begins with birdsong and garden views — a world apart from the everyday.</p>
+      <p>With 10 years of hosting experience and a 99% response rate, the host team brings seasoned expertise to every stay, ensuring every detail is in place from the moment you arrive.</p>
+    </div>
+    <div class="about-visual">
+      <img class="about-img-main" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/9696542f-fdc8-4ea1-82ef-26fa54312b50.jpeg?im_w=1440" alt="Sandewa Villa">
+      <img class="about-img-inset" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/80f7371d-e223-466a-8649-f52e92a3cb3f.jpeg?im_w=720" alt="Sandewa pool">
+      <div class="about-badge">4-Star<br>Villa</div>
+    </div>
+  </div>
+</section>
+
+<div class="gallery-section" id="gallery">
+  <div class="gallery-header">
+    <div>
+      <div class="section-tag">Gallery</div>
+      <h2 class="section-h2">Intimate <em>Beauty</em><br>in Every Frame</h2>
+    </div>
+    <a href="https://www.airbnb.com/rooms/1576626009905712349" target="_blank" class="btn-outline" style="font-size:0.75rem;padding:0.7rem 1.6rem">View All Photos</a>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item tall" onclick="openLightbox(0)">
+      <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/8e86bc9f-0f98-4a2d-aa26-ea1b6bab0f51.jpeg?im_w=1440" alt="Sandewa exterior">
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox(1)">
+      <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/9696542f-fdc8-4ea1-82ef-26fa54312b50.jpeg?im_w=720" alt="Sandewa interior">
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox(2)">
+      <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/80f7371d-e223-466a-8649-f52e92a3cb3f.jpeg?im_w=720" alt="Sandewa pool">
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item wide" onclick="openLightbox(3)">
+      <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/588a0105-c3fc-403b-a609-8c3b478b8114.jpeg?im_w=1440" alt="Sandewa bedroom">
+      <div class="gallery-overlay"></div>
+    </div>
+  </div>
+</div>
+
+<section class="amenities-section" id="amenities">
+  <div class="amenities-inner">
+    <div class="amenities-header">
+      <div class="section-tag">What's Included</div>
+      <h2 class="section-h2">4-Star <em>Comfort</em><br>in Every Detail</h2>
+    </div>
+    <div class="amenities-grid">
+      <div class="amenity-card"><div class="amenity-icon">🏊</div><div class="amenity-name">Private Pool</div><div class="amenity-desc">Year-round outdoor swimming pool in a lush garden setting.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">🌿</div><div class="amenity-name">Lush Garden</div><div class="amenity-desc">Beautifully maintained tropical garden surrounding the villa.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">🏡</div><div class="amenity-name">Terrace &amp; Balcony</div><div class="amenity-desc">Multiple outdoor areas perfect for dining and leisure.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">🍳</div><div class="amenity-name">Full Kitchen</div><div class="amenity-desc">Fully equipped kitchen for preparing home-cooked meals.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">❄️</div><div class="amenity-name">Air Conditioning</div><div class="amenity-desc">Climate-controlled comfort throughout the villa.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">📶</div><div class="amenity-name">Free WiFi</div><div class="amenity-desc">Reliable high-speed internet throughout the property.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">🚗</div><div class="amenity-name">Free Parking</div><div class="amenity-desc">Dedicated parking space available on the premises.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">📷</div><div class="amenity-name">Security Cameras</div><div class="amenity-desc">Exterior security cameras for your peace of mind.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="location-section" id="location">
+  <div class="location-inner">
+    <div>
+      <div class="section-tag">Location</div>
+      <h2 class="section-h2">Ubud's Serenity,<br><em>Within Reach</em></h2>
+      <div class="location-places">
+        <div class="place-row"><span class="place-name">Titik Batu Ubud Club</span><span class="place-dist">2.8 km · 5 min</span></div>
+        <div class="place-row"><span class="place-name">Pison Ubud</span><span class="place-dist">5.4 km · 10 min</span></div>
+        <div class="place-row"><span class="place-name">Monkey Forest Ubud</span><span class="place-dist">9 km · 12 min</span></div>
+        <div class="place-row"><span class="place-name">Ngurah Rai International Airport</span><span class="place-dist">35 km · 70 min</span></div>
+      </div>
+    </div>
+    <div class="map-placeholder">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63129.07!2d115.21193!3d-8.50938!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd718a1f0df1d89%3A0xd9e4bce78c5c7fa!2sUbud%2C%20Bali%2C%20Indonesia!5e0!3m2!1sen!2s" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<section class="services-section" id="services">
+  <div class="services-inner">
+    <div class="section-tag">Guest Services</div>
+    <h2 class="section-h2">Everything Arranged</h2>
+    <div class="services-grid">
+      <div class="service-card"><div class="service-icon">✈️</div><div class="service-title">Airport Transfers</div><div class="service-desc">Private transfers to and from Ngurah Rai International Airport arranged on request. A stress-free start to your Bali stay.</div></div>
+      <div class="service-card"><div class="service-icon">🗺️</div><div class="service-title">Sightseeing Trips</div><div class="service-desc">Explore Ubud's iconic temples, ricefield walks, and cultural landmarks. We arrange the experience, you enjoy the discovery.</div></div>
+      <div class="service-card"><div class="service-icon">🧺</div><div class="service-title">Laundry Service</div><div class="service-desc">Laundry service available at an additional charge — so you can pack light and travel longer.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="booking-section" id="booking">
+  <div class="section-tag">Reserve Sandewa Villa</div>
+  <h2 class="section-h2">Your Intimate <em>Bali Retreat</em></h2>
+  <p class="booking-text">Check-in after 2:00 PM · Check-out before 12:00 PM · Up to 4 guests. Book direct and save 5% off the Airbnb rate.</p>
+  <div style="position:relative"><div class="discount-badge">🎉 Save 5% booking direct</div></div>
+  <div class="booking-actions">
+    <a href="avani-bali-villas.html" class="btn-white">Book Direct — 5% Off</a>
+    <a href="https://www.airbnb.com/rooms/1576626009905712349" target="_blank" class="btn-white-outline">Book on Airbnb</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="avani-bali-villas.html" class="nav-logo">Avani Bali Villas</a>
+      <p>Four private pool villas in the heart of Ubud, Bali. Each stay is personal, each villa is unique.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Our Villas</h4>
+      <ul>
+        <li><a href="geya-villa.html">Geya Villa</a></li>
+        <li><a href="bellis-villa.html">Bellis 68</a></li>
+        <li><a href="sandewa-villa.html">Sandewa Villa</a></li>
+        <li><a href="linum-villa.html">Linum Villa</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Book</h4>
+      <ul>
+        <li><a href="avani-bali-villas.html">Book Direct (5% off)</a></li>
+        <li><a href="https://www.airbnb.com/rooms/1576626009905712349" target="_blank">Sandewa on Airbnb</a></li>
+        <li><a href="https://www.airbnb.com/contact_host/1576626009905712349/send_message" target="_blank">Message Host</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Avani Bali Villas · Ubud, Bali, Indonesia</span>
+    <span>Sandewa Villa · Hosted by Prashanth</span>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-nav lightbox-prev" onclick="changeImg(-1)">‹</button>
+  <img id="lightbox-img" src="" alt="">
+  <button class="lightbox-nav lightbox-next" onclick="changeImg(1)">›</button>
+</div>
+<script>
+  const navbar=document.getElementById('navbar');
+  window.addEventListener('scroll',()=>navbar.classList.toggle('scrolled',window.scrollY>60));
+  const images=['https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/8e86bc9f-0f98-4a2d-aa26-ea1b6bab0f51.jpeg?im_w=1440','https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/9696542f-fdc8-4ea1-82ef-26fa54312b50.jpeg?im_w=1440','https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/80f7371d-e223-466a-8649-f52e92a3cb3f.jpeg?im_w=1440','https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/588a0105-c3fc-403b-a609-8c3b478b8114.jpeg?im_w=1440','https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/69ee0a4a-d2cd-4667-b41c-2d5c7616a393.jpeg?im_w=1440'];
+  let cur=0;
+  function openLightbox(i){cur=i;document.getElementById('lightbox-img').src=images[i];document.getElementById('lightbox').classList.add('open');document.body.style.overflow='hidden';}
+  function closeLightbox(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow='';}
+  function changeImg(d){cur=(cur+d+images.length)%images.length;document.getElementById('lightbox-img').src=images[cur];}
+  document.getElementById('lightbox').addEventListener('click',e=>{if(e.target===document.getElementById('lightbox'))closeLightbox();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();if(e.key==='ArrowRight')changeImg(1);if(e.key==='ArrowLeft')changeImg(-1);});
+  const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}},{threshold:0.1}));
+  document.querySelectorAll('.amenity-card,.service-card,.place-row').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition='opacity 0.6s ease,transform 0.6s ease';obs.observe(el);});
+</script>
+</body>
+</html>
