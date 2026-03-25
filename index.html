@@ -221,7 +221,51 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
 .villa-feature { font-size:0.82rem; color:#555; display:flex; align-items:center; gap:0.5rem; }
 .villa-feature::before { content:'✓'; color:var(--jungle); font-weight:bold; }
 
-
+/* ── BOOKING SIDEBAR ── */
+.booking-sidebar {
+  position:sticky; top:5.5rem;
+  background:var(--white); border:1px solid var(--sand);
+  box-shadow:0 4px 30px rgba(0,0,0,0.08);
+}
+.booking-sidebar-tabs { display:flex; border-bottom:1px solid var(--sand); }
+.booking-tab {
+  flex:1; padding:1rem; text-align:center; cursor:pointer;
+  font-size:0.75rem; letter-spacing:0.12em; text-transform:uppercase;
+  color:#888; transition:color 0.2s, border-color 0.2s;
+  border-bottom:2px solid transparent; margin-bottom:-1px;
+  background:none; border-top:none; border-left:none; border-right:none;
+  font-family:'Jost',sans-serif;
+}
+.booking-tab.active { color:var(--terracotta); border-bottom-color:var(--terracotta); }
+.booking-panel { display:none; padding:1.8rem; }
+.booking-panel.active { display:block; }
+.booking-price { font-family:'Cormorant Garamond',serif; font-size:2rem; color:var(--ink); margin-bottom:0.3rem; }
+.booking-price span { font-family:'Jost',sans-serif; font-size:0.75rem; color:#888; }
+.booking-discount { display:inline-block; background:rgba(184,98,62,0.1); color:var(--terracotta); font-size:0.68rem; letter-spacing:0.1em; padding:0.25rem 0.6rem; margin-bottom:1.2rem; font-weight:500; }
+.booking-form-group { margin-bottom:1rem; }
+.booking-form-group label { font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:#888; display:block; margin-bottom:0.4rem; }
+.booking-form-group input, .booking-form-group select {
+  width:100%; padding:0.7rem 0.9rem; border:1px solid var(--sand);
+  font-family:'Jost',sans-serif; font-size:0.85rem; color:var(--ink);
+  background:var(--white); outline:none; transition:border-color 0.2s;
+  -webkit-appearance:none;
+}
+.booking-form-group input:focus, .booking-form-group select:focus { border-color:var(--terracotta); }
+.booking-dates-row { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+.booking-summary { background:var(--light-bg); padding:1rem; margin:1rem 0; font-size:0.82rem; }
+.booking-summary-row { display:flex; justify-content:space-between; padding:0.3rem 0; color:#666; }
+.booking-summary-row.total { font-weight:500; color:var(--ink); border-top:1px solid var(--sand); padding-top:0.6rem; margin-top:0.3rem; }
+.booking-summary-row.discount { color:var(--terracotta); }
+.calendar-embed-note { font-size:0.78rem; color:#888; line-height:1.6; text-align:center; padding:1rem 0; }
+/* Payment methods */
+.payment-methods { display:flex; gap:0.5rem; margin:0.8rem 0; flex-wrap:wrap; }
+.payment-method-btn {
+  flex:1; min-width:80px; padding:0.6rem 0.4rem; border:1.5px solid var(--sand);
+  cursor:pointer; text-align:center; transition:border-color 0.2s, background 0.2s;
+  font-size:0.72rem; color:#666; background:var(--white);
+  font-family:'Jost',sans-serif; letter-spacing:0.05em;
+}
+.payment-method-btn.selected { border-color:var(--terracotta); background:rgba(184,98,62,0.06); color:var(--terracotta); }
 .payment-method-btn:hover { border-color:var(--terracotta); }
 .card-fields { display:none; }
 .card-fields.visible { display:block; }
@@ -231,6 +275,8 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
 .airbnb-btn:hover { background:#e0484d; }
 
 /* ── BOOKING CONFIRMATION ── */
+#booking-confirm-page { background:var(--light-bg); min-height:100vh; display:none; }
+#booking-confirm-page.active { display:flex; align-items:center; justify-content:center; padding:6rem 2rem; }
 .confirm-box { background:var(--white); max-width:580px; width:100%; padding:3.5rem; text-align:center; box-shadow:0 4px 40px rgba(0,0,0,0.1); }
 .confirm-icon { font-size:3rem; margin-bottom:1rem; }
 .confirm-box h2 { font-family:'Cormorant Garamond',serif; font-size:2.2rem; font-weight:300; margin-bottom:0.8rem; }
@@ -259,8 +305,8 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
 
 /* ── RESPONSIVE ── */
 @media (max-width:1024px) {
-
-
+  .villa-detail-body { grid-template-columns:1fr; }
+  .booking-sidebar { position:static; }
   .why-direct-inner { grid-template-columns:1fr; gap:3rem; }
   .footer-grid { grid-template-columns:1fr 1fr; }
 }
@@ -273,7 +319,7 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
   .villas-grid { grid-template-columns:1fr; }
   .amenities-grid { grid-template-columns:repeat(2,1fr); }
   .footer-grid { grid-template-columns:1fr; gap:2rem; }
-
+  .villa-detail-body { padding:2rem 1.5rem; }
   .intro-strip { flex-wrap:wrap; }
   .intro-item { min-width:50%; border-bottom:1px solid rgba(255,255,255,0.1); }
   .booking-dates-row { grid-template-columns:1fr; }
@@ -284,13 +330,13 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
 
 <!-- NAV -->
 <nav id="navbar">
-  <a class="nav-logo" >Avani Bali Villas</a>
+  <a class="nav-logo" onclick="showPage('home')">Avani Bali Villas</a>
   <ul class="nav-links">
-    <li><a onclick="scrollToVillas()">Our Villas</a></li>
-    <li><a onclick="scrollToAmenities()">Amenities</a></li>
-    <li><a onclick="scrollToWhyDirect()">Book Direct & Save</a></li>
-    <li><a onclick="scrollToContact()">Contact</a></li>
-    <li><a onclick="scrollToVillas()" class="nav-cta btn">Browse Villas</a></li>
+    <li><a onclick="showPage('home'); scrollToVillas()">Our Villas</a></li>
+    <li><a onclick="showPage('home'); scrollToAmenities()">Amenities</a></li>
+    <li><a onclick="showPage('home'); scrollToWhyDirect()">Book Direct & Save</a></li>
+    <li><a onclick="showPage('home'); scrollToContact()">Contact</a></li>
+    <li><a onclick="showPage('home'); scrollToVillas()" class="nav-cta btn">Browse Villas</a></li>
   </ul>
   <button class="nav-hamburger" onclick="document.getElementById('mobileNav').classList.toggle('open')" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -300,14 +346,14 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
 <!-- MOBILE NAV -->
 <div class="mobile-nav" id="mobileNav">
   <button class="mobile-close" onclick="document.getElementById('mobileNav').classList.remove('open')">✕</button>
-  <a onclick="document.getElementById('mobileNav').classList.remove('open');">Home</a>
-  <a onclick="scrollToVillas(); document.getElementById('mobileNav').classList.remove('open');">Our Villas</a>
-  <a onclick="scrollToWhyDirect(); document.getElementById('mobileNav').classList.remove('open');">Book Direct</a>
-  <a onclick="scrollToContact(); document.getElementById('mobileNav').classList.remove('open');">Contact</a>
+  <a onclick="showPage('home'); document.getElementById('mobileNav').classList.remove('open');">Home</a>
+  <a onclick="showPage('home'); scrollToVillas(); document.getElementById('mobileNav').classList.remove('open');">Our Villas</a>
+  <a onclick="showPage('home'); scrollToWhyDirect(); document.getElementById('mobileNav').classList.remove('open');">Book Direct</a>
+  <a onclick="showPage('home'); scrollToContact(); document.getElementById('mobileNav').classList.remove('open');">Contact</a>
 </div>
 
 <!-- ════════════════════ HOME PAGE ════════════════════ -->
-<div id="home-page">
+<div id="home-page" class="page active">
 
   <!-- HERO -->
   <section class="hero">
@@ -341,7 +387,7 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
     <div class="villas-grid">
 
       <!-- Geya -->
-      <a class="villa-card" href="geya-villa.html" style="text-decoration:none;color:inherit;display:block">
+      <div class="villa-card" onclick="window.location='geya-villa.html'">
         <div class="villa-card-img">
           <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/3fe77d25-55a8-463d-9764-84fa17eaf9d6.jpeg?im_w=720" alt="Geya Villa">
           <div class="villa-card-badge">Guest Favourite</div>
@@ -359,10 +405,11 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
             <div class="villa-price">From $XXX <span>/ night on Airbnb</span></div>
             <div class="villa-discount-badge">5% off direct</div>
           </div>
-        </a>
+        </div>
+      </div>
 
       <!-- Bellis -->
-      <a class="villa-card" href="bellis-villa.html" style="text-decoration:none;color:inherit;display:block">
+      <div class="villa-card" onclick="window.location='bellis-villa.html'">
         <div class="villa-card-img">
           <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1356233435162290805/original/ac28ce5c-b50a-43fa-9272-87271a366fa6.jpeg?im_w=720" alt="Bellis Villa">
           <div class="villa-card-badge">Ricefield Views</div>
@@ -380,10 +427,11 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
             <div class="villa-price">From $XXX <span>/ night on Airbnb</span></div>
             <div class="villa-discount-badge">5% off direct</div>
           </div>
-        </a>
+        </div>
+      </div>
 
       <!-- Sandewa -->
-      <a class="villa-card" href="sandewa-villa.html" style="text-decoration:none;color:inherit;display:block">
+      <div class="villa-card" onclick="window.location='sandewa-villa.html'">
         <div class="villa-card-img">
           <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/8e86bc9f-0f98-4a2d-aa26-ea1b6bab0f51.jpeg?im_w=720" alt="Sandewa Villa">
           <div class="villa-card-badge">Cosy Retreat</div>
@@ -401,10 +449,11 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
             <div class="villa-price">From $XXX <span>/ night on Airbnb</span></div>
             <div class="villa-discount-badge">5% off direct</div>
           </div>
-        </a>
+        </div>
+      </div>
 
       <!-- Linum -->
-      <a class="villa-card" href="linum-villa.html" style="text-decoration:none;color:inherit;display:block">
+      <div class="villa-card" onclick="window.location='linum-villa.html'">
         <div class="villa-card-img">
           <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/f4644d24-585b-4914-8577-64048e415159.png?im_w=720" alt="Linum Villa">
           <div class="villa-card-badge">Brand New</div>
@@ -422,7 +471,8 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
             <div class="villa-price">From $XXX <span>/ night on Airbnb</span></div>
             <div class="villa-discount-badge">5% off direct</div>
           </div>
-        </a>
+        </div>
+      </div>
 
     </div>
   </section>
@@ -487,16 +537,16 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
         <span class="nav-logo">Avani Bali Villas</span>
         <p>Four private pool villas in the heart of Ubud, Bali. Managed with care by Prashanth and the team. Each stay is personal, each villa is unique.</p>
         <br>
-        <p>📧 <a href="/cdn-cgi/l/email-protection#9aeae9fbf3feefdafdf7fbf3f6b4f9f5f7" style="color:var(--gold);text-decoration:none"><span class="__cf_email__" data-cfemail="f78784969e9382b7909a969e9bd994989a">[email&#160;protected]</span></a></p>
+        <p>📧 <a href="mailto:psaidu@gmail.com" style="color:var(--gold);text-decoration:none">psaidu@gmail.com</a></p>
         <p>📱 WhatsApp: <a href="https://wa.me/14693460620" style="color:var(--gold);text-decoration:none">+1 469 346 0620</a></p>
       </div>
       <div class="footer-col">
         <h4>Our Villas</h4>
         <ul>
-          <li><a href="geya-villa.html">Geya Villa</a></li>
-          <li><a href="bellis-villa.html">Bellis 68</a></li>
-          <li><a href="sandewa-villa.html">Sandewa Villa</a></li>
-          <li><a href="linum-villa.html">Linum Villa</a></li>
+          <li><a onclick="window.location='geya-villa.html'">Geya Villa</a></li>
+          <li><a onclick="window.location='bellis-villa.html'">Bellis 68</a></li>
+          <li><a onclick="window.location='sandewa-villa.html'">Sandewa Villa</a></li>
+          <li><a onclick="window.location='linum-villa.html'">Linum Villa</a></li>
         </ul>
       </div>
       <div class="footer-col">
@@ -527,8 +577,147 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
 
 </div><!-- end home-page -->
 
+<!-- ════════════════════ VILLA DETAIL PAGES ════════════════════ -->
+<div id="villa-page" class="page">
 
+  <div class="villa-hero" id="villa-hero">
+    <div class="villa-hero-bg" id="villa-hero-bg"></div>
+    <div class="villa-hero-overlay"></div>
+    <div class="villa-hero-content">
+      <div class="section-tag" style="color:var(--gold)" id="villa-location-tag">Ubud · Bali</div>
+      <h1 id="villa-title">Villa Name</h1>
+      <div class="villa-hero-meta" id="villa-meta"></div>
+    </div>
+  </div>
 
+  <div class="villa-detail-body">
+    <div class="villa-detail-main">
+      <div class="villa-thumb-grid" id="villa-thumbs"></div>
+      <div class="villa-detail-desc" id="villa-desc"></div>
+      <div class="villa-features-title">What's Included</div>
+      <div class="villa-features" id="villa-features"></div>
+      <button class="btn btn-outline-dark" onclick="showPage('home')" style="margin-top:1rem">← Back to All Villas</button>
+    </div>
+
+    <!-- BOOKING SIDEBAR -->
+    <div class="booking-sidebar">
+      <div class="booking-sidebar-tabs">
+        <button class="booking-tab active" onclick="switchBookingTab('direct', this)">Book Direct</button>
+        <button class="booking-tab" onclick="switchBookingTab('airbnb', this)">Via Airbnb</button>
+      </div>
+
+      <!-- DIRECT BOOKING PANEL -->
+      <div class="booking-panel active" id="panel-direct">
+        <div class="booking-price">From $<span id="booking-price-val">XXX</span> <span>/ night</span></div>
+        <div class="booking-discount">🎉 You save 5% booking direct!</div>
+
+        <div class="booking-dates-row">
+          <div class="booking-form-group">
+            <label>Check-in</label>
+            <input type="date" id="checkin-date" onchange="calcTotal()">
+          </div>
+          <div class="booking-form-group">
+            <label>Check-out</label>
+            <input type="date" id="checkout-date" onchange="calcTotal()">
+          </div>
+        </div>
+        <div class="booking-form-group">
+          <label>Guests</label>
+          <select id="guests-count">
+            <option>1 guest</option><option>2 guests</option><option>3 guests</option>
+            <option>4 guests</option><option>5 guests</option><option>6 guests</option>
+          </select>
+        </div>
+
+        <div class="booking-summary" id="booking-summary" style="display:none">
+          <div class="booking-summary-row"><span id="nights-label">3 nights × $XXX</span><span id="subtotal-val">$XXX</span></div>
+          <div class="booking-summary-row discount"><span>5% direct discount</span><span id="discount-val">-$XX</span></div>
+          <div class="booking-summary-row total"><span>Total</span><span id="total-val">$XXX</span></div>
+        </div>
+
+        <div class="booking-form-group" style="margin-top:0.5rem">
+          <label>Your Name</label>
+          <input type="text" id="guest-name" placeholder="Full name">
+        </div>
+        <div class="booking-form-group">
+          <label>Email</label>
+          <input type="email" id="guest-email" placeholder="you@email.com">
+        </div>
+        <div class="booking-form-group">
+          <label>Phone / WhatsApp</label>
+          <input type="tel" id="guest-phone" placeholder="+1 234 567 8900">
+        </div>
+
+        <div class="booking-form-group">
+          <label>Payment Method</label>
+          <div class="payment-methods">
+            <button class="payment-method-btn selected" onclick="selectPayment('card', this)">💳 Card</button>
+            <button class="payment-method-btn" onclick="selectPayment('paypal', this)">🅿 PayPal</button>
+            <button class="payment-method-btn" onclick="selectPayment('bank', this)">🏦 Bank</button>
+          </div>
+        </div>
+
+        <div class="card-fields visible" id="card-fields">
+          <div class="booking-form-group">
+            <label>Card Number</label>
+            <input type="text" placeholder="4242 4242 4242 4242" maxlength="19" oninput="formatCard(this)">
+          </div>
+          <div class="booking-dates-row">
+            <div class="booking-form-group">
+              <label>Expiry</label>
+              <input type="text" placeholder="MM/YY" maxlength="5">
+            </div>
+            <div class="booking-form-group">
+              <label>CVV</label>
+              <input type="text" placeholder="123" maxlength="4">
+            </div>
+          </div>
+        </div>
+
+        <div id="paypal-fields" style="display:none;padding:1rem 0;text-align:center">
+          <p style="font-size:0.8rem;color:#888;margin-bottom:0.8rem">You'll be redirected to PayPal to complete payment.</p>
+        </div>
+        <div id="bank-fields" style="display:none;padding:0.5rem 0">
+          <div style="background:var(--light-bg);padding:1rem;font-size:0.8rem;line-height:1.8;color:#555">
+            <strong style="display:block;margin-bottom:0.4rem;color:var(--ink)">Bank Transfer Details</strong>
+            Bank: [Your Bank Name]<br>
+            Account Name: Avani Bali Villas<br>
+            Account No: XXXX-XXXX-XXXX<br>
+            Reference: <em>[Your Name + Check-in Date]</em>
+          </div>
+        </div>
+
+        <button class="btn btn-terra" style="width:100%;margin-top:1rem;padding:1rem;font-size:0.8rem" onclick="submitBooking()">Confirm Booking</button>
+        <p style="font-size:0.7rem;color:#aaa;text-align:center;margin-top:0.6rem;line-height:1.5">We'll confirm within 24 hours by email &amp; WhatsApp</p>
+      </div>
+
+      <!-- AIRBNB PANEL -->
+      <div class="booking-panel" id="panel-airbnb">
+        <div class="airbnb-book-box">
+          <p style="font-size:1.1rem;font-family:'Cormorant Garamond',serif;margin-bottom:0.5rem">Book on Airbnb</p>
+          <p>Prefer to book with Airbnb's secure platform? No problem — click below to view availability and book directly on Airbnb.</p>
+          <p style="color:var(--terracotta);font-weight:500;font-size:0.82rem;margin-bottom:1rem">Note: Booking direct saves you 5%</p>
+          <a id="airbnb-link" href="#" target="_blank" class="airbnb-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 12.269-4.3-4.065-3.164 4.065L6.106 8.221c-.186-1.127.617-2.178 1.744-2.178h8.3c1.127 0 1.93 1.051 1.744 2.178z"/></svg>
+            View on Airbnb
+          </a>
+          <div class="calendar-embed-note" style="margin-top:1.5rem">
+            <strong style="display:block;margin-bottom:0.4rem;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase">Availability Calendar</strong>
+            Real-time availability is synced from Airbnb. To view a live calendar, visit the Airbnb listing above and check the calendar section for blocked dates.
+            <br><br>
+            <em style="font-size:0.72rem;color:#bbb">iCal sync coming soon — paste your Airbnb iCal URL to enable live calendar here.</em>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end villa-page -->
+
+<!-- ════════════════════ BOOKING CONFIRMATION ════════════════════ -->
+<div id="booking-confirm-page" class="page">
+  <div class="confirm-box">
+    <div class="confirm-icon">🌴</div>
     <h2>Booking Request Sent!</h2>
     <p>Thank you for choosing <strong id="confirm-villa-name">Avani Bali Villas</strong>. Your booking request has been received.</p>
     <div class="confirm-details">
@@ -541,7 +730,7 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
     </div>
     <p>We'll confirm your booking within <strong>24 hours</strong> via email and WhatsApp. For urgent enquiries:</p>
     <p style="margin-top:0.5rem">📱 <a href="https://wa.me/14693460620" style="color:var(--terracotta)">WhatsApp us</a> &nbsp;|&nbsp; 📧 <a href="mailto:psaidu@gmail.com" style="color:var(--terracotta)">Email us</a></p>
-    <button class="btn btn-terra" style="margin-top:2rem;padding:1rem 2.5rem" >Back to Avani Villas</button>
+    <button class="btn btn-terra" style="margin-top:2rem;padding:1rem 2.5rem" onclick="showPage('home')">Back to Avani Villas</button>
   </div>
 </div>
 
@@ -553,30 +742,249 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
   <button class="lb-nav lb-next" onclick="lbNav(1)">›</button>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
 <script>
-  // Nav scroll effect
+// ════ VILLA DATA ════
+const VILLAS = {
+  geya: {
+    name: 'Geya Villa',
+    location: 'Ubud · Bali · Indonesia',
+    rating: '★ 5.0 · 14 reviews',
+    bedrooms: 3, baths: 3.5, guests: 6,
+    price: 250,
+    airbnb: 'https://www.airbnb.com/rooms/1526553003171178696',
+    heroImg: 'https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/3fe77d25-55a8-463d-9764-84fa17eaf9d6.jpeg?im_w=1440',
+    imgs: [
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/3fe77d25-55a8-463d-9764-84fa17eaf9d6.jpeg?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/49967d31-2269-4bc2-9ae4-d76c3041f35d.png?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/e393a1e0-bad6-4fcd-8adb-729614f3d411.jpeg?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/960863c2-e85c-4df8-93ec-35ac72848f40.jpeg?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/e0fc4582-e562-46a3-a743-63b0293b526b.jpeg?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/f312d15f-49a5-4a19-8d77-6173717eba7d.png?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/30f7c110-ead2-43ca-b08e-a3982afa380d.jpeg?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/dd871006-987c-4d08-8d59-acb9a5c5f9f8.jpeg?im_w=720',
+    ],
+    desc: 'Welcome to Geya Villa — a brand new 3-bedroom tropical paradise nestled in the heart of Ubud. Surrounded by lush greenery, this private retreat seamlessly blends modern style with authentic Balinese charm. Unwind by your private pool, share a meal in the open-air dining space, or simply absorb the peaceful atmosphere that makes Ubud so special.\n\nEach bedroom opens to the garden through large glass doors, allowing nature to be part of your daily experience. The villa earned a perfect 5-star Guest Favourite rating for its impeccable hospitality and spaciousness.',
+    features: ['Private pool','3 king bedrooms','3.5 bathrooms','Daily housekeeping','Personal butler','Full kitchen','High-speed WiFi','Free parking (2 cars)','Air conditioning','Open-air dining','Sun loungers','Dedicated workspace'],
+  },
+  bellis: {
+    name: 'Bellis 68',
+    location: 'Kecamatan Ubud · Bali · Indonesia',
+    rating: '★ 4.88 · 33 reviews',
+    bedrooms: 3, baths: 3.5, guests: 6,
+    price: 260,
+    airbnb: 'https://www.airbnb.com/rooms/1356233435162290805',
+    heroImg: 'https://a0.muscache.com/im/pictures/hosting/Hosting-1356233435162290805/original/ac28ce5c-b50a-43fa-9272-87271a366fa6.jpeg?im_w=1440',
+    imgs: [
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1356233435162290805/original/ac28ce5c-b50a-43fa-9272-87271a366fa6.jpeg?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1356233435162290805/original/a40f7df4-131b-4bbb-af23-9bc03434e2b1.jpeg?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM1NjIzMzQzNTE2MjI5MDgwNQ==/original/7982d07e-6983-480d-9751-263a3ad4dec9.jpeg?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM1NjIzMzQzNTE2MjI5MDgwNQ==/original/a5a8bf33-81ca-4db7-b715-eea4c7c8df88.jpeg?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM1NjIzMzQzNTE2MjI5MDgwNQ==/original/1f3ed399-8418-49df-a356-eff74a15f50c.jpeg?im_w=720',
+    ],
+    desc: 'Escape to Bellis 68 — an enchanting Balinese villa nestled in the heart of Ubud with breathtaking views of rice fields and jungle. This stunning 3-bedroom retreat beautifully merges modern luxury with traditional Balinese architecture. The private pool is surrounded by lush gardens, while the master suite offers a generous layout and a second bedroom features a luxurious bathtub for ultimate relaxation.\n\nThe open-concept living space seamlessly connects indoors and outdoors, with al fresco dining overlooking the rice paddies. Just 2.5km from Locavore NXT — one of Asia\'s 50 best restaurants.',
+    features: ['Ricefield & jungle views','Private pool','3 king bedrooms','3.5 bathrooms','Luxury bathtub (Bedroom 2)','Daily housekeeping','Personal butler','Full kitchen','High-speed WiFi','Free parking','Al fresco dining','Traditional Balinese décor'],
+  },
+  sandewa: {
+    name: 'Sandewa Villa',
+    location: 'Ubud · Bali · Indonesia',
+    rating: '★ New listing',
+    bedrooms: 2, baths: 2, guests: 4,
+    price: 175,
+    airbnb: 'https://www.airbnb.com/rooms/1576626009905712349',
+    heroImg: 'https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/8e86bc9f-0f98-4a2d-aa26-ea1b6bab0f51.jpeg?im_w=1440',
+    imgs: [
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/8e86bc9f-0f98-4a2d-aa26-ea1b6bab0f51.jpeg?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/9696542f-fdc8-4ea1-82ef-26fa54312b50.jpeg?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/80f7371d-e223-466a-8649-f52e92a3cb3f.jpeg?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/588a0105-c3fc-403b-a609-8c3b478b8114.jpeg?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1576626009905712349/original/69ee0a4a-d2cd-4667-b41c-2d5c7616a393.jpeg?im_w=720',
+    ],
+    desc: 'Sandewa Villa is a spacious 4-star 2-bedroom retreat in Ubud — perfect for couples or small families seeking intimacy and comfort. The property features a private outdoor swimming pool, lush tropical garden, terrace, and balcony, giving you plenty of space to breathe and unwind. The terrace is a favourite spot for outdoor dining, while the pool offers a refreshing escape in the tropical heat.\n\nWith 10 years of hosting experience and a 99% response rate, the team ensures every detail of your stay is taken care of.',
+    features: ['Private outdoor pool','2 bedrooms','2 bathrooms','Terrace & balcony','Lush tropical garden','Full kitchen','High-speed WiFi','Air conditioning','Free parking','Self check-in','Dedicated workspace','Security cameras'],
+  },
+  linum: {
+    name: 'Linum Villa',
+    location: 'Kecamatan Ubud · Bali · Indonesia',
+    rating: '★ New · 2 reviews',
+    bedrooms: 3, baths: 3, guests: 6,
+    price: 240,
+    airbnb: 'https://www.airbnb.com/rooms/1621644751619878196',
+    heroImg: 'https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/f4644d24-585b-4914-8577-64048e415159.png?im_w=1440',
+    imgs: [
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/f4644d24-585b-4914-8577-64048e415159.png?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/d4fc31d5-92d3-42b8-91fb-e887764907bf.png?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/bf4116c9-f311-4d41-9fc5-fa708ba5364f.png?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/e8bc8e2c-4d16-4b5a-aa60-08e690a7f78e.png?im_w=720',
+      'https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/22ead745-6a67-46ce-94a2-9ef309bd634f.png?im_w=720',
+    ],
+    desc: 'Welcome to Linum Villa — a brand new 3-bedroom garden pool villa in Ubud, thoughtfully designed for comfort, privacy, and a deep connection with nature. Each bedroom features a king bed, air conditioning, and large windows that frame calming garden views. The open-plan living and dining area flows seamlessly outdoors to a private pool surrounded by tropical greenery.\n\nJust 2.5km from Locavore NXT (Asia Top 50) and with a Superhost team on hand, Linum Villa is perfect for families or groups seeking a peaceful, well-serviced retreat.',
+    features: ['Private garden pool','3 king bedrooms','3 bathrooms','Open-plan living','Full kitchen','Daily housekeeping','Personal butler','High-speed WiFi','Free parking','Air conditioning','Spacious garden','Superhost service'],
+  }
+};
+
+let currentVilla = null;
+let lbImgs = [], lbIdx = 0;
+let selectedPayment = 'card';
+
+// ════ PAGE NAVIGATION ════
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const navbar = document.getElementById('navbar');
-  window.addEventListener('scroll', () => {
+  if (name === 'home') {
+    document.getElementById('home-page').classList.add('active');
+    navbar.classList.remove('light');
+  } else if (name === 'villa') {
+    document.getElementById('villa-page').classList.add('active');
+    navbar.classList.add('light');
+  } else if (name === 'confirm') {
+    document.getElementById('booking-confirm-page').classList.add('active');
+    navbar.classList.add('light');
+  }
+  window.scrollTo(0, 0);
+  updateNavStyle();
+}
+
+function showVilla(id) {
+  currentVilla = id;
+  const v = VILLAS[id];
+  
+  // Hero
+  document.getElementById('villa-hero-bg').style.backgroundImage = `url('${v.heroImg}')`;
+  document.getElementById('villa-location-tag').textContent = v.location;
+  document.getElementById('villa-title').textContent = v.name;
+  document.getElementById('villa-meta').innerHTML = `
+    <span class="villa-hero-meta-item">🛏 ${v.bedrooms} Bedrooms</span>
+    <span class="villa-hero-meta-item">🚿 ${v.baths} Baths</span>
+    <span class="villa-hero-meta-item">👥 Up to ${v.guests} guests</span>
+    <span class="villa-hero-meta-item">${v.rating}</span>
+  `;
+  
+  // Thumbnails
+  lbImgs = v.imgs;
+  document.getElementById('villa-thumbs').innerHTML = v.imgs.map((img,i) =>
+    `<div class="villa-thumb" onclick="openLB(${i})"><img src="${img}" alt="Photo ${i+1}" loading="lazy"></div>`
+  ).join('');
+  
+  // Description
+  document.getElementById('villa-desc').innerHTML = v.desc.replace(/\n\n/g,'</p><p style="margin-top:1rem">').replace(/^/,'<p>') + '</p>';
+  
+  // Features
+  document.getElementById('villa-features').innerHTML = v.features.map(f => `<div class="villa-feature">${f}</div>`).join('');
+  
+  // Booking sidebar
+  document.getElementById('booking-price-val').textContent = v.price;
+  document.getElementById('airbnb-link').href = v.airbnb;
+  document.getElementById('booking-summary').style.display = 'none';
+  
+  // Reset tabs
+  document.querySelectorAll('.booking-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.booking-tab')[0].classList.add('active');
+  document.querySelectorAll('.booking-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-direct').classList.add('active');
+  
+  // Reset dates
+  document.getElementById('checkin-date').value = '';
+  document.getElementById('checkout-date').value = '';
+  
+  // Set min date to today
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('checkin-date').min = today;
+  document.getElementById('checkout-date').min = today;
+  
+  showPage('villa');
+}
+
+// ════ BOOKING LOGIC ════
+function switchBookingTab(tab, el) {
+  document.querySelectorAll('.booking-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.booking-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(`panel-${tab}`).classList.add('active');
+}
+
+function calcTotal() {
+  const ci = document.getElementById('checkin-date').value;
+  const co = document.getElementById('checkout-date').value;
+  if (!ci || !co) return;
+  const nights = Math.round((new Date(co) - new Date(ci)) / 86400000);
+  if (nights <= 0) { document.getElementById('booking-summary').style.display = 'none'; return; }
+  const v = VILLAS[currentVilla];
+  const subtotal = nights * v.price;
+  const discount = Math.round(subtotal * 0.05);
+  const total = subtotal - discount;
+  document.getElementById('nights-label').textContent = `${nights} night${nights>1?'s':''} × $${v.price}`;
+  document.getElementById('subtotal-val').textContent = `$${subtotal}`;
+  document.getElementById('discount-val').textContent = `-$${discount}`;
+  document.getElementById('total-val').textContent = `$${total}`;
+  document.getElementById('booking-summary').style.display = 'block';
+}
+
+function selectPayment(method, el) {
+  selectedPayment = method;
+  document.querySelectorAll('.payment-method-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('card-fields').classList.toggle('visible', method === 'card');
+  document.getElementById('card-fields').style.display = method === 'card' ? 'block' : 'none';
+  document.getElementById('paypal-fields').style.display = method === 'paypal' ? 'block' : 'none';
+  document.getElementById('bank-fields').style.display = method === 'bank' ? 'block' : 'none';
+}
+
+function formatCard(el) {
+  let v = el.value.replace(/\D/g,'').substring(0,16);
+  el.value = v.replace(/(.{4})/g,'$1 ').trim();
+}
+
+function submitBooking() {
+  const name = document.getElementById('guest-name').value.trim();
+  const email = document.getElementById('guest-email').value.trim();
+  const ci = document.getElementById('checkin-date').value;
+  const co = document.getElementById('checkout-date').value;
+  if (!name || !email || !ci || !co) {
+    alert('Please fill in your name, email, and travel dates to continue.'); return;
+  }
+  const v = VILLAS[currentVilla];
+  const nights = Math.round((new Date(co) - new Date(ci)) / 86400000);
+  const total = Math.round(nights * v.price * 0.95);
+  const fmt = d => new Date(d).toLocaleDateString('en-US', {day:'numeric',month:'long',year:'numeric'});
+  const payLabels = {card:'Credit / Debit Card', paypal:'PayPal', bank:'Bank Transfer'};
+  
+  document.getElementById('confirm-villa').textContent = v.name;
+  document.getElementById('confirm-villa-name').textContent = v.name;
+  document.getElementById('confirm-checkin').textContent = fmt(ci);
+  document.getElementById('confirm-checkout').textContent = fmt(co);
+  document.getElementById('confirm-guests').textContent = document.getElementById('guests-count').value;
+  document.getElementById('confirm-total').textContent = `$${total} (5% discount applied)`;
+  document.getElementById('confirm-payment').textContent = payLabels[selectedPayment];
+  showPage('confirm');
+}
+
+// ════ LIGHTBOX ════
+function openLB(i) { lbIdx = i; document.getElementById('lb-img').src = lbImgs[i]; document.getElementById('lightbox').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeLB() { document.getElementById('lightbox').classList.remove('open'); document.body.style.overflow=''; }
+function lbNav(d) { lbIdx = (lbIdx+d+lbImgs.length)%lbImgs.length; document.getElementById('lb-img').src = lbImgs[lbIdx]; }
+document.getElementById('lightbox').addEventListener('click', e => { if(e.target===e.currentTarget) closeLB(); });
+document.addEventListener('keydown', e => {
+  if(e.key==='Escape') closeLB();
+  if(e.key==='ArrowRight') lbNav(1);
+  if(e.key==='ArrowLeft') lbNav(-1);
+});
+
+// ════ NAV SCROLL ════
+function updateNavStyle() {
+  const navbar = document.getElementById('navbar');
+  if (document.getElementById('home-page').classList.contains('active')) {
     navbar.classList.toggle('scrolled', window.scrollY > 60);
-  });
+    if (window.scrollY <= 60) navbar.classList.remove('light');
+  }
+}
+window.addEventListener('scroll', updateNavStyle);
 
-  // Scroll helpers
-  function scrollToVillas()    { document.getElementById('villas-section').scrollIntoView({behavior:'smooth'}); }
-  function scrollToWhyDirect() { document.getElementById('why-direct-section').scrollIntoView({behavior:'smooth'}); }
-  function scrollToAmenities() { document.getElementById('amenities-section').scrollIntoView({behavior:'smooth'}); }
-  function scrollToContact()   { document.getElementById('contact-section').scrollIntoView({behavior:'smooth'}); }
+// ════ SCROLL HELPERS ════
+function scrollToVillas() { showPage('home'); setTimeout(() => document.getElementById('villas-section').scrollIntoView({behavior:'smooth'}), 100); }
+function scrollToWhyDirect() { showPage('home'); setTimeout(() => document.getElementById('why-direct-section').scrollIntoView({behavior:'smooth'}), 100); }
+function scrollToAmenities() { showPage('home'); setTimeout(() => document.getElementById('amenities-section').scrollIntoView({behavior:'smooth'}), 100); }
+function scrollToContact() { showPage('home'); setTimeout(() => document.getElementById('contact-section').scrollIntoView({behavior:'smooth'}), 100); }
 
-  // Scroll reveal
-  const obs = new IntersectionObserver(entries => entries.forEach(e => {
-    if (e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }
-  }), {threshold: 0.1});
-  document.querySelectorAll('.villa-card, .why-item, .amenity-item').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    obs.observe(el);
-  });
-</script>
-</body>
-</html>
+// ════ SCROLL REVEAL ════
+const obs = new IntersectionObserver(entries => entries.forEach(e => {
+  if(e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transfo
