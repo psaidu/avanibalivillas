@@ -360,8 +360,31 @@
       </div>
     </div>
     <div class="map-placeholder">
-      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63129.07!2d115.21193!3d-8.50938!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd718a1f0df1d89%3A0xd9e4bce78c5c7fa!2sUbud%2C%20Bali%2C%20Indonesia!5e0!3m2!1sen!2s" allowfullscreen="" loading="lazy"></iframe>
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63129.07024040634!2d115.21193!3d-8.50938!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd718a1f0df1d89%3A0xd9e4bce78c5c7fa!2sUbud%2C%20Gianyar%20Regency%2C%20Bali%2C%20Indonesia!5e0!3m2!1sen!2s!4v1700000000000"
+        allowfullscreen="" loading="lazy">
+      </iframe>
     </div>
+    <a href="https://maps.app.goo.gl/Umte9L4gpXcJRo9R7" target="_blank" style="display:inline-flex;align-items:center;gap:0.5rem;margin-top:1rem;font-size:0.82rem;color:var(--gold);text-decoration:none;letter-spacing:0.05em;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.75'" onmouseout="this.style.opacity='1'">
+      <span style="font-size:1.1rem">📍</span> View exact location of Bellis 68 on Google Maps
+    </a><script>
+(function(){
+  var map = L.map('map-bellis68', {zoomControl:true, scrollWheelZoom:false}).setView([-8.5549085,115.2700038], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+  var heartIcon = L.divIcon({
+    html: '<div style="font-size:2rem;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.4));">❤️</div>',
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
+    className: ''
+  });
+  L.marker([-8.5549085,115.2700038], {icon: heartIcon})
+    .addTo(map)
+    .bindPopup('<b>Bellis 68</b><br>Ubud, Bali', {closeButton:false})
+    .openPopup();
+})();
+</script></div>
   </div>
 </section>
 
