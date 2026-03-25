@@ -537,7 +537,7 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
         <span class="nav-logo">Avani Bali Villas</span>
         <p>Four private pool villas in the heart of Ubud, Bali. Managed with care by Prashanth and the team. Each stay is personal, each villa is unique.</p>
         <br>
-        <p>📧 <a href="mailto:psaidu@gmail.com" style="color:var(--gold);text-decoration:none">psaidu@gmail.com</a></p>
+        <p>📧 <a href="/cdn-cgi/l/email-protection#9aeae9fbf3feefdafdf7fbf3f6b4f9f5f7" style="color:var(--gold);text-decoration:none"><span class="__cf_email__" data-cfemail="f78784969e9382b7909a969e9bd994989a">[email&#160;protected]</span></a></p>
         <p>📱 WhatsApp: <a href="https://wa.me/14693460620" style="color:var(--gold);text-decoration:none">+1 469 346 0620</a></p>
       </div>
       <div class="footer-col">
@@ -611,16 +611,23 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
         <div class="booking-price">From $<span id="booking-price-val">XXX</span> <span>/ night</span></div>
         <div class="booking-discount">🎉 You save 5% booking direct!</div>
 
-        <div class="booking-dates-row">
-          <div class="booking-form-group">
-            <label>Check-in</label>
-            <input type="date" id="checkin-date" onchange="calcTotal()">
+        <div class="cal-wrapper">
+          <div class="cal-status" id="cal-status">Loading availability...</div>
+          <div class="cal-months-row" id="cal-months-row">
+            <div class="cal-month-block" id="cal-month-0"></div>
+            <div class="cal-month-block" id="cal-month-1"></div>
           </div>
-          <div class="booking-form-group">
-            <label>Check-out</label>
-            <input type="date" id="checkout-date" onchange="calcTotal()">
+          <div class="cal-legend">
+            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--terracotta)"></div> Selected</div>
+            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f5ede8;border:1px solid #cbb"></div> Unavailable</div>
+            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:rgba(184,98,62,0.1)"></div> Your stay</div>
+          </div>
+          <div class="cal-selected-dates" id="cal-selected-display">
+            Check-in: <span id="cal-show-in">—</span> &nbsp;→&nbsp; Check-out: <span id="cal-show-out">—</span>
           </div>
         </div>
+        <input type="hidden" id="checkin-date">
+        <input type="hidden" id="checkout-date">
         <div class="booking-form-group">
           <label>Guests</label>
           <select id="guests-count">
@@ -729,7 +736,7 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
       <div class="confirm-row"><span class="confirm-label">Payment</span><span class="confirm-value" id="confirm-payment">—</span></div>
     </div>
     <p>We'll confirm your booking within <strong>24 hours</strong> via email and WhatsApp. For urgent enquiries:</p>
-    <p style="margin-top:0.5rem">📱 <a href="https://wa.me/14693460620" style="color:var(--terracotta)">WhatsApp us</a> &nbsp;|&nbsp; 📧 <a href="mailto:psaidu@gmail.com" style="color:var(--terracotta)">Email us</a></p>
+    <p style="margin-top:0.5rem">📱 <a href="https://wa.me/14693460620" style="color:var(--terracotta)">WhatsApp us</a> &nbsp;|&nbsp; 📧 <a href="/cdn-cgi/l/email-protection#e69695878f8293a6818b878f8ac885898b" style="color:var(--terracotta)">Email us</a></p>
     <button class="btn btn-terra" style="margin-top:2rem;padding:1rem 2.5rem" onclick="showPage('home')">Back to Avani Villas</button>
   </div>
 </div>
@@ -742,7 +749,7 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
   <button class="lb-nav lb-next" onclick="lbNav(1)">›</button>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ════ VILLA DATA ════
 const VILLAS = {
   geya: {
@@ -751,6 +758,7 @@ const VILLAS = {
     rating: '★ 5.0 · 14 reviews',
     bedrooms: 3, baths: 3.5, guests: 6,
     price: 250,
+    ical: 'https://www.airbnb.com/calendar/ical/1526553003171178696.ics?t=09864c30941f44438fbbfd5920d7e999',
     airbnb: 'https://www.airbnb.com/rooms/1526553003171178696',
     heroImg: 'https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/3fe77d25-55a8-463d-9764-84fa17eaf9d6.jpeg?im_w=1440',
     imgs: [
@@ -772,6 +780,7 @@ const VILLAS = {
     rating: '★ 4.88 · 33 reviews',
     bedrooms: 3, baths: 3.5, guests: 6,
     price: 260,
+    ical: 'https://www.airbnb.com/calendar/ical/1356233435162290805.ics?t=b00c1920edfa4999bb43d76147a60f8d',
     airbnb: 'https://www.airbnb.com/rooms/1356233435162290805',
     heroImg: 'https://a0.muscache.com/im/pictures/hosting/Hosting-1356233435162290805/original/ac28ce5c-b50a-43fa-9272-87271a366fa6.jpeg?im_w=1440',
     imgs: [
@@ -825,6 +834,143 @@ const VILLAS = {
 let currentVilla = null;
 let lbImgs = [], lbIdx = 0;
 let selectedPayment = 'card';
+
+// ════ ICAL CALENDAR ════
+let calBlockedDates = new Set();
+let calCheckIn = null, calCheckOut = null, calSelecting = false;
+let calViewYear, calViewMonth;
+
+function parseIcal(text) {
+  const blocked = new Set();
+  const lines = text.replace(/\r\n /g,'').replace(/\r\n\t/g,'').split(/\r?\n/);
+  let inEvent = false, dtStart = '', dtEnd = '';
+  for (const line of lines) {
+    if (line === 'BEGIN:VEVENT') { inEvent = true; dtStart=''; dtEnd=''; }
+    if (!inEvent) continue;
+    if (line.startsWith('DTSTART')) dtStart = line.split(':').pop().trim().substring(0,8);
+    if (line.startsWith('DTEND'))   dtEnd   = line.split(':').pop().trim().substring(0,8);
+    if (line === 'END:VEVENT' && dtStart && dtEnd) {
+      let d = new Date(dtStart.substring(0,4)+'-'+dtStart.substring(4,6)+'-'+dtStart.substring(6,8)+'T00:00:00');
+      const end = new Date(dtEnd.substring(0,4)+'-'+dtEnd.substring(4,6)+'-'+dtEnd.substring(6,8)+'T00:00:00');
+      while (d < end) {
+        blocked.add(d.toISOString().split('T')[0]);
+        d.setDate(d.getDate()+1);
+      }
+      inEvent = false;
+    }
+  }
+  return blocked;
+}
+
+async function loadIcal(icalUrl) {
+  const status = document.getElementById('cal-status');
+  if (!icalUrl) { status.textContent = 'Select your dates below'; status.className='cal-status'; return; }
+  status.textContent = 'Loading availability...'; status.className='cal-status loading';
+  try {
+    const proxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(icalUrl);
+    const r = await fetch(proxy);
+    if (!r.ok) throw new Error('fetch failed');
+    const text = await r.text();
+    calBlockedDates = parseIcal(text);
+    status.textContent = 'Calendar loaded — select your check-in date';
+    status.className = 'cal-status';
+  } catch(e) {
+    calBlockedDates = new Set();
+    status.textContent = 'Live calendar unavailable — dates shown are indicative';
+    status.className = 'cal-status error';
+  }
+  renderCalMonths();
+}
+
+function calDateStr(y,m,d) {
+  return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+}
+
+function renderCalMonths() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  if (!calViewYear) { calViewYear = today.getFullYear(); calViewMonth = today.getMonth(); }
+  for (let offset = 0; offset < 2; offset++) {
+    let y = calViewYear, m = calViewMonth + offset;
+    if (m > 11) { m -= 12; y++; }
+    renderOneMonth(y, m, offset, today);
+  }
+}
+
+function renderOneMonth(year, month, slot, today) {
+  const names = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const dows  = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysIn   = new Date(year, month+1, 0).getDate();
+  let html = '<div class="cal-nav">';
+  if (slot === 0) html += `<button onclick="calShift(-1)">&#8249;</button>`; else html += '<div></div>';
+  html += `<div class="cal-month-label">${names[month]} ${year}</div>`;
+  if (slot === 1) html += `<button onclick="calShift(1)">&#8250;</button>`; else html += '<div></div>';
+  html += '</div><div class="cal-grid">';
+  dows.forEach(d => { html += `<div class="cal-dow">${d}</div>`; });
+  for (let i=0; i<firstDay; i++) html += '<div class="cal-day cal-empty"></div>';
+  for (let d=1; d<=daysIn; d++) {
+    const ds = calDateStr(year, month, d);
+    const dayDate = new Date(ds+'T00:00:00');
+    let cls = 'cal-day';
+    if (dayDate < today)            cls += ' cal-past';
+    else if (calBlockedDates.has(ds)) cls += ' cal-blocked';
+    else if (calCheckIn && calCheckOut && ds > calCheckIn && ds < calCheckOut) cls += ' cal-in-range';
+    if (calCheckIn === ds)  cls += ' cal-selected-in';
+    if (calCheckOut === ds) cls += ' cal-selected-out';
+    if (ds === new Date().toISOString().split('T')[0]) cls += ' cal-today';
+    html += `<div class="${cls}" onclick="calClickDay('${ds}')">${d}</div>`;
+  }
+  html += '</div>';
+  document.getElementById('cal-month-'+slot).innerHTML = html;
+}
+
+function calShift(dir) {
+  calViewMonth += dir;
+  if (calViewMonth < 0)  { calViewMonth = 11; calViewYear--; }
+  if (calViewMonth > 11) { calViewMonth = 0;  calViewYear++; }
+  renderCalMonths();
+}
+
+function calClickDay(ds) {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const clicked = new Date(ds+'T00:00:00');
+  if (clicked < today || calBlockedDates.has(ds)) return;
+
+  if (!calCheckIn || (calCheckIn && calCheckOut)) {
+    // Start new selection
+    calCheckIn = ds; calCheckOut = null;
+  } else if (ds <= calCheckIn) {
+    calCheckIn = ds; calCheckOut = null;
+  } else {
+    // Check no blocked dates in range
+    let d = new Date(calCheckIn+'T00:00:00'); d.setDate(d.getDate()+1);
+    const end = new Date(ds+'T00:00:00');
+    let hasBlocked = false;
+    while (d < end) {
+      if (calBlockedDates.has(d.toISOString().split('T')[0])) { hasBlocked = true; break; }
+      d.setDate(d.getDate()+1);
+    }
+    if (hasBlocked) {
+      calCheckIn = ds; calCheckOut = null;
+    } else {
+      calCheckOut = ds;
+    }
+  }
+
+  // Update hidden inputs
+  document.getElementById('checkin-date').value  = calCheckIn  || '';
+  document.getElementById('checkout-date').value = calCheckOut || '';
+
+  // Update display
+  const fmt = s => { if(!s) return '—'; const d=new Date(s+'T00:00:00'); return d.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'}); };
+  document.getElementById('cal-show-in').textContent  = fmt(calCheckIn);
+  document.getElementById('cal-show-out').textContent = fmt(calCheckOut);
+  document.getElementById('cal-selected-display').style.display = calCheckIn ? 'block' : 'none';
+  document.getElementById('cal-status').textContent = calCheckIn && !calCheckOut ? 'Now select your check-out date' : calCheckIn && calCheckOut ? 'Dates selected ✓' : 'Select your check-in date';
+
+  renderCalMonths();
+  if (calCheckIn && calCheckOut) calcTotal();
+}
 
 // ════ PAGE NAVIGATION ════
 function showPage(name) {
@@ -885,6 +1031,10 @@ function showVilla(id) {
   // Reset dates
   document.getElementById('checkin-date').value = '';
   document.getElementById('checkout-date').value = '';
+  calCheckIn = null; calCheckOut = null; calBlockedDates = new Set();
+  calViewYear = null; calViewMonth = null;
+  document.getElementById('cal-selected-display').style.display = 'none';
+  loadIcal(v.ical || null);
   
   // Set min date to today
   const today = new Date().toISOString().split('T')[0];
@@ -983,8 +1133,4 @@ window.addEventListener('scroll', updateNavStyle);
 function scrollToVillas() { showPage('home'); setTimeout(() => document.getElementById('villas-section').scrollIntoView({behavior:'smooth'}), 100); }
 function scrollToWhyDirect() { showPage('home'); setTimeout(() => document.getElementById('why-direct-section').scrollIntoView({behavior:'smooth'}), 100); }
 function scrollToAmenities() { showPage('home'); setTimeout(() => document.getElementById('amenities-section').scrollIntoView({behavior:'smooth'}), 100); }
-function scrollToContact() { showPage('home'); setTimeout(() => document.getElementById('contact-section').scrollIntoView({behavior:'smooth'}), 100); }
-
-// ════ SCROLL REVEAL ════
-const obs = new IntersectionObserver(entries => entries.forEach(e => {
-  if(e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transfo
+function scrollToContact() { showPage('home'); setTimeout(() => do
