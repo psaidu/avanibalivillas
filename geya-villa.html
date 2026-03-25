@@ -630,9 +630,10 @@
   <button class="lightbox-nav lightbox-next" onclick="changeImg(1)">›</button>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js">
+  window.addEventListener('DOMContentLoaded', initCalendar);
+</script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
   // ══ CALENDAR + BOOKING ══
-  const ICAL_URL  = 'https://www.airbnb.com/calendar/ical/1526553003171178696.ics?t=09864c30941f44438fbbfd5920d7e999';
   const BASE_PRICE = 250;
   let blockedDates = new Set();
   let checkIn = null, checkOut = null;
@@ -660,7 +661,6 @@
 
   async function initCalendar() {
     const st = document.getElementById('cal-status');
-    if (!ICAL_URL) { st.textContent='Select your check-in date'; st.className='cal-status'; renderCal(); return; }
     st.textContent='Loading availability from Airbnb...'; st.className='cal-status loading';
     try {
       const r = await fetch('/.netlify/functions/ical?villa=geya');

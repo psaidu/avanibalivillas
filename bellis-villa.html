@@ -543,7 +543,9 @@
   <img id="lightbox-img" src="" alt="">
   <button class="lightbox-nav lightbox-next" onclick="changeImg(1)">›</button>
 </div>
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js">
+  window.addEventListener('DOMContentLoaded', initCalendar);
+</script><script>
   const navbar=document.getElementById('navbar');
   window.addEventListener('scroll',()=>navbar.classList.toggle('scrolled',window.scrollY>60));
   const images=['https://a0.muscache.com/im/pictures/hosting/Hosting-1356233435162290805/original/ac28ce5c-b50a-43fa-9272-87271a366fa6.jpeg?im_w=1440','https://a0.muscache.com/im/pictures/hosting/Hosting-1356233435162290805/original/a40f7df4-131b-4bbb-af23-9bc03434e2b1.jpeg?im_w=1440','https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM1NjIzMzQzNTE2MjI5MDgwNQ==/original/7982d07e-6983-480d-9751-263a3ad4dec9.jpeg?im_w=1440','https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM1NjIzMzQzNTE2MjI5MDgwNQ==/original/a5a8bf33-81ca-4db7-b715-eea4c7c8df88.jpeg?im_w=1440','https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM1NjIzMzQzNTE2MjI5MDgwNQ==/original/1f3ed399-8418-49df-a356-eff74a15f50c.jpeg?im_w=1440'];
@@ -556,7 +558,6 @@
   const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}},{threshold:0.1}));
   document.querySelectorAll('.amenity-card,.service-card,.place-row,.review-card').forEach(el=>{el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition='opacity 0.6s ease,transform 0.6s ease';obs.observe(el);}
   // ══ CALENDAR + BOOKING ══
-  const ICAL_URL  = 'https://www.airbnb.com/calendar/ical/1356233435162290805.ics?t=b00c1920edfa4999bb43d76147a60f8d';
   const BASE_PRICE = 260;
   let blockedDates = new Set();
   let checkIn = null, checkOut = null;
