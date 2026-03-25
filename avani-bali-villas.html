@@ -330,13 +330,13 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
 
 <!-- NAV -->
 <nav id="navbar">
-  <a class="nav-logo" onclick="showPage('home')">Avani Bali Villas</a>
+  <a class="nav-logo" href="avani-bali-villas.html">Avani Bali Villas</a>
   <ul class="nav-links">
-    <li><a onclick="showPage('home'); scrollToVillas()">Our Villas</a></li>
-    <li><a onclick="showPage('home'); scrollToAmenities()">Amenities</a></li>
-    <li><a onclick="showPage('home'); scrollToWhyDirect()">Book Direct & Save</a></li>
-    <li><a onclick="showPage('home'); scrollToContact()">Contact</a></li>
-    <li><a onclick="showPage('home'); scrollToVillas()" class="nav-cta btn">Browse Villas</a></li>
+    <li><a href="#villas-section">Our Villas</a></li>
+    <li><a href="#amenities-section">Amenities</a></li>
+    <li><a href="#why-direct-section">Book Direct & Save</a></li>
+    <li><a href="#contact-section">Contact</a></li>
+    <li><a href="#villas-section" class="nav-cta btn">Browse Villas</a></li>
   </ul>
   <button class="nav-hamburger" onclick="document.getElementById('mobileNav').classList.toggle('open')" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -346,10 +346,10 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
 <!-- MOBILE NAV -->
 <div class="mobile-nav" id="mobileNav">
   <button class="mobile-close" onclick="document.getElementById('mobileNav').classList.remove('open')">✕</button>
-  <a onclick="showPage('home'); document.getElementById('mobileNav').classList.remove('open');">Home</a>
-  <a onclick="showPage('home'); scrollToVillas(); document.getElementById('mobileNav').classList.remove('open');">Our Villas</a>
-  <a onclick="showPage('home'); scrollToWhyDirect(); document.getElementById('mobileNav').classList.remove('open');">Book Direct</a>
-  <a onclick="showPage('home'); scrollToContact(); document.getElementById('mobileNav').classList.remove('open');">Contact</a>
+  <a href="avani-bali-villas.html" onclick="document.getElementById('mobileNav').classList.remove('open')">Home</a>
+  <a href="#villas-section" onclick="document.getElementById('mobileNav').classList.remove('open')">Our Villas</a>
+  <a href="#why-direct-section" onclick="document.getElementById('mobileNav').classList.remove('open')">Book Direct</a>
+  <a href="#contact-section" onclick="document.getElementById('mobileNav').classList.remove('open')">Contact</a>
 </div>
 
 <!-- ════════════════════ HOME PAGE ════════════════════ -->
@@ -537,7 +537,7 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
         <span class="nav-logo">Avani Bali Villas</span>
         <p>Four private pool villas in the heart of Ubud, Bali. Managed with care by Prashanth and the team. Each stay is personal, each villa is unique.</p>
         <br>
-        <p>📧 <a href="mailto:psaidu@gmail.com" style="color:var(--gold);text-decoration:none">psaidu@gmail.com</a></p>
+        <p>📧 <a href="mailto:psaidu&#64;gmail.com" style="color:var(--gold);text-decoration:none">psaidu&#64;gmail.com</a></p>
         <p>📱 WhatsApp: <a href="https://wa.me/14693460620" style="color:var(--gold);text-decoration:none">+1 469 346 0620</a></p>
       </div>
       <div class="footer-col">
@@ -596,7 +596,7 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
       <div class="villa-detail-desc" id="villa-desc"></div>
       <div class="villa-features-title">What's Included</div>
       <div class="villa-features" id="villa-features"></div>
-      <button class="btn btn-outline-dark" onclick="showPage('home')" style="margin-top:1rem">← Back to All Villas</button>
+      <button class="btn btn-outline-dark" href="avani-bali-villas.html" style="margin-top:1rem">← Back to All Villas</button>
     </div>
 
     <!-- BOOKING SIDEBAR -->
@@ -729,8 +729,8 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
       <div class="confirm-row"><span class="confirm-label">Payment</span><span class="confirm-value" id="confirm-payment">—</span></div>
     </div>
     <p>We'll confirm your booking within <strong>24 hours</strong> via email and WhatsApp. For urgent enquiries:</p>
-    <p style="margin-top:0.5rem">📱 <a href="https://wa.me/14693460620" style="color:var(--terracotta)">WhatsApp us</a> &nbsp;|&nbsp; 📧 <a href="mailto:psaidu@gmail.com" style="color:var(--terracotta)">Email us</a></p>
-    <button class="btn btn-terra" style="margin-top:2rem;padding:1rem 2.5rem" onclick="showPage('home')">Back to Avani Villas</button>
+    <p style="margin-top:0.5rem">📱 <a href="https://wa.me/14693460620" style="color:var(--terracotta)">WhatsApp us</a> &nbsp;|&nbsp; 📧 <a href="mailto:psaidu&#64;gmail.com" style="color:var(--terracotta)">psaidu&#64;gmail.com</a></p>
+    <button class="btn btn-terra" style="margin-top:2rem;padding:1rem 2.5rem" href="avani-bali-villas.html">Back to Avani Villas</button>
   </div>
 </div>
 
@@ -742,7 +742,7 @@ footer { background:#0f0d08; padding:4rem 3rem 2rem; }
   <button class="lb-nav lb-next" onclick="lbNav(1)">›</button>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ════ VILLA DATA ════
 const VILLAS = {
   geya: {
@@ -983,8 +983,4 @@ window.addEventListener('scroll', updateNavStyle);
 function scrollToVillas() { showPage('home'); setTimeout(() => document.getElementById('villas-section').scrollIntoView({behavior:'smooth'}), 100); }
 function scrollToWhyDirect() { showPage('home'); setTimeout(() => document.getElementById('why-direct-section').scrollIntoView({behavior:'smooth'}), 100); }
 function scrollToAmenities() { showPage('home'); setTimeout(() => document.getElementById('amenities-section').scrollIntoView({behavior:'smooth'}), 100); }
-function scrollToContact() { showPage('home'); setTimeout(() => document.getElementById('contact-section').scrollIntoView({behavior:'smooth'}), 100); }
-
-// ════ SCROLL REVEAL ════
-const obs = new IntersectionObserver(entries => entries.forEach(e => {
-  if(e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transfo
+function scrollToContact() { showPage('home'); setTimeout(() => docume
