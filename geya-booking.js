@@ -25,7 +25,16 @@ function parseIcal(text) {
   return b;
 }
 
-async function initCalendar() {
+  function getPriceForDate(ds) {
+    var m = parseInt(ds.split("-")[1], 10);
+    if (m >= 1 && m <= 3) return 220;
+    if (m >= 4 && m <= 6) return 250;
+    if (m >= 7 && m <= 9) return 280;
+    if (m >= 10 && m <= 12) return 240;
+    return 0;
+  }
+
+  async function initCalendar() {
   var st=document.getElementById('cal-status');
   if (!st) return;
   st.textContent='Loading availability...'; st.className='cal-status loading';
@@ -76,7 +85,9 @@ function renderMonth(yr,mo,slot,today) {
     if (ds===checkIn) c+=' cal-selected-in';
     if (ds===checkOut) c+=' cal-selected-out';
     if (ds===new Date().toISOString().split('T')[0]) c+=' cal-today';
-    h+='<div class="'+c+'" data-date="'+ds+'" onclick="pickDay(this.dataset.date)">'+d+'</div>';
+    var isAvail = !blockedDates.has(ds) && dt >= today;
+      var priceHtml = isAvail ? '<span class="cal-tooltip">$'+getPriceForDate(ds)+'/night</span>' : '';
+      h+='<div class="'+c+'" data-date="'+ds+'" onclick="pickDay(this.dataset.date)">'+priceHtml+d+'</div>';
   }
   h+='</div>';
   el.innerHTML=h;
