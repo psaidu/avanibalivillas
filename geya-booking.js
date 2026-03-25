@@ -1,5 +1,5 @@
-// geya-booking.js
-var BASE_PRICE = 250;
+// bellis-booking.js
+var BASE_PRICE = 260;
 var blockedDates = new Set();
 var checkIn = null, checkOut = null;
 var viewYear = null, viewMonth = null;
@@ -30,7 +30,7 @@ async function initCalendar() {
   if (!st) return;
   st.textContent='Loading availability...'; st.className='cal-status loading';
   try {
-    var r=await fetch('/.netlify/functions/ical?villa=geya');
+    var r=await fetch('/.netlify/functions/ical?villa=bellis');
     if (!r.ok) throw new Error('HTTP '+r.status);
     blockedDates=parseIcal(await r.text());
     st.textContent='Availability loaded — select your check-in date';

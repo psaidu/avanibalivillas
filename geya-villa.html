@@ -3,205 +3,135 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Geya Villa — Avani Bali Villas, Ubud</title>
+<title>Bellis 68 — Avani Bali Villas, Ubud</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --ink: #1a1712;
-    --cream: #f5f0e8;
-    --sand: #e8dcc8;
-    --terracotta: #c0714a;
-    --jungle: #2d4a35;
-    --gold: #b8943a;
-    --mist: #8fa898;
-    --white: #fefcf8;
-  }
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Outfit', sans-serif; background: var(--ink); color: var(--cream); overflow-x: hidden; }
-
-  /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1.4rem 3rem;
-    background: linear-gradient(to bottom, rgba(26,23,18,0.9), transparent);
-    transition: background 0.4s;
-  }
-  nav.scrolled { background: rgba(26,23,18,0.96); backdrop-filter: blur(12px); }
-  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; letter-spacing: 0.12em; color: var(--gold); font-weight: 300; text-transform: uppercase; text-decoration: none; }
-  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-  .nav-links a { color: var(--cream); text-decoration: none; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; opacity: 0.75; transition: opacity 0.2s, color 0.2s; }
-  .nav-links a:hover { opacity: 1; color: var(--gold); }
-  .nav-cta { background: var(--terracotta) !important; color: var(--white) !important; padding: 0.5rem 1.4rem; opacity: 1 !important; }
-  .nav-cta:hover { background: #a85e3a !important; }
-  .nav-back { font-size: 0.72rem; letter-spacing: 0.15em; color: var(--mist); text-decoration: none; text-transform: uppercase; }
-  .nav-back:hover { color: var(--cream); }
-
-  /* HERO */
-  .hero { position: relative; height: 100vh; min-height: 640px; display: flex; flex-direction: column; justify-content: flex-end; padding: 6rem 3rem; overflow: hidden; }
-  .hero-bg {
-    position: absolute; inset: 0;
-    background: linear-gradient(to top, rgba(26,23,18,1) 0%, rgba(26,23,18,0.3) 50%, rgba(26,23,18,0.1) 100%),
-      url('https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/3fe77d25-55a8-463d-9764-84fa17eaf9d6.jpeg?im_w=1440') center/cover no-repeat;
-    transform: scale(1.04); animation: heroScale 12s ease-out forwards;
-  }
-  @keyframes heroScale { from { transform: scale(1.08); } to { transform: scale(1.0); } }
-  .hero-eyebrow { font-size: 0.72rem; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.2rem; opacity: 0; animation: fadeUp 0.9s 0.3s ease forwards; }
-  .hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3.5rem, 8vw, 7rem); font-weight: 300; line-height: 0.95; letter-spacing: -0.01em; max-width: 780px; opacity: 0; animation: fadeUp 1s 0.5s ease forwards; }
-  .hero h1 em { font-style: italic; color: var(--gold); }
-  .hero-sub { margin-top: 1.8rem; max-width: 480px; font-size: 0.92rem; font-weight: 300; line-height: 1.7; opacity: 0; animation: fadeUp 1s 0.7s ease forwards; color: rgba(245,240,232,0.7); }
-  .hero-actions { display: flex; gap: 1rem; margin-top: 2.2rem; opacity: 0; animation: fadeUp 1s 0.9s ease forwards; }
-  .hero-rating { position: absolute; top: 50%; right: 3rem; transform: translateY(-50%); text-align: center; opacity: 0; animation: fadeIn 1s 1.2s ease forwards; }
-  .hero-rating-num { font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; color: var(--gold); line-height: 1; font-weight: 300; }
-  .hero-rating-stars { font-size: 0.85rem; color: var(--gold); letter-spacing: 0.1em; margin: 0.2rem 0; }
-  .hero-rating-label { font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--mist); }
-
-  /* BUTTONS */
-  .btn-primary { background: var(--terracotta); color: var(--white); padding: 0.9rem 2.2rem; text-decoration: none; font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; transition: background 0.2s, transform 0.15s; display: inline-block; }
-  .btn-primary:hover { background: #a85e3a; transform: translateY(-1px); }
-  .btn-outline { border: 1px solid rgba(245,240,232,0.4); color: var(--cream); padding: 0.9rem 2.2rem; text-decoration: none; font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; transition: border-color 0.2s, background 0.2s; display: inline-block; }
-  .btn-outline:hover { border-color: var(--cream); background: rgba(245,240,232,0.05); }
-
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-  /* STATS BAR */
-  .stats-bar { background: var(--jungle); display: flex; justify-content: center; }
-  .stat { flex: 1; max-width: 220px; text-align: center; padding: 2rem 1.5rem; border-right: 1px solid rgba(255,255,255,0.1); }
-  .stat:last-child { border-right: none; }
-  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.4rem; font-weight: 300; color: var(--gold); line-height: 1; }
-  .stat-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mist); margin-top: 0.4rem; }
-
-  /* SECTION COMMON */
-  section { padding: 6rem 3rem; }
-  .section-tag { font-size: 0.68rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--terracotta); margin-bottom: 1rem; }
-  .section-h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 4.5vw, 3.6rem); font-weight: 300; line-height: 1.1; color: var(--cream); }
-  .section-h2 em { font-style: italic; color: var(--gold); }
-
-  /* ABOUT */
-  .about { background: var(--ink); display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; max-width: 1280px; margin: 0 auto; }
-  .about-text p { font-size: 1rem; font-weight: 300; line-height: 1.85; color: rgba(245,240,232,0.75); margin-top: 1.5rem; }
-  .about-visual { position: relative; }
-  .about-img-main { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; }
-  .about-img-inset { position: absolute; bottom: -2.5rem; left: -2.5rem; width: 55%; aspect-ratio: 1; object-fit: cover; border: 6px solid var(--ink); }
-  .about-badge { position: absolute; top: 2rem; right: -2rem; width: 90px; height: 90px; background: var(--terracotta); border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--white); line-height: 1.5; }
-
-  /* GALLERY */
-  .gallery-section { background: #111008; padding: 5rem 0; }
-  .gallery-header { padding: 0 3rem 3rem; display: flex; justify-content: space-between; align-items: flex-end; }
-  .gallery-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr; grid-template-rows: 360px 260px; gap: 6px; padding: 0 3rem; }
-  .gallery-item { overflow: hidden; position: relative; cursor: pointer; }
-  .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; display: block; }
-  .gallery-item:hover img { transform: scale(1.05); }
-  .gallery-item.tall { grid-row: 1 / 3; }
-  .gallery-item.wide { grid-column: 2 / 4; }
-  .gallery-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,23,18,0.5), transparent); opacity: 0; transition: opacity 0.4s; }
-  .gallery-item:hover .gallery-overlay { opacity: 1; }
-
-  /* AMENITIES */
-  .amenities-section { background: var(--jungle); padding: 6rem 3rem; }
-  .amenities-inner { max-width: 1280px; margin: 0 auto; }
-  .amenities-header { margin-bottom: 4rem; }
-  .amenities-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-right: 1px solid rgba(255,255,255,0.15); border-bottom: 1px solid rgba(255,255,255,0.15); }
-  .amenity-card { padding: 2.5rem 2rem; border-top: 1px solid rgba(255,255,255,0.15); border-left: 1px solid rgba(255,255,255,0.15); transition: background 0.3s; }
-  .amenity-card:hover { background: rgba(255,255,255,0.04); }
-  .amenity-icon { font-size: 1.8rem; margin-bottom: 1rem; }
-  .amenity-name { font-size: 0.9rem; font-weight: 500; letter-spacing: 0.05em; color: var(--cream); margin-bottom: 0.4rem; }
-  .amenity-desc { font-size: 0.8rem; color: var(--mist); line-height: 1.6; font-weight: 300; }
-
-  /* LOCATION */
-  .location-section { background: var(--ink); padding: 6rem 3rem; }
-  .location-inner { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
-  .location-places { margin-top: 2.5rem; }
-  .place-row { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 0; border-bottom: 1px solid rgba(245,240,232,0.1); }
-  .place-name { font-size: 0.9rem; color: var(--cream); }
-  .place-dist { font-size: 0.78rem; color: var(--gold); font-weight: 300; }
-  .map-placeholder { aspect-ratio: 4/3; position: relative; overflow: hidden; }
-  .map-placeholder iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; filter: grayscale(50%) contrast(0.85); }
-
-  /* SERVICES */
-  .services-section { background: var(--sand); padding: 6rem 3rem; }
-  .services-inner { max-width: 1280px; margin: 0 auto; }
-  .services-inner .section-h2 { color: var(--ink); }
-  .services-inner .section-tag { color: var(--terracotta); }
-  .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.5rem; margin-top: 3.5rem; }
-  .service-card { background: var(--white); padding: 2.5rem 2rem; position: relative; overflow: hidden; transition: transform 0.3s; }
-  .service-card:hover { transform: translateY(-4px); }
-  .service-card::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--terracotta); transform: scaleX(0); transform-origin: left; transition: transform 0.4s ease; }
-  .service-card:hover::before { transform: scaleX(1); }
-  .service-icon { font-size: 2rem; margin-bottom: 1.2rem; }
-  .service-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--ink); margin-bottom: 0.7rem; }
-  .service-desc { font-size: 0.85rem; color: #6b6355; line-height: 1.75; font-weight: 300; }
-
-  /* REVIEWS */
-  .reviews-section { background: #111008; padding: 6rem 3rem; }
-  .reviews-inner { max-width: 1280px; margin: 0 auto; }
-  .reviews-header { margin-bottom: 3rem; display: flex; justify-content: space-between; align-items: flex-end; }
-  .rating-overview { display: flex; align-items: center; gap: 2rem; }
-  .rating-big { font-family: 'Cormorant Garamond', serif; font-size: 4rem; font-weight: 300; color: var(--gold); line-height: 1; }
-  .rating-details { }
-  .rating-stars { color: var(--gold); font-size: 1rem; letter-spacing: 0.1em; }
-  .rating-count { font-size: 0.78rem; color: var(--mist); margin-top: 0.3rem; }
-  .reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
-  .review-card { background: rgba(255,255,255,0.04); padding: 2rem; border-top: 2px solid var(--terracotta); }
-  .review-stars { color: var(--gold); font-size: 0.8rem; margin-bottom: 0.8rem; }
-  .review-text { font-size: 0.85rem; color: rgba(245,240,232,0.7); line-height: 1.75; font-weight: 300; font-style: italic; margin-bottom: 1.2rem; }
-  .review-author { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mist); }
-
-  /* BOOKING CTA */
-  .booking-section { background: var(--terracotta); padding: 7rem 3rem; text-align: center; position: relative; overflow: hidden; }
-  .booking-section::before { content: 'BOOK'; position: absolute; font-family: 'Cormorant Garamond', serif; font-size: 28vw; font-weight: 300; color: rgba(255,255,255,0.06); top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; white-space: nowrap; }
-  .booking-section .section-h2 { color: var(--white); position: relative; }
-  .booking-section .section-tag { color: rgba(255,255,255,0.6); position: relative; }
-  .booking-text { font-size: 1rem; color: rgba(255,255,255,0.8); max-width: 540px; margin: 1.5rem auto 0; line-height: 1.75; font-weight: 300; position: relative; }
-  .booking-actions { margin-top: 2.8rem; display: flex; gap: 1rem; justify-content: center; position: relative; }
-  .btn-white { background: var(--white); color: var(--terracotta); padding: 1rem 2.8rem; text-decoration: none; font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; font-weight: 500; transition: transform 0.15s; display: inline-block; }
-  .btn-white:hover { transform: translateY(-2px); }
-  .btn-white-outline { border: 1.5px solid rgba(255,255,255,0.5); color: var(--white); padding: 1rem 2.8rem; text-decoration: none; font-size: 0.8rem; letter-spacing: 0.18em; text-transform: uppercase; transition: border-color 0.2s, background 0.2s; display: inline-block; }
-  .btn-white-outline:hover { border-color: var(--white); background: rgba(255,255,255,0.08); }
-  .discount-badge { display: inline-block; background: rgba(255,255,255,0.2); color: var(--white); font-size: 0.75rem; letter-spacing: 0.15em; padding: 0.4rem 1rem; margin-top: 1rem; position: relative; }
-
-  /* FOOTER */
-  footer { background: #0f0e0b; padding: 4rem 3rem 2.5rem; }
-  .footer-inner { max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 4rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(245,240,232,0.1); }
-  .footer-brand .nav-logo { font-size: 1.5rem; display: block; margin-bottom: 1rem; }
-  .footer-brand p { font-size: 0.83rem; line-height: 1.8; color: rgba(245,240,232,0.5); font-weight: 300; }
-  .footer-col h4 { font-size: 0.68rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 1.4rem; }
-  .footer-col ul { list-style: none; }
-  .footer-col li { margin-bottom: 0.7rem; }
-  .footer-col a { color: rgba(245,240,232,0.55); text-decoration: none; font-size: 0.84rem; transition: color 0.2s; font-weight: 300; }
-  .footer-col a:hover { color: var(--cream); }
-  .footer-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 2rem; font-size: 0.75rem; color: rgba(245,240,232,0.35); max-width: 1280px; margin: 0 auto; }
-
-  /* LIGHTBOX */
-  .lightbox { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(10,9,7,0.96); align-items: center; justify-content: center; }
-  .lightbox.open { display: flex; }
-  .lightbox img { max-width: 90vw; max-height: 88vh; object-fit: contain; }
-  .lightbox-close { position: absolute; top: 2rem; right: 2rem; color: var(--cream); font-size: 1.8rem; cursor: pointer; background: none; border: none; }
-  .lightbox-nav { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(245,240,232,0.1); border: none; color: var(--cream); font-size: 1.5rem; padding: 1rem; cursor: pointer; transition: background 0.2s; }
-  .lightbox-nav:hover { background: rgba(245,240,232,0.2); }
-  .lightbox-prev { left: 1.5rem; }
-  .lightbox-next { right: 1.5rem; }
-
-  @media (max-width: 900px) {
-    nav { padding: 1.2rem 1.5rem; }
-    .nav-links { display: none; }
-    section { padding: 4rem 1.5rem; }
-    .about { grid-template-columns: 1fr; gap: 3rem; }
-    .about-img-inset, .about-badge { display: none; }
-    .amenities-grid { grid-template-columns: repeat(2, 1fr); }
-    .services-grid, .reviews-grid { grid-template-columns: 1fr; }
-    .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
-    .gallery-item.tall { grid-row: auto; }
-    .gallery-item.wide { grid-column: auto; }
-    .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
-    .stats-bar { flex-wrap: wrap; }
-    .stat { min-width: 50%; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    .location-inner { grid-template-columns: 1fr; gap: 3rem; }
-    .hero-rating { display: none; }
-  }
+  :root { --ink:#1a1712; --cream:#f5f0e8; --sand:#e8dcc8; --terracotta:#c0714a; --jungle:#2d4a35; --gold:#b8943a; --mist:#8fa898; --white:#fefcf8; }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:'Outfit',sans-serif; background:var(--ink); color:var(--cream); overflow-x:hidden; }
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:1.4rem 3rem; background:linear-gradient(to bottom,rgba(26,23,18,0.9),transparent); transition:background 0.4s; }
+  nav.scrolled { background:rgba(26,23,18,0.96); backdrop-filter:blur(12px); }
+  .nav-logo { font-family:'Cormorant Garamond',serif; font-size:1.25rem; letter-spacing:0.12em; color:var(--gold); font-weight:300; text-transform:uppercase; text-decoration:none; }
+  .nav-links { display:flex; gap:2.5rem; list-style:none; }
+  .nav-links a { color:var(--cream); text-decoration:none; font-size:0.75rem; letter-spacing:0.18em; text-transform:uppercase; opacity:0.75; transition:opacity 0.2s, color 0.2s; }
+  .nav-links a:hover { opacity:1; color:var(--gold); }
+  .nav-cta { background:var(--terracotta)!important; color:var(--white)!important; padding:0.5rem 1.4rem; opacity:1!important; }
+  .nav-cta:hover { background:#a85e3a!important; }
+  .hero { position:relative; height:100vh; min-height:640px; display:flex; flex-direction:column; justify-content:flex-end; padding:6rem 3rem; overflow:hidden; }
+  .hero-bg { position:absolute; inset:0; background:linear-gradient(to top,rgba(26,23,18,1) 0%,rgba(26,23,18,0.3) 50%,rgba(26,23,18,0.1) 100%), url('https://a0.muscache.com/im/pictures/hosting/Hosting-1356233435162290805/original/ac28ce5c-b50a-43fa-9272-87271a366fa6.jpeg?im_w=1440') center/cover no-repeat; transform:scale(1.04); animation:heroScale 12s ease-out forwards; }
+  @keyframes heroScale { from{transform:scale(1.08)} to{transform:scale(1.0)} }
+  .hero-eyebrow { font-size:0.72rem; letter-spacing:0.32em; text-transform:uppercase; color:var(--gold); margin-bottom:1.2rem; opacity:0; animation:fadeUp 0.9s 0.3s ease forwards; }
+  .hero h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(3.5rem,8vw,7rem); font-weight:300; line-height:0.95; max-width:780px; opacity:0; animation:fadeUp 1s 0.5s ease forwards; }
+  .hero h1 em { font-style:italic; color:var(--gold); }
+  .hero-sub { margin-top:1.8rem; max-width:480px; font-size:0.92rem; font-weight:300; line-height:1.7; opacity:0; animation:fadeUp 1s 0.7s ease forwards; color:rgba(245,240,232,0.7); }
+  .hero-actions { display:flex; gap:1rem; margin-top:2.2rem; opacity:0; animation:fadeUp 1s 0.9s ease forwards; }
+  .hero-rating { position:absolute; top:50%; right:3rem; transform:translateY(-50%); text-align:center; opacity:0; animation:fadeIn 1s 1.2s ease forwards; }
+  .hero-rating-num { font-family:'Cormorant Garamond',serif; font-size:3.5rem; color:var(--gold); line-height:1; font-weight:300; }
+  .hero-rating-stars { font-size:0.85rem; color:var(--gold); letter-spacing:0.1em; margin:0.2rem 0; }
+  .hero-rating-label { font-size:0.62rem; letter-spacing:0.22em; text-transform:uppercase; color:var(--mist); }
+  .btn-primary { background:var(--terracotta); color:var(--white); padding:0.9rem 2.2rem; text-decoration:none; font-size:0.8rem; letter-spacing:0.18em; text-transform:uppercase; transition:background 0.2s,transform 0.15s; display:inline-block; }
+  .btn-primary:hover { background:#a85e3a; transform:translateY(-1px); }
+  .btn-outline { border:1px solid rgba(245,240,232,0.4); color:var(--cream); padding:0.9rem 2.2rem; text-decoration:none; font-size:0.8rem; letter-spacing:0.18em; text-transform:uppercase; transition:border-color 0.2s,background 0.2s; display:inline-block; }
+  .btn-outline:hover { border-color:var(--cream); background:rgba(245,240,232,0.05); }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .stats-bar { background:var(--jungle); display:flex; justify-content:center; }
+  .stat { flex:1; max-width:220px; text-align:center; padding:2rem 1.5rem; border-right:1px solid rgba(255,255,255,0.1); }
+  .stat:last-child { border-right:none; }
+  .stat-num { font-family:'Cormorant Garamond',serif; font-size:2.4rem; font-weight:300; color:var(--gold); line-height:1; }
+  .stat-label { font-size:0.7rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--mist); margin-top:0.4rem; }
+  section { padding:6rem 3rem; }
+  .section-tag { font-size:0.68rem; letter-spacing:0.35em; text-transform:uppercase; color:var(--terracotta); margin-bottom:1rem; }
+  .section-h2 { font-family:'Cormorant Garamond',serif; font-size:clamp(2.2rem,4.5vw,3.6rem); font-weight:300; line-height:1.1; color:var(--cream); }
+  .section-h2 em { font-style:italic; color:var(--gold); }
+  .about { background:var(--ink); display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:center; max-width:1280px; margin:0 auto; }
+  .about-text p { font-size:1rem; font-weight:300; line-height:1.85; color:rgba(245,240,232,0.75); margin-top:1.5rem; }
+  .about-visual { position:relative; }
+  .about-img-main { width:100%; aspect-ratio:3/4; object-fit:cover; display:block; }
+  .about-img-inset { position:absolute; bottom:-2.5rem; left:-2.5rem; width:55%; aspect-ratio:1; object-fit:cover; border:6px solid var(--ink); }
+  .about-badge { position:absolute; top:2rem; right:-2rem; width:90px; height:90px; background:var(--jungle); border-radius:50%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--white); line-height:1.5; }
+  .gallery-section { background:#111008; padding:5rem 0; }
+  .gallery-header { padding:0 3rem 3rem; display:flex; justify-content:space-between; align-items:flex-end; }
+  .gallery-grid { display:grid; grid-template-columns:1.6fr 1fr 1fr; grid-template-rows:360px 260px; gap:6px; padding:0 3rem; }
+  .gallery-item { overflow:hidden; position:relative; cursor:pointer; }
+  .gallery-item img { width:100%; height:100%; object-fit:cover; transition:transform 0.6s ease; display:block; }
+  .gallery-item:hover img { transform:scale(1.05); }
+  .gallery-item.tall { grid-row:1/3; }
+  .gallery-item.wide { grid-column:2/4; }
+  .gallery-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(26,23,18,0.5),transparent); opacity:0; transition:opacity 0.4s; }
+  .gallery-item:hover .gallery-overlay { opacity:1; }
+  .amenities-section { background:var(--jungle); padding:6rem 3rem; }
+  .amenities-inner { max-width:1280px; margin:0 auto; }
+  .amenities-header { margin-bottom:4rem; }
+  .amenities-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:0; border-right:1px solid rgba(255,255,255,0.15); border-bottom:1px solid rgba(255,255,255,0.15); }
+  .amenity-card { padding:2.5rem 2rem; border-top:1px solid rgba(255,255,255,0.15); border-left:1px solid rgba(255,255,255,0.15); transition:background 0.3s; }
+  .amenity-card:hover { background:rgba(255,255,255,0.04); }
+  .amenity-icon { font-size:1.8rem; margin-bottom:1rem; }
+  .amenity-name { font-size:0.9rem; font-weight:500; letter-spacing:0.05em; color:var(--cream); margin-bottom:0.4rem; }
+  .amenity-desc { font-size:0.8rem; color:var(--mist); line-height:1.6; font-weight:300; }
+  .location-section { background:var(--ink); padding:6rem 3rem; }
+  .location-inner { max-width:1280px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:5rem; align-items:start; }
+  .location-places { margin-top:2.5rem; }
+  .place-row { display:flex; align-items:center; justify-content:space-between; padding:1.1rem 0; border-bottom:1px solid rgba(245,240,232,0.1); }
+  .place-name { font-size:0.9rem; color:var(--cream); }
+  .place-dist { font-size:0.78rem; color:var(--gold); font-weight:300; }
+  .map-placeholder { aspect-ratio:4/3; position:relative; overflow:hidden; }
+  .map-placeholder iframe { position:absolute; inset:0; width:100%; height:100%; border:none; filter:grayscale(50%) contrast(0.85); }
+  .services-section { background:var(--sand); padding:6rem 3rem; }
+  .services-inner { max-width:1280px; margin:0 auto; }
+  .services-inner .section-h2 { color:var(--ink); }
+  .services-inner .section-tag { color:var(--terracotta); }
+  .services-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2.5rem; margin-top:3.5rem; }
+  .service-card { background:var(--white); padding:2.5rem 2rem; position:relative; overflow:hidden; transition:transform 0.3s; }
+  .service-card:hover { transform:translateY(-4px); }
+  .service-card::before { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:var(--terracotta); transform:scaleX(0); transform-origin:left; transition:transform 0.4s ease; }
+  .service-card:hover::before { transform:scaleX(1); }
+  .service-icon { font-size:2rem; margin-bottom:1.2rem; }
+  .service-title { font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--ink); margin-bottom:0.7rem; }
+  .service-desc { font-size:0.85rem; color:#6b6355; line-height:1.75; font-weight:300; }
+  .reviews-section { background:#111008; padding:6rem 3rem; }
+  .reviews-inner { max-width:1280px; margin:0 auto; }
+  .reviews-header { margin-bottom:3rem; display:flex; justify-content:space-between; align-items:flex-end; }
+  .rating-big { font-family:'Cormorant Garamond',serif; font-size:4rem; font-weight:300; color:var(--gold); line-height:1; }
+  .rating-stars { color:var(--gold); font-size:1rem; letter-spacing:0.1em; }
+  .rating-count { font-size:0.78rem; color:var(--mist); margin-top:0.3rem; }
+  .reviews-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2rem; }
+  .review-card { background:rgba(255,255,255,0.04); padding:2rem; border-top:2px solid var(--terracotta); }
+  .review-stars { color:var(--gold); font-size:0.8rem; margin-bottom:0.8rem; }
+  .review-text { font-size:0.85rem; color:rgba(245,240,232,0.7); line-height:1.75; font-weight:300; font-style:italic; margin-bottom:1.2rem; }
+  .review-author { font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--mist); }
+  .booking-section { background:var(--terracotta); padding:7rem 3rem; text-align:center; position:relative; overflow:hidden; }
+  .booking-section::before { content:'BOOK'; position:absolute; font-family:'Cormorant Garamond',serif; font-size:28vw; font-weight:300; color:rgba(255,255,255,0.06); top:50%; left:50%; transform:translate(-50%,-50%); pointer-events:none; white-space:nowrap; }
+  .booking-section .section-h2 { color:var(--white); position:relative; }
+  .booking-section .section-tag { color:rgba(255,255,255,0.6); position:relative; }
+  .booking-text { font-size:1rem; color:rgba(255,255,255,0.8); max-width:540px; margin:1.5rem auto 0; line-height:1.75; font-weight:300; position:relative; }
+  .booking-actions { margin-top:2.8rem; display:flex; gap:1rem; justify-content:center; position:relative; }
+  .discount-badge { display:inline-block; background:rgba(255,255,255,0.2); color:var(--white); font-size:0.75rem; letter-spacing:0.15em; padding:0.4rem 1rem; margin-top:1rem; position:relative; }
+  .btn-white { background:var(--white); color:var(--terracotta); padding:1rem 2.8rem; text-decoration:none; font-size:0.8rem; letter-spacing:0.18em; text-transform:uppercase; font-weight:500; transition:transform 0.15s; display:inline-block; }
+  .btn-white:hover { transform:translateY(-2px); }
+  .btn-white-outline { border:1.5px solid rgba(255,255,255,0.5); color:var(--white); padding:1rem 2.8rem; text-decoration:none; font-size:0.8rem; letter-spacing:0.18em; text-transform:uppercase; transition:border-color 0.2s,background 0.2s; display:inline-block; }
+  .btn-white-outline:hover { border-color:var(--white); background:rgba(255,255,255,0.08); }
+  footer { background:#0f0e0b; padding:4rem 3rem 2.5rem; }
+  .footer-inner { max-width:1280px; margin:0 auto; display:grid; grid-template-columns:2fr 1fr 1fr; gap:4rem; padding-bottom:3rem; border-bottom:1px solid rgba(245,240,232,0.1); }
+  .footer-brand .nav-logo { font-size:1.5rem; display:block; margin-bottom:1rem; }
+  .footer-brand p { font-size:0.83rem; line-height:1.8; color:rgba(245,240,232,0.5); font-weight:300; }
+  .footer-col h4 { font-size:0.68rem; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:1.4rem; }
+  .footer-col ul { list-style:none; }
+  .footer-col li { margin-bottom:0.7rem; }
+  .footer-col a { color:rgba(245,240,232,0.55); text-decoration:none; font-size:0.84rem; transition:color 0.2s; font-weight:300; }
+  .footer-col a:hover { color:var(--cream); }
+  .footer-bottom { display:flex; justify-content:space-between; align-items:center; padding-top:2rem; font-size:0.75rem; color:rgba(245,240,232,0.35); max-width:1280px; margin:0 auto; }
+  .lightbox { display:none; position:fixed; inset:0; z-index:999; background:rgba(10,9,7,0.96); align-items:center; justify-content:center; }
+  .lightbox.open { display:flex; }
+  .lightbox img { max-width:90vw; max-height:88vh; object-fit:contain; }
+  .lightbox-close { position:absolute; top:2rem; right:2rem; color:var(--cream); font-size:1.8rem; cursor:pointer; background:none; border:none; }
+  .lightbox-nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(245,240,232,0.1); border:none; color:var(--cream); font-size:1.5rem; padding:1rem; cursor:pointer; }
+  .lightbox-nav:hover { background:rgba(245,240,232,0.2); }
+  .lightbox-prev { left:1.5rem; }
+  .lightbox-next { right:1.5rem; }
+  @media(max-width:900px){nav{padding:1.2rem 1.5rem}.nav-links{display:none}section{padding:4rem 1.5rem}.about{grid-template-columns:1fr;gap:3rem}.about-img-inset,.about-badge{display:none}.amenities-grid{grid-template-columns:repeat(2,1fr)}.services-grid,.reviews-grid{grid-template-columns:1fr}.gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}.gallery-item.tall{grid-row:auto}.gallery-item.wide{grid-column:auto}.footer-inner{grid-template-columns:1fr;gap:2rem}.stats-bar{flex-wrap:wrap}.stat{min-width:50%;border-right:none;border-bottom:1px solid rgba(255,255,255,0.1)}.location-inner{grid-template-columns:1fr;gap:3rem}.hero-rating{display:none}}
 
   /* ── AVAILABILITY CALENDAR ── */
   .cal-wrapper { margin-bottom: 1rem; }
@@ -315,7 +245,6 @@
 </style>
 </head>
 <body>
-
 <nav id="navbar">
   <a href="avani-bali-villas.html" class="nav-logo">Avani Bali Villas</a>
   <ul class="nav-links">
@@ -328,110 +257,105 @@
   </ul>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
   <div class="hero-bg"></div>
   <div class="hero-eyebrow">Avani Bali Villas &nbsp;·&nbsp; Ubud, Bali, Indonesia</div>
-  <h1><em>Geya</em><br>Villa</h1>
-  <p class="hero-sub">A brand new 3-bedroom tropical paradise in the heart of Ubud — where Balinese charm meets contemporary design, surrounded by lush green serenity.</p>
+  <h1><em>Bellis</em><br>68</h1>
+  <p class="hero-sub">A stunning 3-bedroom retreat with breathtaking ricefield and jungle views — where traditional Balinese architecture meets modern luxury in the heart of Ubud.</p>
   <div class="hero-actions">
     <a href="#booking" class="btn-primary">Book Direct — Save 5%</a>
-    <a href="https://www.airbnb.com/rooms/1526553003171178696" target="_blank" class="btn-outline">View on Airbnb</a>
+    <a href="https://www.airbnb.com/rooms/1356233435162290805" target="_blank" class="btn-outline">View on Airbnb</a>
   </div>
   <div class="hero-rating">
-    <div class="hero-rating-num">5.0</div>
+    <div class="hero-rating-num">4.88</div>
     <div class="hero-rating-stars">★★★★★</div>
-    <div class="hero-rating-label">14 reviews</div>
-    <div class="hero-rating-label" style="margin-top:0.4rem;color:var(--terracotta)">Guest Favourite</div>
+    <div class="hero-rating-label">33 reviews</div>
+    <div class="hero-rating-label" style="margin-top:0.4rem;color:var(--terracotta)">Superhost</div>
   </div>
 </section>
 
-<!-- STATS BAR -->
 <div class="stats-bar">
   <div class="stat"><div class="stat-num">3</div><div class="stat-label">Bedrooms</div></div>
   <div class="stat"><div class="stat-num">6</div><div class="stat-label">Max Guests</div></div>
   <div class="stat"><div class="stat-num">3.5</div><div class="stat-label">Bathrooms</div></div>
-  <div class="stat"><div class="stat-num">5.0</div><div class="stat-label">Rating</div></div>
+  <div class="stat"><div class="stat-num">4.88</div><div class="stat-label">Rating</div></div>
   <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Pool Access</div></div>
 </div>
 
-<!-- ABOUT -->
 <section id="about">
   <div class="about">
     <div class="about-text">
       <div class="section-tag">The Villa</div>
-      <h2 class="section-h2">Tropical <em>Paradise</em><br>Meets Modern Comfort</h2>
-      <p>Welcome to Geya Villa — a brand new 3-bedroom retreat nestled in the heart of Ubud. Surrounded by tropical greenery, this private escape seamlessly blends contemporary style with authentic Balinese charm.</p>
-      <p>The villa features a harmonious blend of design and natural elements creating a calming atmosphere from the moment you arrive. Each bedroom has its own unique character, with soft lighting, inviting décor, and large glass doors that open directly to the garden — allowing nature to be part of your stay.</p>
-      <p>Unwind by the private pool framed by lush foliage, share a meal in the open-air dining space, or simply soak in the peaceful atmosphere that makes Ubud so uniquely magical. Rated a perfect 5.0 stars across all categories by guests.</p>
+      <h2 class="section-h2">Rice Fields &amp; <em>Jungle Views</em><br>from Every Window</h2>
+      <p>Escape to Bellis 68 — an enchanting Balinese villa nestled in the heart of Ubud with breathtaking views of rice fields and lush jungle. This 3-bedroom retreat perfectly blends modern luxury with traditional Balinese architecture and warm hospitality.</p>
+      <p>Step outside and discover your private paradise. The outdoor space is surrounded by lush greenery, providing a peaceful backdrop at all hours. The open-concept living space seamlessly connects indoors and outdoors, with al fresco dining overlooking the stunning rice paddies.</p>
+      <p>The master suite features a generous layout with a tranquil sanctuary feel, while the second bedroom is equipped with a luxurious bathtub — perfect for unwinding after a day of exploring Ubud. Just 2.5km from Locavore NXT, one of Asia's 50 best restaurants.</p>
     </div>
     <div class="about-visual">
-      <img class="about-img-main" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/49967d31-2269-4bc2-9ae4-d76c3041f35d.png?im_w=1440" alt="Geya Villa interior">
-      <img class="about-img-inset" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/e393a1e0-bad6-4fcd-8adb-729614f3d411.jpeg?im_w=720" alt="Geya Villa pool">
-      <div class="about-badge">Guest<br>Fav.<br>★5.0</div>
+      <img class="about-img-main" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1356233435162290805/original/a40f7df4-131b-4bbb-af23-9bc03434e2b1.jpeg?im_w=1440" alt="Bellis 68 ricefield view">
+      <img class="about-img-inset" src="https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM1NjIzMzQzNTE2MjI5MDgwNQ==/original/7982d07e-6983-480d-9751-263a3ad4dec9.jpeg?im_w=720" alt="Bellis 68 pool">
+      <div class="about-badge">Rice<br>Field<br>Views</div>
     </div>
   </div>
 </section>
 
-<!-- GALLERY -->
 <div class="gallery-section" id="gallery">
   <div class="gallery-header">
     <div>
       <div class="section-tag">Gallery</div>
-      <h2 class="section-h2">Every Corner,<br><em>Pure Bali</em></h2>
+      <h2 class="section-h2">Jungle, Rice &amp;<br><em>Pure Luxury</em></h2>
     </div>
-    <a href="https://www.airbnb.com/rooms/1526553003171178696" target="_blank" class="btn-outline" style="font-size:0.75rem;padding:0.7rem 1.6rem">View All Photos</a>
+    <a href="https://www.airbnb.com/rooms/1356233435162290805" target="_blank" class="btn-outline" style="font-size:0.75rem;padding:0.7rem 1.6rem">View All Photos</a>
   </div>
   <div class="gallery-grid">
     <div class="gallery-item tall" onclick="openLightbox(0)">
-      <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/3fe77d25-55a8-463d-9764-84fa17eaf9d6.jpeg?im_w=1440" alt="Geya exterior">
+      <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1356233435162290805/original/ac28ce5c-b50a-43fa-9272-87271a366fa6.jpeg?im_w=1440" alt="Bellis exterior">
       <div class="gallery-overlay"></div>
     </div>
     <div class="gallery-item" onclick="openLightbox(1)">
-      <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/960863c2-e85c-4df8-93ec-35ac72848f40.jpeg?im_w=720" alt="Geya living">
+      <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1356233435162290805/original/a40f7df4-131b-4bbb-af23-9bc03434e2b1.jpeg?im_w=720" alt="Ricefield view">
       <div class="gallery-overlay"></div>
     </div>
     <div class="gallery-item" onclick="openLightbox(2)">
-      <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/e0fc4582-e562-46a3-a743-63b0293b526b.jpeg?im_w=720" alt="Geya pool">
+      <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM1NjIzMzQzNTE2MjI5MDgwNQ==/original/7982d07e-6983-480d-9751-263a3ad4dec9.jpeg?im_w=720" alt="Pool">
       <div class="gallery-overlay"></div>
     </div>
     <div class="gallery-item wide" onclick="openLightbox(3)">
-      <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1526553003171178696/original/f312d15f-49a5-4a19-8d77-6173717eba7d.png?im_w=1440" alt="Geya bedroom">
+      <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM1NjIzMzQzNTE2MjI5MDgwNQ==/original/a5a8bf33-81ca-4db7-b715-eea4c7c8df88.jpeg?im_w=1440" alt="Interior">
       <div class="gallery-overlay"></div>
     </div>
   </div>
 </div>
 
-<!-- AMENITIES -->
 <section class="amenities-section" id="amenities">
   <div class="amenities-inner">
     <div class="amenities-header">
       <div class="section-tag">What's Included</div>
-      <h2 class="section-h2">Everything You Need,<br><em>Nothing You Don't</em></h2>
+      <h2 class="section-h2">Luxury <em>Thoughtfully</em><br>Curated</h2>
     </div>
     <div class="amenities-grid">
-      <div class="amenity-card"><div class="amenity-icon">🏊</div><div class="amenity-name">Private Pool</div><div class="amenity-desc">Exclusive pool framed by tropical landscaping — all yours.</div></div>
-      <div class="amenity-card"><div class="amenity-icon">🛎️</div><div class="amenity-name">Personal Butler</div><div class="amenity-desc">Villa staff available on-call for every need during your stay.</div></div>
-      <div class="amenity-card"><div class="amenity-icon">🧹</div><div class="amenity-name">Daily Housekeeping</div><div class="amenity-desc">Daily cleaning plus garden and pool maintenance included.</div></div>
-      <div class="amenity-card"><div class="amenity-icon">🍳</div><div class="amenity-name">Full Kitchen</div><div class="amenity-desc">Fully equipped modern kitchen for cooking and dining together.</div></div>
-      <div class="amenity-card"><div class="amenity-icon">📶</div><div class="amenity-name">High-Speed WiFi</div><div class="amenity-desc">Fast WiFi and a dedicated workspace for remote work.</div></div>
-      <div class="amenity-card"><div class="amenity-icon">🚗</div><div class="amenity-name">Free Parking</div><div class="amenity-desc">Private parking for up to two medium-sized cars.</div></div>
-      <div class="amenity-card"><div class="amenity-icon">🛏️</div><div class="amenity-name">3 King Bedrooms</div><div class="amenity-desc">Each bedroom opens to the garden through large glass doors.</div></div>
-      <div class="amenity-card"><div class="amenity-icon">🔓</div><div class="amenity-name">Self Check-In</div><div class="amenity-desc">Flexible check-in with building staff — arrive on your schedule.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">🌾</div><div class="amenity-name">Ricefield Views</div><div class="amenity-desc">Sweeping views of Ubud's iconic rice paddies from the villa and dining area.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">🏊</div><div class="amenity-name">Private Pool</div><div class="amenity-desc">A tranquil private pool framed by lush tropical gardens.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">🛁</div><div class="amenity-name">Luxury Bathtub</div><div class="amenity-desc">Bedroom 2 features a gorgeous bathtub for the ultimate unwind.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">🛎️</div><div class="amenity-name">Personal Butler</div><div class="amenity-desc">Dedicated villa staff on-call throughout your stay.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">🧹</div><div class="amenity-name">Daily Housekeeping</div><div class="amenity-desc">Daily cleaning, garden and pool maintenance included.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">🍳</div><div class="amenity-name">Full Kitchen</div><div class="amenity-desc">Fully equipped kitchen with al fresco dining overlooking rice fields.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">📶</div><div class="amenity-name">High-Speed WiFi</div><div class="amenity-desc">Fast reliable WiFi and dedicated workspace for remote work.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">🚗</div><div class="amenity-name">Free Parking</div><div class="amenity-desc">Private parking available on premises for your vehicle.</div></div>
     </div>
   </div>
 </section>
 
-<!-- LOCATION -->
 <section class="location-section" id="location">
   <div class="location-inner">
     <div>
       <div class="section-tag">Location</div>
-      <h2 class="section-h2">The Heart<br>of <em>Ubud</em></h2>
+      <h2 class="section-h2">Kecamatan Ubud,<br><em>Bali's Cultural Soul</em></h2>
       <div class="location-places">
-        <div class="place-row"><span class="place-name">Titik Batu Ubud Club</span><span class="place-dist">2.8 km · 5 min</span></div>
-        <div class="place-row"><span class="place-name">Pison Ubud</span><span class="place-dist">5.4 km · 10 min</span></div>
-        <div class="place-row"><span class="place-name">Monkey Forest Ubud</span><span class="place-dist">9 km · 12 min</span></div>
+        <div class="place-row"><span class="place-name">Locavore NXT (Asia Top 50)</span><span class="place-dist">2.5 km · 5 min</span></div>
+        <div class="place-row"><span class="place-name">Titik Batu Ubud Club</span><span class="place-dist">2.8 km · 7 min</span></div>
+        <div class="place-row"><span class="place-name">Pison Ubud</span><span class="place-dist">5.4 km · 14 min</span></div>
+        <div class="place-row"><span class="place-name">Monkey Forest Ubud</span><span class="place-dist">9 km · 15 min</span></div>
         <div class="place-row"><span class="place-name">Ngurah Rai International Airport</span><span class="place-dist">35 km · 70 min</span></div>
       </div>
     </div>
@@ -441,39 +365,37 @@
   </div>
 </section>
 
-<!-- SERVICES -->
 <section class="services-section" id="services">
   <div class="services-inner">
     <div class="section-tag">Guest Services</div>
     <h2 class="section-h2">Beyond the Stay</h2>
     <div class="services-grid">
-      <div class="service-card"><div class="service-icon">✈️</div><div class="service-title">Airport Transfers</div><div class="service-desc">Arrive and depart in comfort with private airport transfers from Ngurah Rai International Airport. Book in advance for a seamless journey.</div></div>
-      <div class="service-card"><div class="service-icon">🗺️</div><div class="service-title">Sightseeing Trips</div><div class="service-desc">Explore Ubud's temples, rice terraces, and cultural landmarks with our arranged sightseeing excursions.</div></div>
-      <div class="service-card"><div class="service-icon">🍽️</div><div class="service-title">Food & Beverage</div><div class="service-desc">Grocery sourcing and in-villa catering available at an additional service charge. Wake up to a fully stocked kitchen.</div></div>
+      <div class="service-card"><div class="service-icon">✈️</div><div class="service-title">Airport Transfers</div><div class="service-desc">Private transfers from Ngurah Rai International Airport arranged on request. Start and end your holiday in comfort.</div></div>
+      <div class="service-card"><div class="service-icon">🗺️</div><div class="service-title">Sightseeing Trips</div><div class="service-desc">Discover Ubud's temples, terraces, and cultural gems with our personalised sightseeing arrangements.</div></div>
+      <div class="service-card"><div class="service-icon">🍽️</div><div class="service-title">Food & Beverage</div><div class="service-desc">Ingredient sourcing and in-villa catering available. Wake up to a fully stocked kitchen ready for you.</div></div>
     </div>
   </div>
 </section>
 
-<!-- REVIEWS -->
 <section class="reviews-section" id="reviews">
   <div class="reviews-inner">
     <div class="reviews-header">
       <div>
         <div class="section-tag">Guest Reviews</div>
-        <h2 class="section-h2" style="color:var(--cream)">What Guests <em>Say</em></h2>
+        <h2 class="section-h2" style="color:var(--cream)">Loved by <em>Guests</em></h2>
       </div>
-      <div class="rating-overview">
-        <div class="rating-big">5.0</div>
-        <div class="rating-details">
+      <div style="display:flex;align-items:center;gap:2rem">
+        <div class="rating-big">4.88</div>
+        <div>
           <div class="rating-stars">★★★★★</div>
-          <div class="rating-count">14 reviews · Guest Favourite</div>
+          <div class="rating-count">33 reviews · Superhost</div>
         </div>
       </div>
     </div>
     <div class="reviews-grid">
-      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">"Absolutely stunning villa. The pool was perfect, the staff were incredibly helpful, and the surroundings are so peaceful. We didn't want to leave."</div><div class="review-author">Airbnb Guest</div></div>
-      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">"Brand new, spotlessly clean, and beautifully designed. The open-air dining area and pool made every evening magical. Highly recommend."</div><div class="review-author">Airbnb Guest</div></div>
-      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">"The perfect Ubud escape. Lush greenery, a gorgeous private pool, and impeccable hospitality from the team. We'll definitely be back."</div><div class="review-author">Airbnb Guest</div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">"The ricefield views are absolutely breathtaking — we had breakfast every morning watching the sunrise over the paddies. The pool, the staff, everything was perfect."</div><div class="review-author">Airbnb Guest</div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">"Beautiful Balinese architecture with all the modern comforts. The second bedroom bathtub was a highlight! Staff were responsive and incredibly hospitable."</div><div class="review-author">Airbnb Guest</div></div>
+      <div class="review-card"><div class="review-stars">★★★★</div><div class="review-text">"Stunning villa in a serene location. The open-plan living space opening to the gardens is magical, especially in the evenings. Would definitely come back."</div><div class="review-author">Airbnb Guest</div></div>
     </div>
   </div>
 </section>
@@ -486,7 +408,7 @@
     <p>Select your dates to check live availability and book directly — saving 5% compared to Airbnb. Your host team confirms within 24 hours.</p>
     <p>Check-in after 3:00 PM &nbsp;·&nbsp; Check-out before 12:00 PM &nbsp;·&nbsp; Up to 6 guests</p>
     <p style="margin-top:1.5rem;font-size:0.85rem">
-      📧 <a href="mailto:psaidu@gmail.com" style="color:var(--terracotta)">psaidu@gmail.com</a>&nbsp;&nbsp;
+      📧 <a href="/cdn-cgi/l/email-protection#ed9d9e8c848998cbcedbd9d68a808c8481c38e8280" style="color:var(--terracotta)">psaidu&#64;gmail.com</a>&nbsp;&nbsp;
       📱 <a href="https://wa.me/14693460620" style="color:var(--terracotta)">+1 469 346 0620</a>
     </p>
   </div>
@@ -501,11 +423,10 @@
     <div class="booking-panel" id="bp-direct">
       <div id="b-form">
         <div class="booking-price-row">
-          <span class="booking-price-big">From $250 <span>/ night</span></span>
+          <span class="booking-price-big">From $260 <span>/ night</span></span>
         </div>
         <div class="booking-discount-tag">🎉 Save 5% booking direct</div>
 
-        <!-- CALENDAR -->
         <div class="cal-wrapper">
           <div id="cal-status" class="cal-status">Loading availability...</div>
           <div class="cal-two-months">
@@ -522,7 +443,6 @@
           </div>
         </div>
 
-        <!-- BOOKING FORM -->
         <div id="b-summary" class="b-summary" style="display:none">
           <div class="b-summary-row"><span id="b-nights"></span><span id="b-sub"></span></div>
           <div class="b-summary-row disc"><span>5% direct discount</span><span id="b-disc"></span></div>
@@ -569,34 +489,29 @@
         <p style="font-size:0.68rem;color:#bbb;text-align:center;margin-top:0.5rem;line-height:1.5">Confirmed within 24 hours by email &amp; WhatsApp</p>
       </div>
 
-      <!-- CONFIRMATION -->
       <div class="b-confirm" id="b-confirm">
         <div style="font-size:2.2rem;margin-bottom:0.5rem">🌴</div>
         <h4>Booking Request Sent!</h4>
         <p style="font-size:0.83rem;color:#888;line-height:1.7;margin-bottom:0.8rem">We'll confirm within <strong>24 hours</strong> via email &amp; WhatsApp.</p>
         <div class="b-confirm-detail" id="b-conf-detail"></div>
-        <p style="font-size:0.82rem">📱 <a href="https://wa.me/14693460620" style="color:var(--terracotta)">WhatsApp</a> &nbsp;|&nbsp; 📧 <a href="mailto:psaidu@gmail.com" style="color:var(--terracotta)">psaidu@gmail.com</a></p>
+        <p style="font-size:0.82rem">📱 <a href="https://wa.me/14693460620" style="color:var(--terracotta)">WhatsApp</a> &nbsp;|&nbsp; 📧 <a href="/cdn-cgi/l/email-protection#10606371797465363326242b777d71797c3e737f7d" style="color:var(--terracotta)">psaidu&#64;gmail.com</a></p>
       </div>
     </div>
 
-    <!-- AIRBNB PANEL -->
     <div class="booking-panel" id="bp-airbnb" style="display:none">
       <p style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;text-align:center;margin-bottom:0.5rem">Book on Airbnb</p>
       <p style="font-size:0.82rem;color:#888;line-height:1.65;text-align:center">Prefer Airbnb's secure payment platform? Book there — but remember, booking direct saves you 5%.</p>
-      <a href="https://www.airbnb.com/rooms/1526553003171178696" target="_blank" class="airbnb-btn-red">View &amp; Book on Airbnb</a>
+      <a href="https://www.airbnb.com/rooms/1356233435162290805" target="_blank" class="airbnb-btn-red">View &amp; Book on Airbnb</a>
     </div>
   </div>
 </div>
 
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">
       <a href="avani-bali-villas.html" class="nav-logo">Avani Bali Villas</a>
-      <p>Four private pool villas in the heart of Ubud, Bali. Each stay is personal, each villa is unique. Managed with care by Prashanth and the team.</p>
-      <p style="margin-top:1rem">📧 <a href="mailto:psaidu@gmail.com" style="color:var(--terracotta)">psaidu@gmail.com</a></p>
-      <p>📱 <a href="https://wa.me/14693460620" style="color:var(--gold);text-decoration:none">WhatsApp: +1 469 346 0620</a></p>
+      <p>Four private pool villas in the heart of Ubud, Bali. Each stay is personal, each villa is unique.</p>
     </div>
     <div class="footer-col">
       <h4>Our Villas</h4>
@@ -611,18 +526,17 @@
       <h4>Book</h4>
       <ul>
         <li><a href="avani-bali-villas.html">Book Direct (5% off)</a></li>
-        <li><a href="https://www.airbnb.com/rooms/1526553003171178696" target="_blank">Geya on Airbnb</a></li>
-        <li><a href="https://www.airbnb.com/contact_host/1526553003171178696/send_message" target="_blank">Message Host</a></li>
+        <li><a href="https://www.airbnb.com/rooms/1356233435162290805" target="_blank">Bellis on Airbnb</a></li>
+        <li><a href="https://www.airbnb.com/contact_host/1356233435162290805/send_message" target="_blank">Message Host</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
     <span>© 2025 Avani Bali Villas · Ubud, Bali, Indonesia</span>
-    <span>Geya Villa · Hosted by Vida &amp; Prashanth</span>
+    <span>Bellis 68 · Hosted by Vida &amp; Prashanth</span>
   </div>
 </footer>
 
-<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
   <button class="lightbox-nav lightbox-prev" onclick="changeImg(-1)">‹</button>
@@ -630,190 +544,19 @@
   <button class="lightbox-nav lightbox-next" onclick="changeImg(1)">›</button>
 </div>
 <script>
-  // NAV SCROLL
-  const navbar = document.getElementById('navbar');
-  window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 60));
-
-  // LIGHTBOX
-  const lbImages = Array.from(document.querySelectorAll('.gallery-item img')).map(i => i.src.replace('im_w=720','im_w=1440'));
-  let lbCur = 0;
-  function openLightbox(i) { lbCur=i; document.getElementById('lightbox-img').src=lbImages[i]; document.getElementById('lightbox').classList.add('open'); document.body.style.overflow='hidden'; }
-  function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); document.body.style.overflow=''; }
-  function changeImg(d) { lbCur=(lbCur+d+lbImages.length)%lbImages.length; document.getElementById('lightbox-img').src=lbImages[lbCur]; }
-  document.getElementById('lightbox').addEventListener('click', e => { if(e.target===document.getElementById('lightbox')) closeLightbox(); });
-  document.addEventListener('keydown', e => { if(e.key==='Escape') closeLightbox(); if(e.key==='ArrowRight') changeImg(1); if(e.key==='ArrowLeft') changeImg(-1); });
-
-  // SCROLL REVEAL
-  const obs = new IntersectionObserver(entries => entries.forEach(e => {
-    if(e.isIntersecting){ e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; }
-  }), {threshold:0.1});
-  document.querySelectorAll('.amenity-card,.service-card,.place-row,.review-card').forEach(el => {
-    el.style.opacity='0'; el.style.transform='translateY(20px)';
-    el.style.transition='opacity 0.6s ease, transform 0.6s ease';
-    obs.observe(el);
-  });
-
-  // ══ CALENDAR + BOOKING ══
-  const BASE_PRICE = 250;
-  let blockedDates = new Set();
-  let checkIn = null, checkOut = null;
-  let viewYear = null, viewMonth = null;
-  let payMethod = 'card';
-
-  function parseIcal(text) {
-    const b = new Set();
-    const lines = text.replace(/\r\n /g,'').replace(/\r\n\t/g,'').split(/\r?\n/);
-    let inEv=false, ds='', de='';
-    for (const ln of lines) {
-      if (ln==='BEGIN:VEVENT') { inEv=true; ds=''; de=''; }
-      if (!inEv) continue;
-      if (ln.startsWith('DTSTART')) ds=ln.split(':').pop().trim().substring(0,8);
-      if (ln.startsWith('DTEND'))   de=ln.split(':').pop().trim().substring(0,8);
-      if (ln==='END:VEVENT' && ds && de) {
-        let d=new Date(ds.substring(0,4)+'-'+ds.substring(4,6)+'-'+ds.substring(6,8)+'T00:00:00');
-        const end=new Date(de.substring(0,4)+'-'+de.substring(4,6)+'-'+de.substring(6,8)+'T00:00:00');
-        while(d<end){ b.add(d.toISOString().split('T')[0]); d.setDate(d.getDate()+1); }
-        inEv=false;
-      }
-    }
-    return b;
-  }
-
-  async function initCalendar() {
-    const st = document.getElementById('cal-status');
-    if (!st) { console.error('cal-status not found'); return; }
-    st.textContent='Loading availability...'; st.className='cal-status loading';
-    try {
-      const r = await fetch('/.netlify/functions/ical?villa=geya');
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      const text = await r.text();
-      blockedDates = parseIcal(text);
-      st.textContent='✓ Availability loaded — select your check-in date';
-      st.className='cal-status';
-    } catch(e) {
-      console.error('iCal error:', e);
-      st.textContent='Could not load live availability — please contact us to check dates';
-      st.className='cal-status error';
-    }
-    renderCal();
-  }
-
-  function dStr(y,m,d) { return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'); }
-
-  function renderCal() {
-    const today=new Date(); today.setHours(0,0,0,0);
-    if (!viewYear) { viewYear=today.getFullYear(); viewMonth=today.getMonth(); }
-    for (let s=0;s<2;s++) {
-      let y=viewYear, m=viewMonth+s;
-      if (m>11) { m-=12; y++; }
-      renderMonth(y,m,s,today);
-    }
-  }
-
-  function renderMonth(yr,mo,slot,today) {
-    const el=document.getElementById('cal-m'+slot);
-    if (!el) return;
-    const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
-    const DOW=['Su','Mo','Tu','We','Th','Fr','Sa'];
-    const fd=new Date(yr,mo,1).getDay(), dim=new Date(yr,mo+1,0).getDate();
-    let h='<div class="cal-nav">';
-    h+=slot===0?'<button onclick="shiftCal(-1)">&#8249;</button>':'<div></div>';
-    h+='<div class="cal-month-label">'+MN[mo]+' '+yr+'</div>';
-    h+=slot===1?'<button onclick="shiftCal(1)">&#8250;</button>':'<div></div>';
-    h+='</div><div class="cal-grid">';
-    DOW.forEach(d=>{ h+='<div class="cal-dow">'+d+'</div>'; });
-    for (let i=0;i<fd;i++) h+='<div class="cal-day cal-empty"></div>';
-    for (let d=1;d<=dim;d++) {
-      const ds=dStr(yr,mo,d), dt=new Date(ds+'T00:00:00');
-      let c='cal-day';
-      if (dt<today) c+=' cal-past';
-      else if (blockedDates.has(ds)) c+=' cal-blocked';
-      else if (checkIn&&checkOut&&ds>checkIn&&ds<checkOut) c+=' cal-in-range';
-      if (ds===checkIn) c+=' cal-selected-in';
-      if (ds===checkOut) c+=' cal-selected-out';
-      if (ds===new Date().toISOString().split('T')[0]) c+=' cal-today';
-      h+='<div class="'+c+'" onclick="pickDay(\''+ds+'\')">'+d+'</div>';
-    }
-    h+='</div>';
-    el.innerHTML=h;
-  }
-
-  function shiftCal(dir) {
-    viewMonth+=dir;
-    if (viewMonth<0){ viewMonth=11; viewYear--; }
-    if (viewMonth>11){ viewMonth=0; viewYear++; }
-    renderCal();
-  }
-
-  function pickDay(ds) {
-    const today=new Date(); today.setHours(0,0,0,0);
-    if (new Date(ds+'T00:00:00')<today||blockedDates.has(ds)) return;
-    if (!checkIn||(checkIn&&checkOut)){ checkIn=ds; checkOut=null; }
-    else if (ds<=checkIn){ checkIn=ds; checkOut=null; }
-    else {
-      let d=new Date(checkIn+'T00:00:00'); d.setDate(d.getDate()+1);
-      const end=new Date(ds+'T00:00:00'); let bad=false;
-      while(d<end){ if(blockedDates.has(d.toISOString().split('T')[0])){ bad=true; break; } d.setDate(d.getDate()+1); }
-      if(bad){ checkIn=ds; checkOut=null; } else checkOut=ds;
-    }
-    const fmt=s=>new Date(s+'T00:00:00').toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
-    const bar=document.getElementById('cal-bar');
-    if(bar){ document.getElementById('cal-in-txt').textContent=checkIn?fmt(checkIn):'—'; document.getElementById('cal-out-txt').textContent=checkOut?fmt(checkOut):'—'; bar.style.display=checkIn?'block':'none'; }
-    const st=document.getElementById('cal-status');
-    if(st) st.textContent=checkIn&&checkOut?'✓ Dates selected':checkIn?'Now select your check-out date':'Select your check-in date';
-    renderCal();
-    if(checkIn&&checkOut) calcBooking();
-  }
-
-  function calcBooking() {
-    if(!checkIn||!checkOut) return;
-    const nights=Math.round((new Date(checkOut)-new Date(checkIn))/86400000);
-    if(nights<=0) return;
-    const sub=nights*BASE_PRICE, disc=Math.round(sub*0.05), tot=sub-disc;
-    document.getElementById('b-nights').textContent=nights+' night'+(nights>1?'s':'')+' × $'+BASE_PRICE;
-    document.getElementById('b-sub').textContent='$'+sub;
-    document.getElementById('b-disc').textContent='-$'+disc;
-    document.getElementById('b-tot').textContent='$'+tot;
-    document.getElementById('b-summary').style.display='block';
-  }
-
-  function switchBookTab(tab,el) {
-    document.querySelectorAll('.booking-tab').forEach(t=>t.classList.remove('active'));
-    el.classList.add('active');
-    document.getElementById('bp-direct').style.display=tab==='direct'?'block':'none';
-    document.getElementById('bp-airbnb').style.display=tab==='airbnb'?'block':'none';
-  }
-
-  function pickPay(method,el) {
-    payMethod=method;
-    document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));
-    el.classList.add('active');
-    document.getElementById('pf-card').style.display=method==='card'?'block':'none';
-    document.getElementById('pf-paypal').style.display=method==='paypal'?'block':'none';
-    document.getElementById('pf-bank').style.display=method==='bank'?'block':'none';
-  }
-
-  function fmtCard(el) { let v=el.value.replace(/\D/g,'').substring(0,16); el.value=v.replace(/(.{4})/g,'$1 ').trim(); }
-
-  function confirmBooking() {
-    const name=document.getElementById('b-name').value.trim();
-    const email=document.getElementById('b-email').value.trim();
-    if(!name||!email||!checkIn||!checkOut){ alert('Please fill in your name, email and select travel dates.'); return; }
-    const nights=Math.round((new Date(checkOut)-new Date(checkIn))/86400000);
-    const tot=Math.round(nights*BASE_PRICE*0.95);
-    const fmt=s=>new Date(s+'T00:00:00').toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'});
-    const pm={card:'Credit/Debit Card',paypal:'PayPal',bank:'Bank Transfer'};
-    document.getElementById('b-conf-detail').innerHTML='<b>Check-in:</b> '+fmt(checkIn)+'<br><b>Check-out:</b> '+fmt(checkOut)+'<br><b>Guests:</b> '+document.getElementById('b-guests').value+'<br><b>Total (5% off):</b> $'+tot+'<br><b>Payment:</b> '+pm[payMethod];
-    document.getElementById('b-form').style.display='none';
-    document.getElementById('b-confirm').style.display='block';
-  }
-
-  // Init calendar when page is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCalendar);
-  } else {
-    initCalendar();
-  }
+var nb=document.getElementById('navbar');
+window.addEventListener('scroll',function(){nb.classList.toggle('scrolled',window.scrollY>60);});
+var lbImgs=[];
+document.querySelectorAll('.gallery-item img').forEach(function(i){lbImgs.push(i.src);});
+var lbCur=0;
+function openLightbox(i){lbCur=i;document.getElementById('lightbox-img').src=lbImgs[i];document.getElementById('lightbox').classList.add('open');document.body.style.overflow='hidden';}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow='';}
+function changeImg(d){lbCur=(lbCur+d+lbImgs.length)%lbImgs.length;document.getElementById('lightbox-img').src=lbImgs[lbCur];}
+document.getElementById('lightbox').addEventListener('click',function(e){if(e.target===document.getElementById('lightbox'))closeLightbox();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLightbox();if(e.key==='ArrowRight')changeImg(1);if(e.key==='ArrowLeft')changeImg(-1);});
+var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}});},{threshold:0.1});
+document.querySelectorAll('.amenity-card,.service-card,.place-row,.review-card').forEach(function(el){el.style.opacity='0';el.style.transform='translateY(20px)';el.style.transition='opacity 0.6s ease,transform 0.6s ease';obs.observe(el);});
 </script>
+<script src="/bellis-booking.js"></script>
 </body>
 </html>
