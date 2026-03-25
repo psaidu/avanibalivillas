@@ -314,6 +314,7 @@
 
 
   .cal-tooltip {
+    display: none;
     position: absolute;
     background: var(--ink);
     color: var(--cream);
@@ -337,6 +338,9 @@
     border-top-color: var(--ink);
   }
   .cal-day { position: relative; }
+  .cal-day:not(.cal-blocked):not(.cal-past):not(.cal-empty):hover .cal-tooltip {
+    display: block;
+  }
 
 </style>
 </head>
