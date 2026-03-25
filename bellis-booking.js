@@ -76,7 +76,7 @@ function renderMonth(yr,mo,slot,today) {
     if (ds===checkIn) c+=' cal-selected-in';
     if (ds===checkOut) c+=' cal-selected-out';
     if (ds===new Date().toISOString().split('T')[0]) c+=' cal-today';
-    h+='<div class="'+c+'" onclick="pickDay(''+ds+'')">'+d+'</div>';
+    h+='<div class="'+c+'" data-date="'+ds+'" onclick="pickDay(this.dataset.date)">'+d+'</div>';
   }
   h+='</div>';
   el.innerHTML=h;
