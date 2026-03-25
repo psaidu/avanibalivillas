@@ -179,6 +179,68 @@
   .payment-methods { display:flex; gap:0.5rem; margin:0.8rem 0; }
   .payment-method-btn { flex:1; padding:0.6rem 0.4rem; border:1.5px solid var(--sand); cursor:pointer; text-align:center; font-size:0.72rem; color:#666; background:var(--white); font-family:'Outfit',sans-serif; letter-spacing:0.05em; transition:border-color 0.2s; }
   .payment-method-btn.selected { border-color:var(--terracotta); background:rgba(192,113,74,0.06); color:var(--terracotta); }
+
+  /* ── AVAILABILITY CALENDAR ── */
+  .cal-wrapper { margin-bottom: 1rem; }
+  .cal-status { font-size: 0.72rem; color: #888; margin-bottom: 0.8rem; min-height: 1.2em; text-align:center; padding: 0.4rem; background: #f9f5ec; }
+  .cal-status.loading { color: var(--gold); }
+  .cal-status.error { color: #c07070; }
+  .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+  .cal-nav button { background: none; border: 1px solid var(--sand); color: var(--ink); padding: 0.25rem 0.65rem; cursor: pointer; font-size: 0.9rem; line-height: 1; transition: background 0.2s; }
+  .cal-nav button:hover { background: var(--sand); }
+  .cal-month-label { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--ink); font-weight: 400; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; margin-bottom: 0.5rem; }
+  .cal-dow { text-align: center; font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; color: #bbb; padding: 0.15rem 0 0.35rem; }
+  .cal-day { text-align: center; padding: 0.38rem 0; font-size: 0.78rem; cursor: pointer; border-radius: 2px; transition: background 0.15s, color 0.15s; user-select:none; }
+  .cal-day:hover:not(.cal-blocked):not(.cal-past):not(.cal-empty) { background: rgba(192,113,74,0.15); color: var(--terracotta); }
+  .cal-day.cal-empty { cursor: default; }
+  .cal-day.cal-past { color: #d0d0d0; cursor: not-allowed; }
+  .cal-day.cal-blocked { background: #fdf0ec; color: #dbb; cursor: not-allowed; text-decoration: line-through; font-size: 0.72rem; }
+  .cal-day.cal-selected-in { background: var(--terracotta); color: #fff !important; border-radius: 2px 0 0 2px; }
+  .cal-day.cal-selected-out { background: var(--terracotta); color: #fff !important; border-radius: 0 2px 2px 0; }
+  .cal-day.cal-in-range { background: rgba(192,113,74,0.12); color: var(--terracotta); border-radius: 0; }
+  .cal-day.cal-today { font-weight: 700; }
+  .cal-legend { display: flex; gap: 0.8rem; margin: 0.5rem 0 1rem; font-size: 0.65rem; color: #999; flex-wrap: wrap; }
+  .cal-legend-item { display: flex; align-items: center; gap: 0.3rem; }
+  .cal-legend-dot { width: 9px; height: 9px; border-radius: 1px; flex-shrink:0; }
+  .cal-two-months { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  .cal-selected-bar { background: rgba(192,113,74,0.08); border-left: 3px solid var(--terracotta); padding: 0.6rem 0.9rem; margin: 0.5rem 0 1rem; font-size: 0.82rem; display: none; }
+  .cal-selected-bar span { color: var(--terracotta); font-weight: 500; }
+
+  /* ── BOOKING SIDEBAR ── */
+  .booking-wrap { max-width: 1280px; margin: 0 auto; padding: 5rem 3rem; display: grid; grid-template-columns: 1fr 420px; gap: 4rem; align-items: start; background: var(--white); }
+  .booking-intro h3 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--ink); margin-bottom: 1rem; }
+  .booking-intro p { font-size: 0.9rem; color: #666; line-height: 1.8; font-weight: 300; margin-bottom: 0.8rem; }
+  .booking-sidebar { background: var(--white); border: 1px solid var(--sand); box-shadow: 0 4px 30px rgba(0,0,0,0.09); position: sticky; top: 5.5rem; }
+  .booking-sidebar-tabs { display: flex; border-bottom: 1px solid var(--sand); }
+  .booking-tab { flex:1; padding: 1rem; text-align: center; cursor: pointer; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: #999; border-bottom: 2px solid transparent; margin-bottom: -1px; background: none; border-top: none; border-left: none; border-right: none; font-family: 'Outfit', sans-serif; transition: color 0.2s; }
+  .booking-tab.active { color: var(--terracotta); border-bottom-color: var(--terracotta); font-weight: 500; }
+  .booking-panel { padding: 1.6rem; }
+  .booking-price-row { margin-bottom: 0.4rem; }
+  .booking-price-big { font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; color: var(--ink); }
+  .booking-price-big span { font-family: 'Outfit', sans-serif; font-size: 0.75rem; color: #999; }
+  .booking-discount-tag { display: inline-block; background: rgba(192,113,74,0.1); color: var(--terracotta); font-size: 0.68rem; letter-spacing: 0.1em; padding: 0.22rem 0.6rem; margin-bottom: 1.2rem; font-weight: 500; }
+  .b-label { font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: #aaa; display: block; margin-bottom: 0.35rem; margin-top: 0.9rem; }
+  .b-input, .b-select { width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--sand); font-family: 'Outfit', sans-serif; font-size: 0.84rem; color: var(--ink); background: var(--white); outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
+  .b-input:focus, .b-select:focus { border-color: var(--terracotta); }
+  .b-summary { background: #f9f5ec; padding: 1rem; margin: 1rem 0; font-size: 0.82rem; }
+  .b-summary-row { display: flex; justify-content: space-between; padding: 0.28rem 0; color: #777; }
+  .b-summary-row.disc { color: var(--terracotta); }
+  .b-summary-row.tot { font-weight: 500; color: var(--ink); border-top: 1px solid var(--sand); padding-top: 0.55rem; margin-top: 0.3rem; }
+  .pay-methods { display: flex; gap: 0.4rem; margin: 0.6rem 0 1rem; }
+  .pay-btn { flex:1; padding: 0.55rem 0.3rem; border: 1.5px solid var(--sand); cursor: pointer; text-align: center; font-size: 0.7rem; color: #888; background: var(--white); font-family: 'Outfit', sans-serif; transition: border-color 0.2s, color 0.2s; }
+  .pay-btn.active { border-color: var(--terracotta); background: rgba(192,113,74,0.05); color: var(--terracotta); }
+  .b-btn { width: 100%; padding: 1rem; background: var(--terracotta); color: #fff; border: none; font-family: 'Outfit', sans-serif; font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; margin-top: 1rem; transition: background 0.2s; }
+  .b-btn:hover { background: #a85e3a; }
+  .airbnb-btn-red { display: block; padding: 0.9rem; background: #FF5A5F; color: #fff; text-align: center; text-decoration: none; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'Outfit', sans-serif; transition: background 0.2s; margin-top: 1rem; }
+  .airbnb-btn-red:hover { background: #e04448; }
+  .b-confirm { display: none; padding: 2rem; text-align: center; background: #fff; }
+  .b-confirm h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; margin: 0.5rem 0; }
+  .b-confirm-detail { background: #f9f5ec; padding: 0.8rem 1rem; text-align: left; font-size: 0.82rem; line-height: 2; margin: 1rem 0; }
+
+  @media (max-width: 1024px) { .booking-wrap { grid-template-columns: 1fr; } .booking-sidebar { position: static; } }
+  @media (max-width: 600px) { .cal-two-months { grid-template-columns: 1fr; } .booking-wrap { padding: 3rem 1.5rem; } }
+
 </style>
 </head>
 <body>
@@ -386,206 +448,169 @@
   <img id="lightbox-img" src="" alt="">
   <button class="lightbox-nav lightbox-next" onclick="changeImg(1)">›</button>
 </div>
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js">
-
-  // ════ ICAL CALENDAR ════
-  let calBlockedDates = new Set();
-  let calCheckIn = null, calCheckOut = null;
-  let calViewYear = null, calViewMonth = null;
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+  // ══ CALENDAR + BOOKING ══
+  const ICAL_URL  = '';
+  const BASE_PRICE = 240;
+  let blockedDates = new Set();
+  let checkIn = null, checkOut = null;
+  let viewYear = null, viewMonth = null;
+  let payMethod = 'card';
 
   function parseIcal(text) {
-    const blocked = new Set();
+    const b = new Set();
     const lines = text.replace(/\r\n /g,'').replace(/\r\n\t/g,'').split(/\r?\n/);
-    let inEvent = false, dtStart = '', dtEnd = '';
-    for (const line of lines) {
-      if (line === 'BEGIN:VEVENT') { inEvent = true; dtStart=''; dtEnd=''; }
-      if (!inEvent) continue;
-      if (line.startsWith('DTSTART')) dtStart = line.split(':').pop().trim().substring(0,8);
-      if (line.startsWith('DTEND'))   dtEnd   = line.split(':').pop().trim().substring(0,8);
-      if (line === 'END:VEVENT' && dtStart && dtEnd) {
-        let d = new Date(dtStart.substring(0,4)+'-'+dtStart.substring(4,6)+'-'+dtStart.substring(6,8)+'T00:00:00');
-        const end = new Date(dtEnd.substring(0,4)+'-'+dtEnd.substring(4,6)+'-'+dtEnd.substring(6,8)+'T00:00:00');
-        while (d < end) { blocked.add(d.toISOString().split('T')[0]); d.setDate(d.getDate()+1); }
-        inEvent = false;
+    let inEv=false, ds='', de='';
+    for (const ln of lines) {
+      if (ln==='BEGIN:VEVENT') { inEv=true; ds=''; de=''; }
+      if (!inEv) continue;
+      if (ln.startsWith('DTSTART')) ds = ln.split(':').pop().trim().substring(0,8);
+      if (ln.startsWith('DTEND'))   de = ln.split(':').pop().trim().substring(0,8);
+      if (ln==='END:VEVENT' && ds && de) {
+        let d = new Date(ds.substring(0,4)+'-'+ds.substring(4,6)+'-'+ds.substring(6,8)+'T00:00:00');
+        const end = new Date(de.substring(0,4)+'-'+de.substring(4,6)+'-'+de.substring(6,8)+'T00:00:00');
+        while (d < end) { b.add(d.toISOString().split('T')[0]); d.setDate(d.getDate()+1); }
+        inEv=false;
       }
     }
-    return blocked;
+    return b;
   }
 
-  async function loadIcal(icalUrl) {
-    const status = document.getElementById('cal-status');
-    if (!icalUrl) { status.textContent = 'Select your dates below'; status.className='cal-status'; renderCalMonths(); return; }
-    status.textContent = 'Loading availability...'; status.className='cal-status loading';
+  async function initCalendar() {
+    const st = document.getElementById('cal-status');
+    if (!ICAL_URL) { st.textContent='Select your check-in date'; st.className='cal-status'; renderCal(); return; }
+    st.textContent='Loading availability from Airbnb...'; st.className='cal-status loading';
     try {
-      const proxy = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(icalUrl);
-      const r = await fetch(proxy);
+      const r = await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(ICAL_URL));
       if (!r.ok) throw new Error();
-      const text = await r.text();
-      calBlockedDates = parseIcal(text);
-      status.textContent = 'Calendar loaded — select your check-in date';
-      status.className = 'cal-status';
+      blockedDates = parseIcal(await r.text());
+      st.textContent = '✓ Availability loaded — select your check-in date';
+      st.className = 'cal-status';
     } catch(e) {
-      calBlockedDates = new Set();
-      status.textContent = 'Live calendar unavailable — dates shown are indicative';
-      status.className = 'cal-status error';
+      st.textContent = 'Live calendar unavailable — dates shown are indicative';
+      st.className = 'cal-status error';
     }
-    renderCalMonths();
+    renderCal();
   }
 
-  function calDateStr(y,m,d) {
-    return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-  }
+  function dStr(y,m,d) { return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'); }
 
-  function renderCalMonths() {
+  function renderCal() {
     const today = new Date(); today.setHours(0,0,0,0);
-    if (!calViewYear) { calViewYear = today.getFullYear(); calViewMonth = today.getMonth(); }
-    for (let offset = 0; offset < 2; offset++) {
-      let y = calViewYear, m = calViewMonth + offset;
-      if (m > 11) { m -= 12; y++; }
-      renderOneMonth(y, m, offset, today);
+    if (!viewYear) { viewYear=today.getFullYear(); viewMonth=today.getMonth(); }
+    for (let s=0;s<2;s++) {
+      let y=viewYear, m=viewMonth+s;
+      if (m>11) { m-=12; y++; }
+      renderMonth(y,m,s,today);
     }
   }
 
-  function renderOneMonth(year, month, slot, today) {
-    const names = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-    const dows  = ['Su','Mo','Tu','We','Th','Fr','Sa'];
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysIn   = new Date(year, month+1, 0).getDate();
-    let html = '<div class="cal-nav">';
-    if (slot === 0) html += `<button onclick="calShift(-1)">&#8249;</button>`; else html += '<div></div>';
-    html += `<div class="cal-month-label">${names[month]} ${year}</div>`;
-    if (slot === 1) html += `<button onclick="calShift(1)">&#8250;</button>`; else html += '<div></div>';
-    html += '</div><div class="cal-grid">';
-    dows.forEach(d => { html += `<div class="cal-dow">${d}</div>`; });
-    for (let i=0; i<firstDay; i++) html += '<div class="cal-day cal-empty"></div>';
-    for (let d=1; d<=daysIn; d++) {
-      const ds = calDateStr(year, month, d);
-      const dayDate = new Date(ds+'T00:00:00');
-      let cls = 'cal-day';
-      if (dayDate < today)              cls += ' cal-past';
-      else if (calBlockedDates.has(ds)) cls += ' cal-blocked';
-      else if (calCheckIn && calCheckOut && ds > calCheckIn && ds < calCheckOut) cls += ' cal-in-range';
-      if (calCheckIn === ds)  cls += ' cal-selected-in';
-      if (calCheckOut === ds) cls += ' cal-selected-out';
-      if (ds === new Date().toISOString().split('T')[0]) cls += ' cal-today';
-      html += `<div class="${cls}" onclick="calClickDay('${ds}')">${d}</div>`;
+  function renderMonth(yr,mo,slot,today) {
+    const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const DOW=['Su','Mo','Tu','We','Th','Fr','Sa'];
+    const fd=new Date(yr,mo,1).getDay(), dim=new Date(yr,mo+1,0).getDate();
+    let h='<div class="cal-nav">';
+    h += slot===0 ? '<button onclick="shiftCal(-1)">&#8249;</button>' : '<div></div>';
+    h += '<div class="cal-month-label">'+MN[mo]+' '+yr+'</div>';
+    h += slot===1 ? '<button onclick="shiftCal(1)">&#8250;</button>' : '<div></div>';
+    h += '</div><div class="cal-grid">';
+    DOW.forEach(d=>{ h+='<div class="cal-dow">'+d+'</div>'; });
+    for (let i=0;i<fd;i++) h+='<div class="cal-day cal-empty"></div>';
+    for (let d=1;d<=dim;d++) {
+      const ds=dStr(yr,mo,d), dt=new Date(ds+'T00:00:00');
+      let c='cal-day';
+      if (dt<today) c+=' cal-past';
+      else if (blockedDates.has(ds)) c+=' cal-blocked';
+      else if (checkIn&&checkOut&&ds>checkIn&&ds<checkOut) c+=' cal-in-range';
+      if (ds===checkIn) c+=' cal-selected-in';
+      if (ds===checkOut) c+=' cal-selected-out';
+      if (ds===new Date().toISOString().split('T')[0]) c+=' cal-today';
+      h+='<div class="'+c+'" onclick="pickDay(\''+ds+'\')">'+d+'</div>';
     }
-    html += '</div>';
-    document.getElementById('cal-month-'+slot).innerHTML = html;
+    h+='</div>';
+    document.getElementById('cal-m'+slot).innerHTML=h;
   }
 
-  function calShift(dir) {
-    calViewMonth += dir;
-    if (calViewMonth < 0)  { calViewMonth = 11; calViewYear--; }
-    if (calViewMonth > 11) { calViewMonth = 0;  calViewYear++; }
-    renderCalMonths();
+  function shiftCal(dir) {
+    viewMonth+=dir;
+    if (viewMonth<0) { viewMonth=11; viewYear--; }
+    if (viewMonth>11) { viewMonth=0; viewYear++; }
+    renderCal();
   }
 
-  function calClickDay(ds) {
-    const today = new Date(); today.setHours(0,0,0,0);
-    const clicked = new Date(ds+'T00:00:00');
-    if (clicked < today || calBlockedDates.has(ds)) return;
-    if (!calCheckIn || (calCheckIn && calCheckOut)) {
-      calCheckIn = ds; calCheckOut = null;
-    } else if (ds <= calCheckIn) {
-      calCheckIn = ds; calCheckOut = null;
-    } else {
-      let d = new Date(calCheckIn+'T00:00:00'); d.setDate(d.getDate()+1);
-      const end = new Date(ds+'T00:00:00');
-      let hasBlocked = false;
-      while (d < end) { if (calBlockedDates.has(d.toISOString().split('T')[0])) { hasBlocked=true; break; } d.setDate(d.getDate()+1); }
-      if (hasBlocked) { calCheckIn = ds; calCheckOut = null; }
-      else calCheckOut = ds;
+  function pickDay(ds) {
+    const today=new Date(); today.setHours(0,0,0,0);
+    if (new Date(ds+'T00:00:00')<today || blockedDates.has(ds)) return;
+    if (!checkIn||(checkIn&&checkOut)) { checkIn=ds; checkOut=null; }
+    else if (ds<=checkIn) { checkIn=ds; checkOut=null; }
+    else {
+      let d=new Date(checkIn+'T00:00:00'); d.setDate(d.getDate()+1);
+      const end=new Date(ds+'T00:00:00'); let bad=false;
+      while(d<end) { if(blockedDates.has(d.toISOString().split('T')[0])) { bad=true; break; } d.setDate(d.getDate()+1); }
+      if(bad) { checkIn=ds; checkOut=null; } else checkOut=ds;
     }
-    document.getElementById('checkin-date').value  = calCheckIn  || '';
-    document.getElementById('checkout-date').value = calCheckOut || '';
-    const fmt = s => { if(!s) return '—'; const d=new Date(s+'T00:00:00'); return d.toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'}); };
-    document.getElementById('cal-show-in').textContent  = fmt(calCheckIn);
-    document.getElementById('cal-show-out').textContent = fmt(calCheckOut);
-    document.getElementById('cal-selected-display').style.display = calCheckIn ? 'block' : 'none';
-    document.getElementById('cal-status').textContent = calCheckIn && !calCheckOut ? 'Now select your check-out date' : calCheckIn && calCheckOut ? 'Dates selected ✓' : 'Select your check-in date';
-    renderCalMonths();
-    if (calCheckIn && calCheckOut) calcTotal();
+    const fmt=s=>new Date(s+'T00:00:00').toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
+    const bar=document.getElementById('cal-bar');
+    document.getElementById('cal-in-txt').textContent  = checkIn  ? fmt(checkIn)  : '—';
+    document.getElementById('cal-out-txt').textContent = checkOut ? fmt(checkOut) : '—';
+    bar.style.display = checkIn ? 'block' : 'none';
+    const st=document.getElementById('cal-status');
+    st.textContent = checkIn&&checkOut ? '✓ Dates selected' : checkIn ? 'Now select your check-out date' : '✓ Availability loaded — select your check-in date';
+    renderCal();
+    if (checkIn&&checkOut) calcBooking();
   }
 
-  function calcTotal() {
-    const ci = document.getElementById('checkin-date').value;
-    const co = document.getElementById('checkout-date').value;
-    const summaryEl = document.getElementById('booking-summary');
-    if (!ci || !co || !summaryEl) return;
-    const nights = Math.round((new Date(co) - new Date(ci)) / 86400000);
-    if (nights <= 0) { summaryEl.style.display='none'; return; }
-    const priceEl = document.getElementById('villa-base-price');
-    const price = priceEl ? parseInt(priceEl.value) : 0;
-    if (!price) { summaryEl.style.display='none'; return; }
-    const subtotal = nights * price;
-    const discount = Math.round(subtotal * 0.05);
-    const total = subtotal - discount;
-    document.getElementById('nights-label').textContent = nights+' night'+(nights>1?'s':'')+' × $'+price;
-    document.getElementById('subtotal-val').textContent = '$'+subtotal;
-    document.getElementById('discount-val').textContent = '-$'+discount;
-    document.getElementById('total-val').textContent = '$'+total;
-    summaryEl.style.display = 'block';
+  function calcBooking() {
+    if (!checkIn||!checkOut) return;
+    const nights=Math.round((new Date(checkOut)-new Date(checkIn))/86400000);
+    if (nights<=0) return;
+    const sub=nights*BASE_PRICE, disc=Math.round(sub*0.05), tot=sub-disc;
+    document.getElementById('b-nights').textContent=nights+' night'+(nights>1?'s':'')+' × $'+BASE_PRICE;
+    document.getElementById('b-sub').textContent='$'+sub;
+    document.getElementById('b-disc').textContent='-$'+disc;
+    document.getElementById('b-tot').textContent='$'+tot;
+    document.getElementById('b-summary').style.display='block';
   }
 
-
-  let selectedPayment = 'card';
-
-  function switchTab(tab, el) {
-    document.querySelectorAll('.booking-tab').forEach(t => t.classList.remove('active'));
+  function switchBookTab(tab,el) {
+    document.querySelectorAll('.booking-tab').forEach(t=>t.classList.remove('active'));
     el.classList.add('active');
-    document.getElementById('panel-direct').style.display = tab==='direct' ? 'block' : 'none';
-    document.getElementById('panel-airbnb').style.display = tab==='airbnb' ? 'block' : 'none';
+    document.getElementById('bp-direct').style.display=tab==='direct'?'block':'none';
+    document.getElementById('bp-airbnb').style.display=tab==='airbnb'?'block':'none';
   }
 
-  function selectPayment(method, el) {
-    selectedPayment = method;
-    document.querySelectorAll('.payment-method-btn').forEach(b => b.classList.remove('selected'));
-    el.classList.add('selected');
-    document.getElementById('card-fields').style.display   = method==='card'   ? 'block' : 'none';
-    document.getElementById('paypal-fields').style.display = method==='paypal' ? 'block' : 'none';
-    document.getElementById('bank-fields').style.display   = method==='bank'   ? 'block' : 'none';
+  function pickPay(method,el) {
+    payMethod=method;
+    document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('pf-card').style.display=method==='card'?'block':'none';
+    document.getElementById('pf-paypal').style.display=method==='paypal'?'block':'none';
+    document.getElementById('pf-bank').style.display=method==='bank'?'block':'none';
   }
 
-  function formatCard(el) {
-    let v = el.value.replace(/\D/g,'').substring(0,16);
-    el.value = v.replace(/(.{4})/g,'$1 ').trim();
+  function fmtCard(el) {
+    let v=el.value.replace(/\D/g,'').substring(0,16);
+    el.value=v.replace(/(.{4})/g,'$1 ').trim();
   }
 
-  function submitBooking() {
-    const name  = document.getElementById('guest-name').value.trim();
-    const email = document.getElementById('guest-email').value.trim();
-    const ci    = document.getElementById('checkin-date').value;
-    const co    = document.getElementById('checkout-date').value;
-    if (!name || !email || !ci || !co) { alert('Please fill in your name, email, and select your travel dates.'); return; }
-    const nights  = Math.round((new Date(co) - new Date(ci)) / 86400000);
-    const price   = parseInt(document.getElementById('villa-base-price').value);
-    const total   = Math.round(nights * price * 0.95);
-    const fmt     = s => new Date(s+'T00:00:00').toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'});
-    const payLabels = {card:'Credit / Debit Card', paypal:'PayPal', bank:'Bank Transfer'};
-    const villaName = document.title.split('—')[0].trim();
-    document.getElementById('confirm-details').innerHTML =
-      `<strong>Villa:</strong> ${villaName}<br>` +
-      `<strong>Check-in:</strong> ${fmt(ci)}<br>` +
-      `<strong>Check-out:</strong> ${fmt(co)}<br>` +
-      `<strong>Guests:</strong> ${document.getElementById('guests-count').value}<br>` +
-      `<strong>Total (5% off):</strong> $${total}<br>` +
-      `<strong>Payment:</strong> ${payLabels[selectedPayment]}`;
-    document.getElementById('booking-sidebar').style.display = 'none';
-    document.getElementById('booking-confirm').style.display = 'block';
+  function confirmBooking() {
+    const name=document.getElementById('b-name').value.trim();
+    const email=document.getElementById('b-email').value.trim();
+    if (!name||!email||!checkIn||!checkOut) { alert('Please fill in your name, email and select travel dates.'); return; }
+    const nights=Math.round((new Date(checkOut)-new Date(checkIn))/86400000);
+    const tot=Math.round(nights*BASE_PRICE*0.95);
+    const fmt=s=>new Date(s+'T00:00:00').toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'});
+    const pm={card:'Credit/Debit Card',paypal:'PayPal',bank:'Bank Transfer'};
+    document.getElementById('b-conf-detail').innerHTML=
+      '<b>Check-in:</b> '+fmt(checkIn)+'<br>'+
+      '<b>Check-out:</b> '+fmt(checkOut)+'<br>'+
+      '<b>Guests:</b> '+document.getElementById('b-guests').value+'<br>'+
+      '<b>Total (5% off):</b> $'+tot+'<br>'+
+      '<b>Payment:</b> '+pm[payMethod];
+    document.getElementById('b-form').style.display='none';
+    document.getElementById('b-confirm').style.display='block';
   }
 
-  // Init calendar
-  window.addEventListener('DOMContentLoaded', () => loadIcal(''));
-</script><script>
-  const navbar=document.getElementById('navbar');
-  window.addEventListener('scroll',()=>navbar.classList.toggle('scrolled',window.scrollY>60));
-  const images=['https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/f4644d24-585b-4914-8577-64048e415159.png?im_w=1440','https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/d4fc31d5-92d3-42b8-91fb-e887764907bf.png?im_w=1440','https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/bf4116c9-f311-4d41-9fc5-fa708ba5364f.png?im_w=1440','https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/e8bc8e2c-4d16-4b5a-aa60-08e690a7f78e.png?im_w=1440','https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/22ead745-6a67-46ce-94a2-9ef309bd634f.png?im_w=1440'];
-  let cur=0;
-  function openLightbox(i){cur=i;document.getElementById('lightbox-img').src=images[i];document.getElementById('lightbox').classList.add('open');document.body.style.overflow='hidden';}
-  function closeLightbox(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow='';}
-  function changeImg(d){cur=(cur+d+images.length)%images.length;document.getElementById('lightbox-img').src=images[cur];}
-  document.getElementById('lightbox').addEventListener('click',e=>{if(e.target===document.getElementById('lightbox'))closeLightbox();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();if(e.key==='ArrowRight')changeImg(1);if(e.key==='ArrowLeft')changeImg(-1);});
-  const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}},{threshold:0.1}));
-  document.querySelector
+  window.addEventListener('DOMContentLoaded', initCalendar);
+
+>
