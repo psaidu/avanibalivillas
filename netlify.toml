@@ -5,6 +5,14 @@
 [functions]
   node_bundler = "esbuild"
 
+[build.processing]
+  skip_processing = true
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+
 [[headers]]
   for = "/.netlify/functions/*"
   [headers.values]
