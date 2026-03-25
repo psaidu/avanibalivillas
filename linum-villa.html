@@ -1,163 +1,616 @@
-// geya-booking.js
-var BASE_PRICE = 250;
-var blockedDates = new Set();
-var checkIn = null, checkOut = null;
-var viewYear = null, viewMonth = null;
-var payMethod = 'card';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linum Villa — Avani Bali Villas, Ubud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1a1712;--cream:#f5f0e8;--sand:#e8dcc8;--terracotta:#c0714a;--jungle:#2d4a35;--gold:#b8943a;--mist:#8fa898;--white:#fefcf8;}
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Outfit',sans-serif;background:var(--ink);color:var(--cream);overflow-x:hidden;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1.4rem 3rem;background:linear-gradient(to bottom,rgba(26,23,18,0.9),transparent);transition:background 0.4s;}
+  nav.scrolled{background:rgba(26,23,18,0.96);backdrop-filter:blur(12px);}
+  .nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.25rem;letter-spacing:0.12em;color:var(--gold);font-weight:300;text-transform:uppercase;text-decoration:none;}
+  .nav-links{display:flex;gap:2.5rem;list-style:none;}
+  .nav-links a{color:var(--cream);text-decoration:none;font-size:0.75rem;letter-spacing:0.18em;text-transform:uppercase;opacity:0.75;transition:opacity 0.2s,color 0.2s;}
+  .nav-links a:hover{opacity:1;color:var(--gold);}
+  .nav-cta{background:var(--terracotta)!important;color:var(--white)!important;padding:0.5rem 1.4rem;opacity:1!important;}
+  .hero{position:relative;height:100vh;min-height:640px;display:flex;flex-direction:column;justify-content:flex-end;padding:6rem 3rem;overflow:hidden;}
+  .hero-bg{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,23,18,1) 0%,rgba(26,23,18,0.3) 50%,rgba(26,23,18,0.1) 100%),url('https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/f4644d24-585b-4914-8577-64048e415159.png?im_w=1440') center/cover no-repeat;transform:scale(1.04);animation:heroScale 12s ease-out forwards;}
+  @keyframes heroScale{from{transform:scale(1.08)}to{transform:scale(1.0)}}
+  .hero-eyebrow{font-size:0.72rem;letter-spacing:0.32em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;opacity:0;animation:fadeUp 0.9s 0.3s ease forwards;}
+  .hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(3.5rem,8vw,7rem);font-weight:300;line-height:0.95;max-width:780px;opacity:0;animation:fadeUp 1s 0.5s ease forwards;}
+  .hero h1 em{font-style:italic;color:var(--gold);}
+  .hero-sub{margin-top:1.8rem;max-width:480px;font-size:0.92rem;font-weight:300;line-height:1.7;opacity:0;animation:fadeUp 1s 0.7s ease forwards;color:rgba(245,240,232,0.7);}
+  .hero-actions{display:flex;gap:1rem;margin-top:2.2rem;opacity:0;animation:fadeUp 1s 0.9s ease forwards;}
+  .hero-rating{position:absolute;top:50%;right:3rem;transform:translateY(-50%);text-align:center;opacity:0;animation:fadeIn 1s 1.2s ease forwards;}
+  .hero-rating-num{font-family:'Cormorant Garamond',serif;font-size:3.5rem;color:var(--gold);line-height:1;font-weight:300;}
+  .hero-rating-stars{font-size:0.85rem;color:var(--gold);letter-spacing:0.1em;margin:0.2rem 0;}
+  .hero-rating-label{font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--mist);}
+  .btn-primary{background:var(--terracotta);color:var(--white);padding:0.9rem 2.2rem;text-decoration:none;font-size:0.8rem;letter-spacing:0.18em;text-transform:uppercase;transition:background 0.2s,transform 0.15s;display:inline-block;}
+  .btn-primary:hover{background:#a85e3a;transform:translateY(-1px);}
+  .btn-outline{border:1px solid rgba(245,240,232,0.4);color:var(--cream);padding:0.9rem 2.2rem;text-decoration:none;font-size:0.8rem;letter-spacing:0.18em;text-transform:uppercase;transition:border-color 0.2s,background 0.2s;display:inline-block;}
+  .btn-outline:hover{border-color:var(--cream);background:rgba(245,240,232,0.05);}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  .stats-bar{background:var(--jungle);display:flex;justify-content:center;}
+  .stat{flex:1;max-width:220px;text-align:center;padding:2rem 1.5rem;border-right:1px solid rgba(255,255,255,0.1);}
+  .stat:last-child{border-right:none;}
+  .stat-num{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;color:var(--gold);line-height:1;}
+  .stat-label{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--mist);margin-top:0.4rem;}
+  section{padding:6rem 3rem;}
+  .section-tag{font-size:0.68rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--terracotta);margin-bottom:1rem;}
+  .section-h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,4.5vw,3.6rem);font-weight:300;line-height:1.1;color:var(--cream);}
+  .section-h2 em{font-style:italic;color:var(--gold);}
+  .about{background:var(--ink);display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;max-width:1280px;margin:0 auto;}
+  .about-text p{font-size:1rem;font-weight:300;line-height:1.85;color:rgba(245,240,232,0.75);margin-top:1.5rem;}
+  .about-visual{position:relative;}
+  .about-img-main{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;}
+  .about-img-inset{position:absolute;bottom:-2.5rem;left:-2.5rem;width:55%;aspect-ratio:1;object-fit:cover;border:6px solid var(--ink);}
+  .about-badge{position:absolute;top:2rem;right:-2rem;width:90px;height:90px;background:var(--terracotta);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--white);line-height:1.5;}
+  .gallery-section{background:#111008;padding:5rem 0;}
+  .gallery-header{padding:0 3rem 3rem;display:flex;justify-content:space-between;align-items:flex-end;}
+  .gallery-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr;grid-template-rows:360px 260px;gap:6px;padding:0 3rem;}
+  .gallery-item{overflow:hidden;position:relative;cursor:pointer;}
+  .gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease;display:block;}
+  .gallery-item:hover img{transform:scale(1.05);}
+  .gallery-item.tall{grid-row:1/3;}
+  .gallery-item.wide{grid-column:2/4;}
+  .gallery-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(26,23,18,0.5),transparent);opacity:0;transition:opacity 0.4s;}
+  .gallery-item:hover .gallery-overlay{opacity:1;}
+  .amenities-section{background:var(--jungle);padding:6rem 3rem;}
+  .amenities-inner{max-width:1280px;margin:0 auto;}
+  .amenities-header{margin-bottom:4rem;}
+  .amenities-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-right:1px solid rgba(255,255,255,0.15);border-bottom:1px solid rgba(255,255,255,0.15);}
+  .amenity-card{padding:2.5rem 2rem;border-top:1px solid rgba(255,255,255,0.15);border-left:1px solid rgba(255,255,255,0.15);transition:background 0.3s;}
+  .amenity-card:hover{background:rgba(255,255,255,0.04);}
+  .amenity-icon{font-size:1.8rem;margin-bottom:1rem;}
+  .amenity-name{font-size:0.9rem;font-weight:500;letter-spacing:0.05em;color:var(--cream);margin-bottom:0.4rem;}
+  .amenity-desc{font-size:0.8rem;color:var(--mist);line-height:1.6;font-weight:300;}
+  .location-section{background:var(--ink);padding:6rem 3rem;}
+  .location-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;}
+  .location-places{margin-top:2.5rem;}
+  .place-row{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 0;border-bottom:1px solid rgba(245,240,232,0.1);}
+  .place-name{font-size:0.9rem;color:var(--cream);}
+  .place-dist{font-size:0.78rem;color:var(--gold);font-weight:300;}
+  .map-placeholder{aspect-ratio:4/3;position:relative;overflow:hidden;}
+  .map-placeholder iframe{position:absolute;inset:0;width:100%;height:100%;border:none;filter:grayscale(50%) contrast(0.85);}
+  .services-section{background:var(--sand);padding:6rem 3rem;}
+  .services-inner{max-width:1280px;margin:0 auto;}
+  .services-inner .section-h2{color:var(--ink);}
+  .services-inner .section-tag{color:var(--terracotta);}
+  .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5rem;margin-top:3.5rem;}
+  .service-card{background:var(--white);padding:2.5rem 2rem;position:relative;overflow:hidden;transition:transform 0.3s;}
+  .service-card:hover{transform:translateY(-4px);}
+  .service-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:var(--terracotta);transform:scaleX(0);transform-origin:left;transition:transform 0.4s ease;}
+  .service-card:hover::before{transform:scaleX(1);}
+  .service-icon{font-size:2rem;margin-bottom:1.2rem;}
+  .service-title{font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--ink);margin-bottom:0.7rem;}
+  .service-desc{font-size:0.85rem;color:#6b6355;line-height:1.75;font-weight:300;}
+  .reviews-section{background:#111008;padding:6rem 3rem;}
+  .reviews-inner{max-width:1280px;margin:0 auto;}
+  .reviews-header{margin-bottom:3rem;display:flex;justify-content:space-between;align-items:flex-end;}
+  .rating-big{font-family:'Cormorant Garamond',serif;font-size:4rem;font-weight:300;color:var(--gold);line-height:1;}
+  .rating-stars{color:var(--gold);font-size:1rem;letter-spacing:0.1em;}
+  .rating-count{font-size:0.78rem;color:var(--mist);margin-top:0.3rem;}
+  .reviews-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2rem;}
+  .review-card{background:rgba(255,255,255,0.04);padding:2rem;border-top:2px solid var(--terracotta);}
+  .review-stars{color:var(--gold);font-size:0.8rem;margin-bottom:0.8rem;}
+  .review-text{font-size:0.85rem;color:rgba(245,240,232,0.7);line-height:1.75;font-weight:300;font-style:italic;margin-bottom:1.2rem;}
+  .review-author{font-size:0.75rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--mist);}
+  .booking-section{background:var(--terracotta);padding:7rem 3rem;text-align:center;position:relative;overflow:hidden;}
+  .booking-section::before{content:'BOOK';position:absolute;font-family:'Cormorant Garamond',serif;font-size:28vw;font-weight:300;color:rgba(255,255,255,0.06);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;white-space:nowrap;}
+  .booking-section .section-h2{color:var(--white);position:relative;}
+  .booking-section .section-tag{color:rgba(255,255,255,0.6);position:relative;}
+  .booking-text{font-size:1rem;color:rgba(255,255,255,0.8);max-width:540px;margin:1.5rem auto 0;line-height:1.75;font-weight:300;position:relative;}
+  .booking-actions{margin-top:2.8rem;display:flex;gap:1rem;justify-content:center;position:relative;}
+  .discount-badge{display:inline-block;background:rgba(255,255,255,0.2);color:var(--white);font-size:0.75rem;letter-spacing:0.15em;padding:0.4rem 1rem;margin-top:1rem;position:relative;}
+  .btn-white{background:var(--white);color:var(--terracotta);padding:1rem 2.8rem;text-decoration:none;font-size:0.8rem;letter-spacing:0.18em;text-transform:uppercase;font-weight:500;transition:transform 0.15s;display:inline-block;}
+  .btn-white:hover{transform:translateY(-2px);}
+  .btn-white-outline{border:1.5px solid rgba(255,255,255,0.5);color:var(--white);padding:1rem 2.8rem;text-decoration:none;font-size:0.8rem;letter-spacing:0.18em;text-transform:uppercase;transition:border-color 0.2s,background 0.2s;display:inline-block;}
+  .btn-white-outline:hover{border-color:var(--white);background:rgba(255,255,255,0.08);}
+  footer{background:#0f0e0b;padding:4rem 3rem 2.5rem;}
+  .footer-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:4rem;padding-bottom:3rem;border-bottom:1px solid rgba(245,240,232,0.1);}
+  .footer-brand .nav-logo{font-size:1.5rem;display:block;margin-bottom:1rem;}
+  .footer-brand p{font-size:0.83rem;line-height:1.8;color:rgba(245,240,232,0.5);font-weight:300;}
+  .footer-col h4{font-size:0.68rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.4rem;}
+  .footer-col ul{list-style:none;}
+  .footer-col li{margin-bottom:0.7rem;}
+  .footer-col a{color:rgba(245,240,232,0.55);text-decoration:none;font-size:0.84rem;transition:color 0.2s;font-weight:300;}
+  .footer-col a:hover{color:var(--cream);}
+  .footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:2rem;font-size:0.75rem;color:rgba(245,240,232,0.35);max-width:1280px;margin:0 auto;}
+  .lightbox{display:none;position:fixed;inset:0;z-index:999;background:rgba(10,9,7,0.96);align-items:center;justify-content:center;}
+  .lightbox.open{display:flex;}
+  .lightbox img{max-width:90vw;max-height:88vh;object-fit:contain;}
+  .lightbox-close{position:absolute;top:2rem;right:2rem;color:var(--cream);font-size:1.8rem;cursor:pointer;background:none;border:none;}
+  .lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(245,240,232,0.1);border:none;color:var(--cream);font-size:1.5rem;padding:1rem;cursor:pointer;}
+  .lightbox-nav:hover{background:rgba(245,240,232,0.2);}
+  .lightbox-prev{left:1.5rem;}
+  .lightbox-next{right:1.5rem;}
+  @media(max-width:900px){nav{padding:1.2rem 1.5rem}.nav-links{display:none}section{padding:4rem 1.5rem}.about{grid-template-columns:1fr;gap:3rem}.about-img-inset,.about-badge{display:none}.amenities-grid{grid-template-columns:repeat(2,1fr)}.services-grid,.reviews-grid{grid-template-columns:1fr}.gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto}.gallery-item.tall{grid-row:auto}.gallery-item.wide{grid-column:auto}.footer-inner{grid-template-columns:1fr;gap:2rem}.stats-bar{flex-wrap:wrap}.stat{min-width:50%;border-right:none;border-bottom:1px solid rgba(255,255,255,0.1)}.location-inner{grid-template-columns:1fr;gap:3rem}.hero-rating{display:none}}
 
-function parseIcal(text) {
-  var b = new Set();
-  var lines = text.replace(/\r\n /g,'').replace(/\r\n\t/g,'').split(/\r?\n/);
-  var inEv=false, ds='', de='';
-  for (var i=0; i<lines.length; i++) {
-    var ln=lines[i];
-    if (ln==='BEGIN:VEVENT') { inEv=true; ds=''; de=''; }
-    if (!inEv) continue;
-    if (ln.indexOf('DTSTART')===0) ds=ln.split(':').pop().trim().substring(0,8);
-    if (ln.indexOf('DTEND')===0)   de=ln.split(':').pop().trim().substring(0,8);
-    if (ln==='END:VEVENT' && ds && de) {
-      var d=new Date(ds.substring(0,4)+'-'+ds.substring(4,6)+'-'+ds.substring(6,8)+'T00:00:00');
-      var end=new Date(de.substring(0,4)+'-'+de.substring(4,6)+'-'+de.substring(6,8)+'T00:00:00');
-      while(d<end){ b.add(d.toISOString().split('T')[0]); d.setDate(d.getDate()+1); }
-      inEv=false;
+  /* ── AVAILABILITY CALENDAR ── */
+  .cal-wrapper { margin-bottom: 1rem; }
+  .cal-status { font-size: 0.72rem; color: var(--mist); margin-bottom: 0.6rem; min-height: 1.1em; text-align:center; }
+  .cal-status.loading { color: var(--gold); }
+  .cal-status.error { color: #e07070; }
+  .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; }
+  .cal-nav button { background: none; border: 1px solid var(--sand); color: var(--ink); padding: 0.3rem 0.7rem; cursor: pointer; font-size: 0.85rem; transition: background 0.2s; }
+  .cal-nav button:hover { background: var(--sand); }
+  .cal-month-label { font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; color: var(--ink); font-weight: 400; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; }
+  .cal-dow { text-align: center; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: #aaa; padding: 0.2rem 0 0.4rem; }
+  .cal-day { text-align: center; padding: 0.42rem 0; font-size: 0.8rem; cursor: pointer; border-radius: 2px; transition: background 0.15s, color 0.15s; user-select:none; }
+  .cal-day:hover:not(.cal-blocked):not(.cal-past):not(.cal-empty) { background: rgba(192,113,74,0.12); color: var(--terracotta); }
+  .cal-day.cal-empty { cursor: default; }
+  .cal-day.cal-past { color: #ccc; cursor: not-allowed; }
+  .cal-day.cal-blocked { background: #f5ede8; color: #cbb; cursor: not-allowed; text-decoration: line-through; }
+  .cal-day.cal-selected-in { background: var(--terracotta); color: #fff; border-radius: 2px 0 0 2px; }
+  .cal-day.cal-selected-out { background: var(--terracotta); color: #fff; border-radius: 0 2px 2px 0; }
+  .cal-day.cal-in-range { background: rgba(192,113,74,0.1); color: var(--terracotta); border-radius: 0; }
+  .cal-day.cal-today { font-weight: 600; }
+  .cal-legend { display: flex; gap: 1rem; margin-top: 0.6rem; font-size: 0.68rem; color: #888; flex-wrap:wrap; }
+  .cal-legend-item { display: flex; align-items: center; gap: 0.35rem; }
+  .cal-legend-dot { width: 10px; height: 10px; border-radius: 1px; flex-shrink:0; }
+  .cal-months-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .cal-selected-dates { background: #f9f5ec; padding: 0.7rem 0.9rem; margin-top:0.6rem; font-size:0.82rem; display:none; border-left: 3px solid var(--terracotta); }
+  .cal-selected-dates span { color: var(--terracotta); font-weight:500; }
+  @media(max-width:600px){ .cal-months-row { grid-template-columns: 1fr; } }
+
+  /* ── BOOKING SIDEBAR ── */
+  .booking-sidebar { position:sticky; top:5.5rem; background:var(--white); border:1px solid var(--sand); box-shadow:0 4px 30px rgba(0,0,0,0.08); }
+  .booking-sidebar-tabs { display:flex; border-bottom:1px solid var(--sand); }
+  .booking-tab { flex:1; padding:1rem; text-align:center; cursor:pointer; font-size:0.75rem; letter-spacing:0.12em; text-transform:uppercase; color:#888; border-bottom:2px solid transparent; margin-bottom:-1px; background:none; border-top:none; border-left:none; border-right:none; font-family:'Outfit',sans-serif; transition:color 0.2s; }
+  .booking-tab.active { color:var(--terracotta); border-bottom-color:var(--terracotta); }
+  .booking-panel { padding:1.8rem; }
+  .booking-price { font-family:'Cormorant Garamond',serif; font-size:2rem; color:var(--ink); margin-bottom:0.3rem; }
+  .booking-discount { display:inline-block; background:rgba(192,113,74,0.1); color:var(--terracotta); font-size:0.68rem; letter-spacing:0.1em; padding:0.25rem 0.6rem; margin-bottom:1.2rem; font-weight:500; }
+  .booking-form-group { margin-bottom:1rem; }
+  .booking-form-group label { font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:#888; display:block; margin-bottom:0.4rem; }
+  .booking-form-group input, .booking-form-group select { width:100%; padding:0.7rem 0.9rem; border:1px solid var(--sand); font-family:'Outfit',sans-serif; font-size:0.85rem; color:var(--ink); background:var(--white); outline:none; transition:border-color 0.2s; -webkit-appearance:none; }
+  .booking-form-group input:focus, .booking-form-group select:focus { border-color:var(--terracotta); }
+  .booking-summary { background:#f9f5ec; padding:1rem; margin:1rem 0; font-size:0.82rem; }
+  .booking-summary-row { display:flex; justify-content:space-between; padding:0.3rem 0; color:#666; }
+  .booking-summary-row.discount { color:var(--terracotta); }
+  .booking-summary-row.total { font-weight:500; color:var(--ink); border-top:1px solid var(--sand); padding-top:0.6rem; margin-top:0.3rem; }
+  .payment-methods { display:flex; gap:0.5rem; margin:0.8rem 0; }
+  .payment-method-btn { flex:1; padding:0.6rem 0.4rem; border:1.5px solid var(--sand); cursor:pointer; text-align:center; font-size:0.72rem; color:#666; background:var(--white); font-family:'Outfit',sans-serif; letter-spacing:0.05em; transition:border-color 0.2s; }
+  .payment-method-btn.selected { border-color:var(--terracotta); background:rgba(192,113,74,0.06); color:var(--terracotta); }
+
+  /* ── AVAILABILITY CALENDAR ── */
+  .cal-wrapper { margin-bottom: 1rem; }
+  .cal-status { font-size: 0.72rem; color: #888; margin-bottom: 0.8rem; min-height: 1.2em; text-align:center; padding: 0.4rem; background: #f9f5ec; }
+  .cal-status.loading { color: var(--gold); }
+  .cal-status.error { color: #c07070; }
+  .cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+  .cal-nav button { background: none; border: 1px solid var(--sand); color: var(--ink); padding: 0.25rem 0.65rem; cursor: pointer; font-size: 0.9rem; line-height: 1; transition: background 0.2s; }
+  .cal-nav button:hover { background: var(--sand); }
+  .cal-month-label { font-family: 'Cormorant Garamond', serif; font-size: 1rem; color: var(--ink); font-weight: 400; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 2px; margin-bottom: 0.5rem; }
+  .cal-dow { text-align: center; font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; color: #bbb; padding: 0.15rem 0 0.35rem; }
+  .cal-day { text-align: center; padding: 0.38rem 0; font-size: 0.78rem; cursor: pointer; border-radius: 2px; transition: background 0.15s, color 0.15s; user-select:none; }
+  .cal-day:hover:not(.cal-blocked):not(.cal-past):not(.cal-empty) { background: rgba(192,113,74,0.15); color: var(--terracotta); }
+  .cal-day.cal-empty { cursor: default; }
+  .cal-day.cal-past { color: #d0d0d0; cursor: not-allowed; }
+  .cal-day.cal-blocked { background: #fdf0ec; color: #dbb; cursor: not-allowed; text-decoration: line-through; font-size: 0.72rem; }
+  .cal-day.cal-selected-in { background: var(--terracotta); color: #fff !important; border-radius: 2px 0 0 2px; }
+  .cal-day.cal-selected-out { background: var(--terracotta); color: #fff !important; border-radius: 0 2px 2px 0; }
+  .cal-day.cal-in-range { background: rgba(192,113,74,0.12); color: var(--terracotta); border-radius: 0; }
+  .cal-day.cal-today { font-weight: 700; }
+  .cal-legend { display: flex; gap: 0.8rem; margin: 0.5rem 0 1rem; font-size: 0.65rem; color: #999; flex-wrap: wrap; }
+  .cal-legend-item { display: flex; align-items: center; gap: 0.3rem; }
+  .cal-legend-dot { width: 9px; height: 9px; border-radius: 1px; flex-shrink:0; }
+  .cal-two-months { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  .cal-selected-bar { background: rgba(192,113,74,0.08); border-left: 3px solid var(--terracotta); padding: 0.6rem 0.9rem; margin: 0.5rem 0 1rem; font-size: 0.82rem; display: none; }
+  .cal-selected-bar span { color: var(--terracotta); font-weight: 500; }
+
+  /* ── BOOKING SIDEBAR ── */
+  .booking-wrap { max-width: 1280px; margin: 0 auto; padding: 5rem 3rem; display: grid; grid-template-columns: 1fr 420px; gap: 4rem; align-items: start; background: var(--white); }
+  .booking-intro h3 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: var(--ink); margin-bottom: 1rem; }
+  .booking-intro p { font-size: 0.9rem; color: #666; line-height: 1.8; font-weight: 300; margin-bottom: 0.8rem; }
+  .booking-sidebar { background: var(--white); border: 1px solid var(--sand); box-shadow: 0 4px 30px rgba(0,0,0,0.09); position: sticky; top: 5.5rem; }
+  .booking-sidebar-tabs { display: flex; border-bottom: 1px solid var(--sand); }
+  .booking-tab { flex:1; padding: 1rem; text-align: center; cursor: pointer; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: #999; border-bottom: 2px solid transparent; margin-bottom: -1px; background: none; border-top: none; border-left: none; border-right: none; font-family: 'Outfit', sans-serif; transition: color 0.2s; }
+  .booking-tab.active { color: var(--terracotta); border-bottom-color: var(--terracotta); font-weight: 500; }
+  .booking-panel { padding: 1.6rem; }
+  .booking-price-row { margin-bottom: 0.4rem; }
+  .booking-price-big { font-family: 'Cormorant Garamond', serif; font-size: 1.9rem; color: var(--ink); }
+  .booking-price-big span { font-family: 'Outfit', sans-serif; font-size: 0.75rem; color: #999; }
+  .booking-discount-tag { display: inline-block; background: rgba(192,113,74,0.1); color: var(--terracotta); font-size: 0.68rem; letter-spacing: 0.1em; padding: 0.22rem 0.6rem; margin-bottom: 1.2rem; font-weight: 500; }
+  .b-label { font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: #aaa; display: block; margin-bottom: 0.35rem; margin-top: 0.9rem; }
+  .b-input, .b-select { width: 100%; padding: 0.65rem 0.85rem; border: 1px solid var(--sand); font-family: 'Outfit', sans-serif; font-size: 0.84rem; color: var(--ink); background: var(--white); outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
+  .b-input:focus, .b-select:focus { border-color: var(--terracotta); }
+  .b-summary { background: #f9f5ec; padding: 1rem; margin: 1rem 0; font-size: 0.82rem; }
+  .b-summary-row { display: flex; justify-content: space-between; padding: 0.28rem 0; color: #777; }
+  .b-summary-row.disc { color: var(--terracotta); }
+  .b-summary-row.tot { font-weight: 500; color: var(--ink); border-top: 1px solid var(--sand); padding-top: 0.55rem; margin-top: 0.3rem; }
+  .pay-methods { display: flex; gap: 0.4rem; margin: 0.6rem 0 1rem; }
+  .pay-btn { flex:1; padding: 0.55rem 0.3rem; border: 1.5px solid var(--sand); cursor: pointer; text-align: center; font-size: 0.7rem; color: #888; background: var(--white); font-family: 'Outfit', sans-serif; transition: border-color 0.2s, color 0.2s; }
+  .pay-btn.active { border-color: var(--terracotta); background: rgba(192,113,74,0.05); color: var(--terracotta); }
+  .b-btn { width: 100%; padding: 1rem; background: var(--terracotta); color: #fff; border: none; font-family: 'Outfit', sans-serif; font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; margin-top: 1rem; transition: background 0.2s; }
+  .b-btn:hover { background: #a85e3a; }
+  .airbnb-btn-red { display: block; padding: 0.9rem; background: #FF5A5F; color: #fff; text-align: center; text-decoration: none; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; font-family: 'Outfit', sans-serif; transition: background 0.2s; margin-top: 1rem; }
+  .airbnb-btn-red:hover { background: #e04448; }
+  .b-confirm { display: none; padding: 2rem; text-align: center; background: #fff; }
+  .b-confirm h4 { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 300; margin: 0.5rem 0; }
+  .b-confirm-detail { background: #f9f5ec; padding: 0.8rem 1rem; text-align: left; font-size: 0.82rem; line-height: 2; margin: 1rem 0; }
+
+  @media (max-width: 1024px) { .booking-wrap { grid-template-columns: 1fr; } .booking-sidebar { position: static; } }
+  @media (max-width: 600px) { .cal-two-months { grid-template-columns: 1fr; } .booking-wrap { padding: 3rem 1.5rem; } }
+
+</style>
+</head>
+<body>
+<nav id="navbar">
+  <a href="avani-bali-villas.html" class="nav-logo">Avani Bali Villas</a>
+  <ul class="nav-links">
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#amenities">Amenities</a></li>
+    <li><a href="#location">Location</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="avani-bali-villas.html">← All Villas</a></li>
+    <li><a href="https://www.airbnb.com/rooms/1621644751619878196" target="_blank" class="nav-cta">Book Now</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-eyebrow">Avani Bali Villas &nbsp;·&nbsp; Ubud, Bali, Indonesia</div>
+  <h1><em>Linum</em><br>Villa</h1>
+  <p class="hero-sub">A brand new 3-bedroom garden pool villa in Ubud — thoughtfully designed for comfort, privacy, and a deep connection with Bali's natural surroundings.</p>
+  <div class="hero-actions">
+    <a href="#booking" class="btn-primary">Book Direct — Save 5%</a>
+    <a href="https://www.airbnb.com/rooms/1621644751619878196" target="_blank" class="btn-outline">View on Airbnb</a>
+  </div>
+  <div class="hero-rating">
+    <div class="hero-rating-num">New</div>
+    <div class="hero-rating-stars">★★★★★</div>
+    <div class="hero-rating-label">2 reviews</div>
+    <div class="hero-rating-label" style="margin-top:0.4rem;color:var(--terracotta)">Superhost</div>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat"><div class="stat-num">3</div><div class="stat-label">Bedrooms</div></div>
+  <div class="stat"><div class="stat-num">6</div><div class="stat-label">Max Guests</div></div>
+  <div class="stat"><div class="stat-num">3</div><div class="stat-label">Bathrooms</div></div>
+  <div class="stat"><div class="stat-num">New</div><div class="stat-label">Listing</div></div>
+  <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Pool Access</div></div>
+</div>
+
+<section id="about">
+  <div class="about">
+    <div class="about-text">
+      <div class="section-tag">The Villa</div>
+      <h2 class="section-h2">Brand New <em>Garden</em><br>Pool Villa</h2>
+      <p>Welcome to Linum Villa — a brand new 3-bedroom garden pool retreat in Ubud, thoughtfully designed for comfort, privacy, and a genuine connection with nature. Each bedroom features a king bed, air conditioning, fresh linens, and large windows that frame calming garden views.</p>
+      <p>The open-plan living and dining area flows seamlessly outdoors to a private pool surrounded by lush tropical greenery. The spacious private garden enhances the sense of serenity — authentic Ubud views that can't be manufactured, only discovered.</p>
+      <p>Just 2.5km from Locavore NXT (Asia's Top 50 Best Restaurants) and hosted by Aprilia, a Superhost with 374 reviews and a 4.87 average rating. Every stay is managed with meticulous care.</p>
+    </div>
+    <div class="about-visual">
+      <img class="about-img-main" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/d4fc31d5-92d3-42b8-91fb-e887764907bf.png?im_w=1440" alt="Linum Villa interior">
+      <img class="about-img-inset" src="https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/bf4116c9-f311-4d41-9fc5-fa708ba5364f.png?im_w=720" alt="Linum Villa pool">
+      <div class="about-badge">Brand<br>New<br>2025</div>
+    </div>
+  </div>
+</section>
+
+<div class="gallery-section" id="gallery">
+  <div class="gallery-header">
+    <div>
+      <div class="section-tag">Gallery</div>
+      <h2 class="section-h2">Garden, Pool<br>&amp; <em>Pure Serenity</em></h2>
+    </div>
+    <a href="https://www.airbnb.com/rooms/1621644751619878196" target="_blank" class="btn-outline" style="font-size:0.75rem;padding:0.7rem 1.6rem">View All Photos</a>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-item tall" onclick="openLightbox(0)">
+      <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/f4644d24-585b-4914-8577-64048e415159.png?im_w=1440" alt="Linum exterior">
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox(1)">
+      <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/d4fc31d5-92d3-42b8-91fb-e887764907bf.png?im_w=720" alt="Linum interior">
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox(2)">
+      <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/bf4116c9-f311-4d41-9fc5-fa708ba5364f.png?im_w=720" alt="Linum pool">
+      <div class="gallery-overlay"></div>
+    </div>
+    <div class="gallery-item wide" onclick="openLightbox(3)">
+      <img src="https://a0.muscache.com/im/pictures/hosting/Hosting-1621644751619878196/original/e8bc8e2c-4d16-4b5a-aa60-08e690a7f78e.png?im_w=1440" alt="Linum bedroom">
+      <div class="gallery-overlay"></div>
+    </div>
+  </div>
+</div>
+
+<section class="amenities-section" id="amenities">
+  <div class="amenities-inner">
+    <div class="amenities-header">
+      <div class="section-tag">What's Included</div>
+      <h2 class="section-h2">Designed for <em>Comfort</em><br>&amp; Connection</h2>
+    </div>
+    <div class="amenities-grid">
+      <div class="amenity-card"><div class="amenity-icon">🏊</div><div class="amenity-name">Private Pool</div><div class="amenity-desc">Tropical garden pool — peaceful swims under the Bali sun.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">🌿</div><div class="amenity-name">Spacious Garden</div><div class="amenity-desc">Private garden with authentic Ubud greenery and natural views.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">🛎️</div><div class="amenity-name">Personal Butler</div><div class="amenity-desc">Villa staff available on-call for every need during your stay.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">🧹</div><div class="amenity-name">Daily Housekeeping</div><div class="amenity-desc">Daily cleaning plus garden and pool maintenance included.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">🍳</div><div class="amenity-name">Full Kitchen</div><div class="amenity-desc">Open-plan kitchen and dining seamlessly connected to the garden.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">📶</div><div class="amenity-name">High-Speed WiFi</div><div class="amenity-desc">Fast WiFi and dedicated workspace for remote workers.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">🛏️</div><div class="amenity-name">3 King Bedrooms</div><div class="amenity-desc">Each with large windows, garden views, and fresh linens.</div></div>
+      <div class="amenity-card"><div class="amenity-icon">🚗</div><div class="amenity-name">Free Parking</div><div class="amenity-desc">Private parking suitable for one medium-sized car.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="location-section" id="location">
+  <div class="location-inner">
+    <div>
+      <div class="section-tag">Location</div>
+      <h2 class="section-h2">Kecamatan Ubud,<br><em>Near the Best</em></h2>
+      <div class="location-places">
+        <div class="place-row"><span class="place-name">Locavore NXT (Asia Top 50)</span><span class="place-dist">2.5 km · 5 min</span></div>
+        <div class="place-row"><span class="place-name">Raw Gym</span><span class="place-dist">3 km · 5 min</span></div>
+        <div class="place-row"><span class="place-name">Titik Batu Ubud Club</span><span class="place-dist">2.8 km · 7 min</span></div>
+        <div class="place-row"><span class="place-name">Pison Ubud</span><span class="place-dist">5.4 km · 14 min</span></div>
+        <div class="place-row"><span class="place-name">Monkey Forest Ubud</span><span class="place-dist">9 km · 15 min</span></div>
+        <div class="place-row"><span class="place-name">Ngurah Rai International Airport</span><span class="place-dist">35 km · 70 min</span></div>
+      </div>
+    </div>
+    <div class="map-placeholder">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63129.07!2d115.21193!3d-8.50938!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd718a1f0df1d89%3A0xd9e4bce78c5c7fa!2sUbud%2C%20Bali%2C%20Indonesia!5e0!3m2!1sen!2s" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+  </div>
+</section>
+
+<section class="services-section" id="services">
+  <div class="services-inner">
+    <div class="section-tag">Guest Services</div>
+    <h2 class="section-h2">Superhost <em>Care</em></h2>
+    <div class="services-grid">
+      <div class="service-card"><div class="service-icon">✈️</div><div class="service-title">Airport Transfers</div><div class="service-desc">Private transfers to and from Ngurah Rai International Airport. Arrange in advance and begin your holiday the moment you land.</div></div>
+      <div class="service-card"><div class="service-icon">🗺️</div><div class="service-title">Sightseeing Trips</div><div class="service-desc">Explore Ubud's temples, rice terraces, and cultural treasures. We arrange the experience so you focus on the wonder.</div></div>
+      <div class="service-card"><div class="service-icon">🍽️</div><div class="service-title">Food & Beverage</div><div class="service-desc">Grocery preparation and in-villa catering available with a service charge. Personalised meals in your own private space.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="reviews-section" id="reviews">
+  <div class="reviews-inner">
+    <div class="reviews-header">
+      <div>
+        <div class="section-tag">Early Guests</div>
+        <h2 class="section-h2" style="color:var(--cream)">First <em>Impressions</em></h2>
+      </div>
+      <div style="display:flex;align-items:center;gap:2rem">
+        <div class="rating-big">New</div>
+        <div>
+          <div class="rating-stars">★★★★★</div>
+          <div class="rating-count">2 reviews · Superhost team</div>
+        </div>
+      </div>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">"Brand new villa with everything you could need. Pristine condition, beautiful pool, and the team was so attentive. An incredible find in Ubud."</div><div class="review-author">Airbnb Guest</div></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><div class="review-text">"The garden and pool are stunning — total privacy surrounded by nature. The open-plan layout feels incredibly spacious. Highly recommend for families."</div><div class="review-author">Airbnb Guest</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="booking-section" id="booking">
+  <div class="section-tag">Reserve Linum Villa</div>
+  <h2 class="section-h2">Be Among the <em>First</em><br>to Stay</h2>
+  <p class="booking-text">Check-in after 3:00 PM · Check-out before 12:00 PM · Up to 6 guests. Book direct and save 5% off the Airbnb rate — guaranteed.</p>
+  <div style="position:relative"><div class="discount-badge">🎉 Save 5% booking direct</div></div>
+  <div class="booking-actions">
+    <a href="avani-bali-villas.html" class="btn-white">Book Direct — 5% Off</a>
+    <a href="https://www.airbnb.com/rooms/1621644751619878196" target="_blank" class="btn-white-outline">Book on Airbnb</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="avani-bali-villas.html" class="nav-logo">Avani Bali Villas</a>
+      <p>Four private pool villas in the heart of Ubud, Bali. Each stay is personal, each villa is unique.</p>
+      <p style="margin-top:1rem">📧 <a href="/cdn-cgi/l/email-protection#a1d1d2c0c8c5d4e1c6ccc0c8cd8fc2cecc" style="color:var(--gold);text-decoration:none"><span class="__cf_email__" data-cfemail="463635272f223306212b272f2a6825292b">[email&#160;protected]</span></a></p>
+      <p>📱 <a href="https://wa.me/14693460620" style="color:var(--gold);text-decoration:none">WhatsApp: +1 469 346 0620</a></p>
+    </div>
+    <div class="footer-col">
+      <h4>Our Villas</h4>
+      <ul>
+        <li><a href="geya-villa.html">Geya Villa</a></li>
+        <li><a href="bellis-villa.html">Bellis 68</a></li>
+        <li><a href="sandewa-villa.html">Sandewa Villa</a></li>
+        <li><a href="linum-villa.html">Linum Villa</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Book</h4>
+      <ul>
+        <li><a href="avani-bali-villas.html">Book Direct (5% off)</a></li>
+        <li><a href="https://www.airbnb.com/rooms/1621644751619878196" target="_blank">Linum on Airbnb</a></li>
+        <li><a href="https://www.airbnb.com/contact_host/1621644751619878196/send_message" target="_blank">Message Host</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Avani Bali Villas · Ubud, Bali, Indonesia</span>
+    <span>Linum Villa · Hosted by Aprilia &amp; Prashanth</span>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-nav lightbox-prev" onclick="changeImg(-1)">‹</button>
+  <img id="lightbox-img" src="" alt="">
+  <button class="lightbox-nav lightbox-next" onclick="changeImg(1)">›</button>
+</div>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
+  // ══ CALENDAR + BOOKING ══
+  const ICAL_URL  = '';
+  const BASE_PRICE = 240;
+  let blockedDates = new Set();
+  let checkIn = null, checkOut = null;
+  let viewYear = null, viewMonth = null;
+  let payMethod = 'card';
+
+  function parseIcal(text) {
+    const b = new Set();
+    const lines = text.replace(/\r\n /g,'').replace(/\r\n\t/g,'').split(/\r?\n/);
+    let inEv=false, ds='', de='';
+    for (const ln of lines) {
+      if (ln==='BEGIN:VEVENT') { inEv=true; ds=''; de=''; }
+      if (!inEv) continue;
+      if (ln.startsWith('DTSTART')) ds = ln.split(':').pop().trim().substring(0,8);
+      if (ln.startsWith('DTEND'))   de = ln.split(':').pop().trim().substring(0,8);
+      if (ln==='END:VEVENT' && ds && de) {
+        let d = new Date(ds.substring(0,4)+'-'+ds.substring(4,6)+'-'+ds.substring(6,8)+'T00:00:00');
+        const end = new Date(de.substring(0,4)+'-'+de.substring(4,6)+'-'+de.substring(6,8)+'T00:00:00');
+        while (d < end) { b.add(d.toISOString().split('T')[0]); d.setDate(d.getDate()+1); }
+        inEv=false;
+      }
+    }
+    return b;
+  }
+
+  async function initCalendar() {
+    const st = document.getElementById('cal-status');
+    if (!ICAL_URL) { st.textContent='Select your check-in date'; st.className='cal-status'; renderCal(); return; }
+    st.textContent='Loading availability from Airbnb...'; st.className='cal-status loading';
+    try {
+      const r = await fetch('https://api.allorigins.win/raw?url='+encodeURIComponent(ICAL_URL));
+      if (!r.ok) throw new Error();
+      blockedDates = parseIcal(await r.text());
+      st.textContent = '✓ Availability loaded — select your check-in date';
+      st.className = 'cal-status';
+    } catch(e) {
+      st.textContent = 'Live calendar unavailable — dates shown are indicative';
+      st.className = 'cal-status error';
+    }
+    renderCal();
+  }
+
+  function dStr(y,m,d) { return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'); }
+
+  function renderCal() {
+    const today = new Date(); today.setHours(0,0,0,0);
+    if (!viewYear) { viewYear=today.getFullYear(); viewMonth=today.getMonth(); }
+    for (let s=0;s<2;s++) {
+      let y=viewYear, m=viewMonth+s;
+      if (m>11) { m-=12; y++; }
+      renderMonth(y,m,s,today);
     }
   }
-  return b;
-}
 
-async function initCalendar() {
-  var st=document.getElementById('cal-status');
-  if (!st) return;
-  st.textContent='Loading availability...'; st.className='cal-status loading';
-  try {
-    var r=await fetch('/.netlify/functions/ical?villa=geya');
-    if (!r.ok) throw new Error('HTTP '+r.status);
-    blockedDates=parseIcal(await r.text());
-    st.textContent='Availability loaded — select your check-in date';
-    st.className='cal-status';
-  } catch(e) {
-    st.textContent='Could not load live availability — contact us to check dates';
-    st.className='cal-status error';
+  function renderMonth(yr,mo,slot,today) {
+    const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const DOW=['Su','Mo','Tu','We','Th','Fr','Sa'];
+    const fd=new Date(yr,mo,1).getDay(), dim=new Date(yr,mo+1,0).getDate();
+    let h='<div class="cal-nav">';
+    h += slot===0 ? '<button onclick="shiftCal(-1)">&#8249;</button>' : '<div></div>';
+    h += '<div class="cal-month-label">'+MN[mo]+' '+yr+'</div>';
+    h += slot===1 ? '<button onclick="shiftCal(1)">&#8250;</button>' : '<div></div>';
+    h += '</div><div class="cal-grid">';
+    DOW.forEach(d=>{ h+='<div class="cal-dow">'+d+'</div>'; });
+    for (let i=0;i<fd;i++) h+='<div class="cal-day cal-empty"></div>';
+    for (let d=1;d<=dim;d++) {
+      const ds=dStr(yr,mo,d), dt=new Date(ds+'T00:00:00');
+      let c='cal-day';
+      if (dt<today) c+=' cal-past';
+      else if (blockedDates.has(ds)) c+=' cal-blocked';
+      else if (checkIn&&checkOut&&ds>checkIn&&ds<checkOut) c+=' cal-in-range';
+      if (ds===checkIn) c+=' cal-selected-in';
+      if (ds===checkOut) c+=' cal-selected-out';
+      if (ds===new Date().toISOString().split('T')[0]) c+=' cal-today';
+      h+='<div class="'+c+'" onclick="pickDay(\''+ds+'\')">'+d+'</div>';
+    }
+    h+='</div>';
+    document.getElementById('cal-m'+slot).innerHTML=h;
   }
-  renderCal();
-}
 
-function dStr(y,m,d) { return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'); }
-
-function renderCal() {
-  var today=new Date(); today.setHours(0,0,0,0);
-  if (!viewYear) { viewYear=today.getFullYear(); viewMonth=today.getMonth(); }
-  for (var s=0;s<2;s++) {
-    var y=viewYear, m=viewMonth+s;
-    if (m>11) { m-=12; y++; }
-    renderMonth(y,m,s,today);
+  function shiftCal(dir) {
+    viewMonth+=dir;
+    if (viewMonth<0) { viewMonth=11; viewYear--; }
+    if (viewMonth>11) { viewMonth=0; viewYear++; }
+    renderCal();
   }
-}
 
-function renderMonth(yr,mo,slot,today) {
-  var el=document.getElementById('cal-m'+slot);
-  if (!el) return;
-  var MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  var DOW=['Su','Mo','Tu','We','Th','Fr','Sa'];
-  var fd=new Date(yr,mo,1).getDay(), dim=new Date(yr,mo+1,0).getDate();
-  var h='<div class="cal-nav">';
-  h+=slot===0?'<button onclick="shiftCal(-1)">&#8249;</button>':'<div></div>';
-  h+='<div class="cal-month-label">'+MN[mo]+' '+yr+'</div>';
-  h+=slot===1?'<button onclick="shiftCal(1)">&#8250;</button>':'<div></div>';
-  h+='</div><div class="cal-grid">';
-  DOW.forEach(function(d){ h+='<div class="cal-dow">'+d+'</div>'; });
-  for (var i=0;i<fd;i++) h+='<div class="cal-day cal-empty"></div>';
-  for (var d=1;d<=dim;d++) {
-    var ds=dStr(yr,mo,d), dt=new Date(ds+'T00:00:00');
-    var c='cal-day';
-    if (dt<today) c+=' cal-past';
-    else if (blockedDates.has(ds)) c+=' cal-blocked';
-    else if (checkIn&&checkOut&&ds>checkIn&&ds<checkOut) c+=' cal-in-range';
-    if (ds===checkIn) c+=' cal-selected-in';
-    if (ds===checkOut) c+=' cal-selected-out';
-    if (ds===new Date().toISOString().split('T')[0]) c+=' cal-today';
-    h+='<div class="'+c+'" onclick="pickDay(''+ds+'')">'+d+'</div>';
+  function pickDay(ds) {
+    const today=new Date(); today.setHours(0,0,0,0);
+    if (new Date(ds+'T00:00:00')<today || blockedDates.has(ds)) return;
+    if (!checkIn||(checkIn&&checkOut)) { checkIn=ds; checkOut=null; }
+    else if (ds<=checkIn) { checkIn=ds; checkOut=null; }
+    else {
+      let d=new Date(checkIn+'T00:00:00'); d.setDate(d.getDate()+1);
+      const end=new Date(ds+'T00:00:00'); let bad=false;
+      while(d<end) { if(blockedDates.has(d.toISOString().split('T')[0])) { bad=true; break; } d.setDate(d.getDate()+1); }
+      if(bad) { checkIn=ds; checkOut=null; } else checkOut=ds;
+    }
+    const fmt=s=>new Date(s+'T00:00:00').toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});
+    const bar=document.getElementById('cal-bar');
+    document.getElementById('cal-in-txt').textContent  = checkIn  ? fmt(checkIn)  : '—';
+    document.getElementById('cal-out-txt').textContent = checkOut ? fmt(checkOut) : '—';
+    bar.style.display = checkIn ? 'block' : 'none';
+    const st=document.getElementById('cal-status');
+    st.textContent = checkIn&&checkOut ? '✓ Dates selected' : checkIn ? 'Now select your check-out date' : '✓ Availability loaded — select your check-in date';
+    renderCal();
+    if (checkIn&&checkOut) calcBooking();
   }
-  h+='</div>';
-  el.innerHTML=h;
-}
 
-function shiftCal(dir) {
-  viewMonth+=dir;
-  if (viewMonth<0){ viewMonth=11; viewYear--; }
-  if (viewMonth>11){ viewMonth=0; viewYear++; }
-  renderCal();
-}
-
-function pickDay(ds) {
-  var today=new Date(); today.setHours(0,0,0,0);
-  if (new Date(ds+'T00:00:00')<today||blockedDates.has(ds)) return;
-  if (!checkIn||(checkIn&&checkOut)){ checkIn=ds; checkOut=null; }
-  else if (ds<=checkIn){ checkIn=ds; checkOut=null; }
-  else {
-    var d=new Date(checkIn+'T00:00:00'); d.setDate(d.getDate()+1);
-    var end=new Date(ds+'T00:00:00'); var bad=false;
-    while(d<end){ if(blockedDates.has(d.toISOString().split('T')[0])){ bad=true; break; } d.setDate(d.getDate()+1); }
-    if(bad){ checkIn=ds; checkOut=null; } else checkOut=ds;
+  function calcBooking() {
+    if (!checkIn||!checkOut) return;
+    const nights=Math.round((new Date(checkOut)-new Date(checkIn))/86400000);
+    if (nights<=0) return;
+    const sub=nights*BASE_PRICE, disc=Math.round(sub*0.05), tot=sub-disc;
+    document.getElementById('b-nights').textContent=nights+' night'+(nights>1?'s':'')+' × $'+BASE_PRICE;
+    document.getElementById('b-sub').textContent='$'+sub;
+    document.getElementById('b-disc').textContent='-$'+disc;
+    document.getElementById('b-tot').textContent='$'+tot;
+    document.getElementById('b-summary').style.display='block';
   }
-  var fmt=function(s){ return new Date(s+'T00:00:00').toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'}); };
-  var bar=document.getElementById('cal-bar');
-  if(bar){ document.getElementById('cal-in-txt').textContent=checkIn?fmt(checkIn):'--'; document.getElementById('cal-out-txt').textContent=checkOut?fmt(checkOut):'--'; bar.style.display=checkIn?'block':'none'; }
-  var st=document.getElementById('cal-status');
-  if(st) st.textContent=checkIn&&checkOut?'Dates selected':checkIn?'Now select check-out date':'Select check-in date';
-  renderCal();
-  if(checkIn&&checkOut) calcBooking();
-}
 
-function calcBooking() {
-  if(!checkIn||!checkOut) return;
-  var nights=Math.round((new Date(checkOut)-new Date(checkIn))/86400000);
-  if(nights<=0) return;
-  var sub=nights*BASE_PRICE, disc=Math.round(sub*0.05), tot=sub-disc;
-  document.getElementById('b-nights').textContent=nights+' night'+(nights>1?'s':'')+' x $'+BASE_PRICE;
-  document.getElementById('b-sub').textContent='$'+sub;
-  document.getElementById('b-disc').textContent='-$'+disc;
-  document.getElementById('b-tot').textContent='$'+tot;
-  document.getElementById('b-summary').style.display='block';
-}
+  function switchBookTab(tab,el) {
+    document.querySelectorAll('.booking-tab').forEach(t=>t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('bp-direct').style.display=tab==='direct'?'block':'none';
+    document.getElementById('bp-airbnb').style.display=tab==='airbnb'?'block':'none';
+  }
 
-function switchBookTab(tab,el) {
-  document.querySelectorAll('.booking-tab').forEach(function(t){ t.classList.remove('active'); });
-  el.classList.add('active');
-  document.getElementById('bp-direct').style.display=tab==='direct'?'block':'none';
-  document.getElementById('bp-airbnb').style.display=tab==='airbnb'?'block':'none';
-}
+  function pickPay(method,el) {
+    payMethod=method;
+    document.querySelectorAll('.pay-btn').forEach(b=>b.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('pf-card').style.display=method==='card'?'block':'none';
+    document.getElementById('pf-paypal').style.display=method==='paypal'?'block':'none';
+    document.getElementById('pf-bank').style.display=method==='bank'?'block':'none';
+  }
 
-function pickPay(method,el) {
-  payMethod=method;
-  document.querySelectorAll('.pay-btn').forEach(function(b){ b.classList.remove('active'); });
-  el.classList.add('active');
-  document.getElementById('pf-card').style.display=method==='card'?'block':'none';
-  document.getElementById('pf-paypal').style.display=method==='paypal'?'block':'none';
-  document.getElementById('pf-bank').style.display=method==='bank'?'block':'none';
-}
+  function fmtCard(el) {
+    let v=el.value.replace(/\D/g,'').substring(0,16);
+    el.value=v.replace(/(.{4})/g,'$1 ').trim();
+  }
 
-function fmtCard(el) {
-  var v=el.value.replace(/\D/g,'').substring(0,16);
-  el.value=v.replace(/(.{4})/g,'$1 ').trim();
-}
+  function confirmBooking() {
+    const name=document.getElementById('b-name').value.trim();
+    const email=document.getElementById('b-email').value.trim();
+    if (!name||!email||!checkIn||!checkOut) { alert('Please fill in your name, email and select travel dates.'); return; }
+    const nights=Math.round((new Date(checkOut)-new Date(checkIn))/86400000);
+    const tot=Math.round(nights*BASE_PRICE*0.95);
+    const fmt=s=>new Date(s+'T00:00:00').toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'});
+    const pm={card:'Credit/Debit Card',paypal:'PayPal',bank:'Bank Transfer'};
+    document.getElementById('b-conf-detail').innerHTML=
+      '<b>Check-in:</b> '+fmt(checkIn)+'<br>'+
+      '<b>Check-out:</b> '+fmt(checkOut)+'<br>'+
+      '<b>Guests:</b> '+document.getElementById('b-guests').value+'<br>'+
+      '<b>Total (5% off):</b> $'+tot+'<br>'+
+      '<b>Payment:</b> '+pm[payMethod];
+    document.getElementById('b-form').style.display='none';
+    document.getElementById('b-confirm').style.display='block';
+  }
 
-function confirmBooking() {
-  var name=document.getElementById('b-name').value.trim();
-  var email=document.getElementById('b-email').value.trim();
-  if(!name||!email||!checkIn||!checkOut){ alert('Please fill in your name, email and select travel dates.'); return; }
-  var nights=Math.round((new Date(checkOut)-new Date(checkIn))/86400000);
-  var tot=Math.round(nights*BASE_PRICE*0.95);
-  var fmt=function(s){ return new Date(s+'T00:00:00').toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'}); };
-  var pm={card:'Credit/Debit Card',paypal:'PayPal',bank:'Bank Transfer'};
-  document.getElementById('b-conf-detail').innerHTML=
-    '<b>Check-in:</b> '+fmt(checkIn)+'<br>'+
-    '<b>Check-out:</b> '+fmt(checkOut)+'<br>'+
-    '<b>Guests:</b> '+document.getElementById('b-guests').value+'<br>'+
-    '<b>Total (5% off):</b> $'+tot+'<br>'+
-    '<b>Payment:</b> '+pm[payMethod];
-  document.getElementById('b-form').style.display='none';
-  document.getElementById('b-confirm').style.display='block';
-}
+  window.addEventListener('DOMContentLoaded', initCalendar);
 
-document.addEventListener('DOMContentLoaded', initCalendar);
+>
