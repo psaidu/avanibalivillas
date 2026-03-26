@@ -48,15 +48,15 @@ function getFinalPrice(ds) {
 }
 
 function getPriceLabel(ds) {
-  if (customPrices[ds]) return '$' + customPrices[ds] + '/night ✎';
+  if (customPrices[ds]) return '🔐 Admin Price: $' + customPrices[ds] + '/night';
   var base  = getSeasonalPrice(ds);
   var today = new Date(); today.setHours(0,0,0,0);
   var date  = new Date(ds + 'T00:00:00');
   var daysUntil = Math.round((date - today) / 86400000);
   if (daysUntil >= EARLY_BIRD_DAYS) {
-    return '$' + Math.round(base * (1 - EARLY_BIRD_PCT/100)) + '/night 🕊 Early Bird';
+    return '$' + base + ' → $' + Math.round(base * (1 - EARLY_BIRD_PCT/100)) + '/night 🕊 Early Bird';
   } else if (daysUntil <= LAST_MINUTE_DAYS && daysUntil >= 0) {
-    return '$' + Math.round(base * (1 - LAST_MINUTE_PCT/100)) + '/night ⚡ Last Minute';
+    return '$' + base + ' → $' + Math.round(base * (1 - LAST_MINUTE_PCT/100)) + '/night ⚡ Last Minute';
   }
   return '$' + base + '/night';
 }
@@ -64,14 +64,31 @@ function getPriceLabel(ds) {
 function getStayTotal(ciDs, coDs) {
   var d   = new Date(ciDs + 'T00:00:00');
   var end = new Date(coDs + 'T00:00:00');
-  var total = 0, nights = 0;
+  var baseTotal = 0, finalTotal = 0, nights = 0;
+  var earlyBirdNights = 0, lastMinuteNights = 0, adminNights = 0;
+  var today = new Date(); today.setHours(0,0,0,0);
   while (d < end) {
     var ds = d.toISOString().split('T')[0];
-    total += getFinalPrice(ds);
+    var base = getSeasonalPrice(ds);
+    var final = getFinalPrice(ds);
+    var daysUntil = Math.round((new Date(ds+'T00:00:00') - today) / 86400000);
+    baseTotal  += base;
+    finalTotal += final;
+    if (customPrices[ds])                               adminNights++;
+    else if (daysUntil >= EARLY_BIRD_DAYS)              earlyBirdNights++;
+    else if (daysUntil <= LAST_MINUTE_DAYS && daysUntil >= 0) lastMinuteNights++;
     nights++;
     d.setDate(d.getDate() + 1);
   }
-  return { total: total, nights: nights };
+  return {
+    nights: nights,
+    baseTotal: baseTotal,
+    finalTotal: finalTotal,
+    earlyBirdNights: earlyBirdNights,
+    lastMinuteNights: lastMinuteNights,
+    adminNights: adminNights,
+    earlyBirdSaving: baseTotal - finalTotal > 0 ? baseTotal - finalTotal : 0,
+  };
 }
 
 // ── ADMIN MODE ───────────────────────────────────────────────
@@ -232,15 +249,31 @@ function pickDay(ds) {
 
 function calcBooking() {
   if(!checkIn||!checkOut) return;
-  var result  = getStayTotal(checkIn, checkOut);
-  var nights  = result.nights;
-  var total   = result.total;
-  var disc    = Math.round(total * 0.05);
-  var finalT  = total - disc;
-  document.getElementById('b-nights').textContent = nights+' night'+(nights>1?'s':'')+' (variable pricing)';
-  document.getElementById('b-sub').textContent    = '$'+total;
-  document.getElementById('b-disc').textContent   = '-$'+disc;
-  document.getElementById('b-tot').textContent    = '$'+finalT;
+  var r = getStayTotal(checkIn, checkOut);
+  var directDisc = Math.round(r.finalTotal * 0.05);
+  var grandTotal = r.finalTotal - directDisc;
+
+  var rows = '';
+  rows += '<div class="b-summary-row"><span>'+r.nights+' night'+(r.nights>1?'s':'')+' (base rate)</span><span>$'+r.baseTotal+'</span></div>';
+  if (r.earlyBirdNights > 0) {
+    var saving = Math.round(r.baseTotal * (EARLY_BIRD_PCT/100) * (r.earlyBirdNights/r.nights));
+    rows += '<div class="b-summary-row disc"><span>🕊 Early Bird ('+r.earlyBirdNights+' night'+(r.earlyBirdNights>1?'s':'')+', '+EARLY_BIRD_PCT+'% off)</span><span>-$'+saving+'</span></div>';
+  }
+  if (r.lastMinuteNights > 0) {
+    var saving = Math.round(r.baseTotal * (LAST_MINUTE_PCT/100) * (r.lastMinuteNights/r.nights));
+    rows += '<div class="b-summary-row disc"><span>⚡ Last Minute ('+r.lastMinuteNights+' night'+(r.lastMinuteNights>1?'s':'')+', '+LAST_MINUTE_PCT+'% off)</span><span>-$'+saving+'</span></div>';
+  }
+  if (r.adminNights > 0) {
+    var adminSaving = r.baseTotal - r.finalTotal - (r.earlyBirdNights+r.lastMinuteNights > 0 ? Math.round(r.baseTotal*(EARLY_BIRD_PCT/100)*(r.earlyBirdNights/r.nights)) + Math.round(r.baseTotal*(LAST_MINUTE_PCT/100)*(r.lastMinuteNights/r.nights)) : 0);
+    rows += '<div class="b-summary-row disc"><span>🔐 Custom price ('+r.adminNights+' night'+(r.adminNights>1?'s':'')+')</span><span>'+(adminSaving>0?'-$'+adminSaving:'')+'</span></div>';
+  }
+  if (r.baseTotal !== r.finalTotal) {
+    rows += '<div class="b-summary-row" style="border-top:1px solid var(--sand);padding-top:0.4rem;margin-top:0.2rem"><span>Subtotal after discounts</span><span>$'+r.finalTotal+'</span></div>';
+  }
+  rows += '<div class="b-summary-row disc"><span>5% direct booking discount</span><span>-$'+directDisc+'</span></div>';
+  rows += '<div class="b-summary-row tot"><span>Total</span><span>$'+grandTotal+'</span></div>';
+
+  document.getElementById('b-summary').innerHTML = rows;
   document.getElementById('b-summary').style.display='block';
 }
 
@@ -271,14 +304,14 @@ function confirmBooking() {
   var email=document.getElementById('b-email').value.trim();
   if(!name||!email||!checkIn||!checkOut){ alert('Please fill in your name, email and select travel dates.'); return; }
   var result = getStayTotal(checkIn, checkOut);
-  var finalT = result.total - Math.round(result.total * 0.05);
+  var finalT = result.finalTotal - Math.round(result.finalTotal * 0.05);
   var fmt=function(s){ return new Date(s+'T00:00:00').toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'}); };
   var pm={card:'Credit/Debit Card',paypal:'PayPal',bank:'Bank Transfer'};
   document.getElementById('b-conf-detail').innerHTML=
     '<b>Check-in:</b> '+fmt(checkIn)+'<br>'+
     '<b>Check-out:</b> '+fmt(checkOut)+'<br>'+
     '<b>Nights:</b> '+result.nights+'<br>'+
-    '<b>Total (5% direct discount applied):</b> $'+finalT+'<br>'+
+    '<b>Total (incl. all discounts):</b> $'+finalT+'<br>'+
     '<b>Payment:</b> '+pm[payMethod];
   document.getElementById('b-form').style.display='none';
   document.getElementById('b-confirm').style.display='block';
