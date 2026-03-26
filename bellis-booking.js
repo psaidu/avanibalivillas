@@ -1,10 +1,115 @@
 // bellis-booking.js
-var BASE_PRICE = 260;
-var blockedDates = new Set();
-var checkIn = null, checkOut = null;
-var viewYear = null, viewMonth = null;
-var payMethod = 'card';
 
+// ── PRICING CONFIG ──────────────────────────────────────────
+var SEASONAL_PRICES = [
+  { monthStart: 1,  monthEnd: 3,  price: 228 }, // Jan-Mar Low
+  { monthStart: 4,  monthEnd: 6,  price: 260 }, // Apr-Jun Shoulder
+  { monthStart: 7,  monthEnd: 9,  price: 292 }, // Jul-Sep Peak
+  { monthStart: 10, monthEnd: 12, price: 249 }, // Oct-Dec Shoulder
+];
+var EARLY_BIRD_DAYS     = 60;
+var EARLY_BIRD_PCT      = 10;
+var LAST_MINUTE_DAYS    = 7;
+var LAST_MINUTE_PCT     = 10;
+var ADMIN_PASSWORD      = 'avani2025';
+
+// ── STATE ────────────────────────────────────────────────────
+var blockedDates  = new Set();
+var customPrices  = {};   // { 'YYYY-MM-DD': price } session overrides
+var checkIn       = null;
+var checkOut      = null;
+var viewYear      = null;
+var viewMonth     = null;
+var payMethod     = 'card';
+var adminMode     = false;
+
+// ── PRICING LOGIC ────────────────────────────────────────────
+function getSeasonalPrice(ds) {
+  var m = parseInt(ds.split('-')[1], 10);
+  for (var i = 0; i < SEASONAL_PRICES.length; i++) {
+    var s = SEASONAL_PRICES[i];
+    if (m >= s.monthStart && m <= s.monthEnd) return s.price;
+  }
+  return 250;
+}
+
+function getFinalPrice(ds) {
+  if (customPrices[ds]) return customPrices[ds];
+  var base  = getSeasonalPrice(ds);
+  var today = new Date(); today.setHours(0,0,0,0);
+  var date  = new Date(ds + 'T00:00:00');
+  var daysUntil = Math.round((date - today) / 86400000);
+  if (daysUntil >= EARLY_BIRD_DAYS) {
+    base = Math.round(base * (1 - EARLY_BIRD_PCT / 100));
+  } else if (daysUntil <= LAST_MINUTE_DAYS && daysUntil >= 0) {
+    base = Math.round(base * (1 - LAST_MINUTE_PCT / 100));
+  }
+  return base;
+}
+
+function getPriceLabel(ds) {
+  if (customPrices[ds]) return '$' + customPrices[ds] + '/night ✎';
+  var base  = getSeasonalPrice(ds);
+  var today = new Date(); today.setHours(0,0,0,0);
+  var date  = new Date(ds + 'T00:00:00');
+  var daysUntil = Math.round((date - today) / 86400000);
+  if (daysUntil >= EARLY_BIRD_DAYS) {
+    return '$' + Math.round(base * (1 - EARLY_BIRD_PCT/100)) + '/night 🕊 Early Bird';
+  } else if (daysUntil <= LAST_MINUTE_DAYS && daysUntil >= 0) {
+    return '$' + Math.round(base * (1 - LAST_MINUTE_PCT/100)) + '/night ⚡ Last Minute';
+  }
+  return '$' + base + '/night';
+}
+
+function getStayTotal(ciDs, coDs) {
+  var d   = new Date(ciDs + 'T00:00:00');
+  var end = new Date(coDs + 'T00:00:00');
+  var total = 0, nights = 0;
+  while (d < end) {
+    var ds = d.toISOString().split('T')[0];
+    total += getFinalPrice(ds);
+    nights++;
+    d.setDate(d.getDate() + 1);
+  }
+  return { total: total, nights: nights };
+}
+
+// ── ADMIN MODE ───────────────────────────────────────────────
+function toggleAdminMode() {
+  if (adminMode) {
+    adminMode = false;
+    document.getElementById('admin-btn').textContent = '🔐 Admin';
+    document.getElementById('admin-btn').style.background = 'transparent';
+    renderCal();
+    return;
+  }
+  var pw = prompt('Enter admin password:');
+  if (pw === ADMIN_PASSWORD) {
+    adminMode = true;
+    document.getElementById('admin-btn').textContent = '✅ Admin ON';
+    document.getElementById('admin-btn').style.background = 'rgba(184,98,62,0.15)';
+    alert('Admin mode ON — click any available date to set a custom price.');
+    renderCal();
+  } else if (pw !== null) {
+    alert('Incorrect password.');
+  }
+}
+
+function adminEditPrice(ds) {
+  var current = customPrices[ds] || getFinalPrice(ds);
+  var val = prompt('Set custom price for ' + ds + ' (current: $' + current + ').\nLeave blank to reset to seasonal price:', current);
+  if (val === null) return;
+  if (val.trim() === '') {
+    delete customPrices[ds];
+  } else {
+    var p = parseInt(val, 10);
+    if (isNaN(p) || p < 1) { alert('Invalid price.'); return; }
+    customPrices[ds] = p;
+  }
+  renderCal();
+}
+
+// ── ICAL ─────────────────────────────────────────────────────
 function parseIcal(text) {
   var b = new Set();
   var lines = text.replace(/\r\n /g,'').replace(/\r\n\t/g,'').split(/\r?\n/);
@@ -25,16 +130,7 @@ function parseIcal(text) {
   return b;
 }
 
-  function getPriceForDate(ds) {
-    var m = parseInt(ds.split("-")[1], 10);
-    if (m >= 1 && m <= 3) return 228;
-    if (m >= 4 && m <= 6) return 260;
-    if (m >= 7 && m <= 9) return 292;
-    if (m >= 10 && m <= 12) return 249;
-    return 0;
-  }
-
-  async function initCalendar() {
+async function initCalendar() {
   var st=document.getElementById('cal-status');
   if (!st) return;
   st.textContent='Loading availability...'; st.className='cal-status loading';
@@ -51,6 +147,7 @@ function parseIcal(text) {
   renderCal();
 }
 
+// ── CALENDAR RENDER ──────────────────────────────────────────
 function dStr(y,m,d) { return y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'); }
 
 function renderCal() {
@@ -61,6 +158,9 @@ function renderCal() {
     if (m>11) { m-=12; y++; }
     renderMonth(y,m,s,today);
   }
+  // Show/hide admin button
+  var ab = document.getElementById('admin-btn');
+  if (ab) ab.style.display = 'inline-block';
 }
 
 function renderMonth(yr,mo,slot,today) {
@@ -78,16 +178,25 @@ function renderMonth(yr,mo,slot,today) {
   for (var i=0;i<fd;i++) h+='<div class="cal-day cal-empty"></div>';
   for (var d=1;d<=dim;d++) {
     var ds=dStr(yr,mo,d), dt=new Date(ds+'T00:00:00');
+    var isPast    = dt < today;
+    var isBlocked = blockedDates.has(ds);
+    var isAvail   = !isPast && !isBlocked;
+    var hasCustom = !!customPrices[ds];
     var c='cal-day';
-    if (dt<today) c+=' cal-past';
-    else if (blockedDates.has(ds)) c+=' cal-blocked';
+    if (isPast)    c+=' cal-past';
+    else if (isBlocked) c+=' cal-blocked';
     else if (checkIn&&checkOut&&ds>checkIn&&ds<checkOut) c+=' cal-in-range';
-    if (ds===checkIn) c+=' cal-selected-in';
+    if (ds===checkIn)  c+=' cal-selected-in';
     if (ds===checkOut) c+=' cal-selected-out';
     if (ds===new Date().toISOString().split('T')[0]) c+=' cal-today';
-    var isAvail = !blockedDates.has(ds) && dt >= today;
-      var priceHtml = isAvail ? '<span class="cal-tooltip">$'+getPriceForDate(ds)+'/night</span>' : '';
-      h+='<div class="'+c+'" data-date="'+ds+'" onclick="pickDay(this.dataset.date)">'+priceHtml+d+'</div>';
+    if (hasCustom) c+=' cal-custom-price';
+    if (adminMode && isAvail) c+=' cal-admin';
+
+    var tooltip = isAvail ? '<span class="cal-tooltip">'+getPriceLabel(ds)+'</span>' : '';
+    var onclick  = adminMode && isAvail
+      ? 'data-date="'+ds+'" onclick="adminEditPrice(this.dataset.date)"'
+      : 'data-date="'+ds+'" onclick="pickDay(this.dataset.date)"';
+    h+='<div class="'+c+'" '+onclick+'>'+tooltip+d+'</div>';
   }
   h+='</div>';
   el.innerHTML=h;
@@ -115,23 +224,26 @@ function pickDay(ds) {
   var bar=document.getElementById('cal-bar');
   if(bar){ document.getElementById('cal-in-txt').textContent=checkIn?fmt(checkIn):'--'; document.getElementById('cal-out-txt').textContent=checkOut?fmt(checkOut):'--'; bar.style.display=checkIn?'block':'none'; }
   var st=document.getElementById('cal-status');
-  if(st) st.textContent=checkIn&&checkOut?'Dates selected':checkIn?'Now select check-out date':'Select check-in date';
+  if(st) st.textContent=checkIn&&checkOut?'Dates selected':checkIn?'Now select your check-out date':'Select your check-in date';
   renderCal();
   if(checkIn&&checkOut) calcBooking();
 }
 
 function calcBooking() {
   if(!checkIn||!checkOut) return;
-  var nights=Math.round((new Date(checkOut)-new Date(checkIn))/86400000);
-  if(nights<=0) return;
-  var sub=nights*BASE_PRICE, disc=Math.round(sub*0.05), tot=sub-disc;
-  document.getElementById('b-nights').textContent=nights+' night'+(nights>1?'s':'')+' x $'+BASE_PRICE;
-  document.getElementById('b-sub').textContent='$'+sub;
-  document.getElementById('b-disc').textContent='-$'+disc;
-  document.getElementById('b-tot').textContent='$'+tot;
+  var result  = getStayTotal(checkIn, checkOut);
+  var nights  = result.nights;
+  var total   = result.total;
+  var disc    = Math.round(total * 0.05);
+  var finalT  = total - disc;
+  document.getElementById('b-nights').textContent = nights+' night'+(nights>1?'s':'')+' (variable pricing)';
+  document.getElementById('b-sub').textContent    = '$'+total;
+  document.getElementById('b-disc').textContent   = '-$'+disc;
+  document.getElementById('b-tot').textContent    = '$'+finalT;
   document.getElementById('b-summary').style.display='block';
 }
 
+// ── BOOKING FORM ─────────────────────────────────────────────
 function switchBookTab(tab,el) {
   document.querySelectorAll('.booking-tab').forEach(function(t){ t.classList.remove('active'); });
   el.classList.add('active');
@@ -157,15 +269,15 @@ function confirmBooking() {
   var name=document.getElementById('b-name').value.trim();
   var email=document.getElementById('b-email').value.trim();
   if(!name||!email||!checkIn||!checkOut){ alert('Please fill in your name, email and select travel dates.'); return; }
-  var nights=Math.round((new Date(checkOut)-new Date(checkIn))/86400000);
-  var tot=Math.round(nights*BASE_PRICE*0.95);
+  var result = getStayTotal(checkIn, checkOut);
+  var finalT = result.total - Math.round(result.total * 0.05);
   var fmt=function(s){ return new Date(s+'T00:00:00').toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'}); };
   var pm={card:'Credit/Debit Card',paypal:'PayPal',bank:'Bank Transfer'};
   document.getElementById('b-conf-detail').innerHTML=
     '<b>Check-in:</b> '+fmt(checkIn)+'<br>'+
     '<b>Check-out:</b> '+fmt(checkOut)+'<br>'+
-    '<b>Guests:</b> '+document.getElementById('b-guests').value+'<br>'+
-    '<b>Total (5% off):</b> $'+tot+'<br>'+
+    '<b>Nights:</b> '+result.nights+'<br>'+
+    '<b>Total (5% direct discount applied):</b> $'+finalT+'<br>'+
     '<b>Payment:</b> '+pm[payMethod];
   document.getElementById('b-form').style.display='none';
   document.getElementById('b-confirm').style.display='block';

@@ -272,6 +272,31 @@
     display: block;
   }
 
+
+  /* ── ADMIN + PRICING ── */
+  .cal-admin { cursor: cell !important; }
+  .cal-admin:hover { outline: 2px dashed var(--terracotta); outline-offset: -1px; }
+  .cal-custom-price { background: rgba(181,137,58,0.15) !important; }
+  .cal-custom-price.cal-selected-in,
+  .cal-custom-price.cal-selected-out { background: var(--terracotta) !important; }
+  .admin-bar {
+    display: flex; align-items: center; justify-content: flex-end;
+    margin-bottom: 0.5rem;
+  }
+  #admin-btn {
+    display: none; font-size: 0.68rem; letter-spacing: 0.1em;
+    padding: 0.3rem 0.7rem; border: 1px solid var(--sand);
+    background: transparent; color: #aaa; cursor: pointer;
+    font-family: 'Outfit', sans-serif; border-radius: 2px;
+    transition: all 0.2s;
+  }
+  #admin-btn:hover { border-color: var(--terracotta); color: var(--terracotta); }
+  .price-legend {
+    display: flex; gap: 0.8rem; flex-wrap: wrap;
+    font-size: 0.65rem; color: #999; margin: 0.4rem 0 0.8rem;
+  }
+  .price-legend-item { display: flex; align-items: center; gap: 0.3rem; }
+
 </style>
 </head>
 <body>
