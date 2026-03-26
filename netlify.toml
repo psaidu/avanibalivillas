@@ -4,10 +4,12 @@
 
 [functions]
   node_bundler = "esbuild"
-  included_files = ["netlify/functions/**"]
 
 [build.processing]
   skip_processing = true
+
+[[plugins]]
+  package = "@netlify/plugin-functions-install-core"
 
 [[headers]]
   for = "/.netlify/functions/*"
