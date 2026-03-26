@@ -112,19 +112,28 @@ function toggleAdminMode() {
   }
 }
 
-function adminEditPrice(ds) {
+async function adminEditPrice(ds) {
   var current = customPrices[ds] || getFinalPrice(ds);
   var val = prompt('Set custom price for ' + ds + ' (current: $' + current + ').\nLeave blank to reset to seasonal price:', current);
   if (val === null) return;
-  if (val.trim() === '') {
-    delete customPrices[ds];
-  } else {
-    var p = parseInt(val, 10);
-    if (isNaN(p) || p < 1) { alert('Invalid price.'); return; }
-    customPrices[ds] = p;
+
+  var newPrice = val.trim() === '' ? null : parseInt(val, 10);
+  if (val.trim() !== '' && (isNaN(newPrice) || newPrice < 1)) { alert('Invalid price.'); return; }
+
+  try {
+    var r = await fetch('/.netlify/functions/prices', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ villa: 'geya', password: ADMIN_PASSWORD, date: ds, price: newPrice })
+    });
+    var data = await r.json();
+    if (!r.ok) { alert('Error saving price: ' + (data.error || r.status)); return; }
+    customPrices = data.prices || {};
+    renderCal();
+    if (checkIn && checkOut) calcBooking();
+  } catch(e) {
+    alert('Could not save price to server: ' + e.message);
   }
-  renderCal();
-  if (checkIn && checkOut) calcBooking();
 }
 
 // ── ICAL ─────────────────────────────────────────────────────
@@ -153,9 +162,13 @@ async function initCalendar() {
   if (!st) return;
   st.textContent='Loading availability...'; st.className='cal-status loading';
   try {
-    var r=await fetch('/.netlify/functions/ical?villa=geya');
-    if (!r.ok) throw new Error('HTTP '+r.status);
-    blockedDates=parseIcal(await r.text());
+    // Load iCal and server prices in parallel
+    var results = await Promise.all([
+      fetch('/.netlify/functions/ical?villa=geya').then(function(r){ return r.ok ? r.text() : ''; }),
+      fetch('/.netlify/functions/prices?villa=geya').then(function(r){ return r.ok ? r.json() : {}; }).catch(function(){ return {}; })
+    ]);
+    blockedDates  = parseIcal(results[0]);
+    customPrices  = results[1] || {};
     st.textContent='Availability loaded — select your check-in date';
     st.className='cal-status';
   } catch(e) {
