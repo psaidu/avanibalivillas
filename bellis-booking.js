@@ -107,6 +107,7 @@ function adminEditPrice(ds) {
     customPrices[ds] = p;
   }
   renderCal();
+  if (checkIn && checkOut) calcBooking();
 }
 
 // ── ICAL ─────────────────────────────────────────────────────
