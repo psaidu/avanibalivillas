@@ -543,18 +543,15 @@
 
         <label class="b-label">Payment Method</label>
         <div class="pay-methods">
-          <button class="pay-btn active" onclick="pickPay('card',this)">💳 Card</button>
+          <button class="pay-btn active" onclick="pickPay('card',this);mountStripeCard()">💳 Card</button>
           <button class="pay-btn" onclick="pickPay('paypal',this)">🅿 PayPal</button>
           <button class="pay-btn" onclick="pickPay('bank',this)">🏦 Bank</button>
         </div>
 
         <div id="pf-card">
-          <label class="b-label">Card Number</label>
-          <input type="text" class="b-input" placeholder="4242 4242 4242 4242" maxlength="19" oninput="fmtCard(this)">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;margin-top:0.5rem">
-            <div><label class="b-label">Expiry</label><input type="text" class="b-input" placeholder="MM/YY" maxlength="5"></div>
-            <div><label class="b-label">CVV</label><input type="text" class="b-input" placeholder="123" maxlength="4"></div>
-          </div>
+          <label class="b-label">Card Details</label>
+          <div id="stripe-card-element" style="padding:0.75rem 0.9rem;border:1px solid var(--sand);background:var(--white);margin-bottom:0.4rem;min-height:2.5rem;"></div>
+          <div id="stripe-error" style="color:#c0392b;font-size:0.78rem;min-height:1.2em;margin-bottom:0.4rem;"></div>
         </div>
         <div id="pf-paypal" style="display:none;padding:0.8rem 0;font-size:0.8rem;color:#888;text-align:center">You'll be redirected to PayPal to complete payment.</div>
         <div id="pf-bank" style="display:none;margin-top:0.5rem">
@@ -565,7 +562,7 @@
           </div>
         </div>
 
-        <button class="b-btn" onclick="confirmBooking()">Confirm Booking Request</button>
+        <button class="b-btn" id="b-submit-btn" onclick="confirmBooking()">Confirm Booking Request</button>
         <p style="font-size:0.68rem;color:#bbb;text-align:center;margin-top:0.5rem;line-height:1.5">Confirmed within 24 hours by email &amp; WhatsApp</p>
       </div>
 

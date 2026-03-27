@@ -288,6 +288,8 @@ function calcBooking() {
 
   document.getElementById('b-summary').innerHTML = rows;
   document.getElementById('b-summary').style.display='block';
+  var btn = document.getElementById('b-submit-btn');
+  if (btn) btn.textContent = 'Confirm & Pay $' + grandTotal;
 }
 
 // ── BOOKING FORM ─────────────────────────────────────────────
@@ -312,22 +314,126 @@ function fmtCard(el) {
   el.value=v.replace(/(.{4})/g,'$1 ').trim();
 }
 
-function confirmBooking() {
-  var name=document.getElementById('b-name').value.trim();
-  var email=document.getElementById('b-email').value.trim();
-  if(!name||!email||!checkIn||!checkOut){ alert('Please fill in your name, email and select travel dates.'); return; }
-  var result = getStayTotal(checkIn, checkOut);
-  var finalT = result.finalTotal - Math.round(result.finalTotal * 0.05);
-  var fmt=function(s){ return new Date(s+'T00:00:00').toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'}); };
-  var pm={card:'Credit/Debit Card',paypal:'PayPal',bank:'Bank Transfer'};
-  document.getElementById('b-conf-detail').innerHTML=
-    '<b>Check-in:</b> '+fmt(checkIn)+'<br>'+
-    '<b>Check-out:</b> '+fmt(checkOut)+'<br>'+
-    '<b>Nights:</b> '+result.nights+'<br>'+
-    '<b>Total (incl. all discounts):</b> $'+finalT+'<br>'+
-    '<b>Payment:</b> '+pm[payMethod];
-  document.getElementById('b-form').style.display='none';
-  document.getElementById('b-confirm').style.display='block';
-}
 
-document.addEventListener('DOMContentLoaded', initCalendar);
+// ── STRIPE PAYMENTS ──────────────────────────────────────────
+var STRIPE_PK = 'pk_test_51TFi2zFppRXm3rjrcVAHi43tkKRiN0X5glzv0WnLhfJWWunaF2D7fZfggVh1PqJdFwdOY4D3lsu0F7lnWuNv2dx500MCIoe1ix';
+var stripeInstance = null;
+var stripeElements = null;
+var stripeCardElement = null;
+
+function initStripe() {{
+  if (stripeInstance) return;
+  if (typeof Stripe === 'undefined') {{
+    var s = document.createElement('script');
+    s.src = 'https://js.stripe.com/v3/';
+    s.onload = function() {{
+      stripeInstance = Stripe(STRIPE_PK);
+    }};
+    document.head.appendChild(s);
+  }} else {{
+    stripeInstance = Stripe(STRIPE_PK);
+  }}
+}}
+
+function mountStripeCard() {{
+  if (!stripeInstance) {{
+    stripeInstance = Stripe(STRIPE_PK);
+  }}
+  var el = document.getElementById('stripe-card-element');
+  if (!el || el.hasChildNodes()) return;
+  stripeElements   = stripeInstance.elements();
+  stripeCardElement = stripeElements.create('card', {{
+    style: {{
+      base: {{
+        fontFamily: 'Outfit, sans-serif',
+        fontSize: '15px',
+        color: '#18160f',
+        '::placeholder': {{ color: '#aaa' }},
+      }}
+    }}
+  }});
+  stripeCardElement.mount('#stripe-card-element');
+  stripeCardElement.on('change', function(e) {{
+    var err = document.getElementById('stripe-error');
+    if (err) err.textContent = e.error ? e.error.message : '';
+  }});
+}}
+
+async function confirmBooking() {{
+  var name  = document.getElementById('b-name').value.trim();
+  var email = document.getElementById('b-email').value.trim();
+  if (!name || !email || !checkIn || !checkOut) {{
+    alert('Please fill in your name, email and select travel dates.');
+    return;
+  }}
+
+  var r      = getStayTotal(checkIn, checkOut);
+  var finalT = r.finalTotal - Math.round(r.finalTotal * 0.05);
+  var fmt    = function(s) {{ return new Date(s + 'T00:00:00').toLocaleDateString('en-US', {{day:'numeric',month:'long',year:'numeric'}}); }};
+
+  if (payMethod === 'card') {{
+    // Stripe payment
+    var btn = document.getElementById('b-submit-btn');
+    if (btn) {{ btn.disabled = true; btn.textContent = 'Processing...'; }}
+
+    try {{
+      // Create payment intent on server
+      var res = await fetch('/.netlify/functions/stripe-payment', {{
+        method: 'POST',
+        headers: {{ 'Content-Type': 'application/json' }},
+        body: JSON.stringify({{
+          amount:      finalT,
+          currency:    'usd',
+          villa:       document.title.split('—')[0].trim(),
+          checkIn:     checkIn,
+          checkOut:    checkOut,
+          guestName:   name,
+          guestEmail:  email,
+          nights:      r.nights,
+        }})
+      }});
+      var data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Payment setup failed');
+
+      // Confirm card payment with Stripe
+      var result = await stripeInstance.confirmCardPayment(data.clientSecret, {{
+        payment_method: {{
+          card: stripeCardElement,
+          billing_details: {{ name: name, email: email }},
+        }}
+      }});
+
+      if (result.error) {{
+        var err = document.getElementById('stripe-error');
+        if (err) err.textContent = result.error.message;
+        if (btn) {{ btn.disabled = false; btn.textContent = 'Confirm & Pay $' + finalT; }}
+        return;
+      }}
+
+      // Payment succeeded
+      showConfirmation(name, email, r, finalT, fmt, 'Credit/Debit Card');
+
+    }} catch(e) {{
+      alert('Payment error: ' + e.message);
+      if (btn) {{ btn.disabled = false; btn.textContent = 'Confirm & Pay $' + finalT; }}
+    }}
+
+  }} else if (payMethod === 'paypal') {{
+    showConfirmation(name, email, r, finalT, fmt, 'PayPal');
+  }} else {{
+    showConfirmation(name, email, r, finalT, fmt, 'Bank Transfer');
+  }}
+}}
+
+function showConfirmation(name, email, r, finalT, fmt, payLabel) {{
+  document.getElementById('b-conf-detail').innerHTML =
+    '<b>Check-in:</b> ' + fmt(checkIn) + '<br>' +
+    '<b>Check-out:</b> ' + fmt(checkOut) + '<br>' +
+    '<b>Nights:</b> ' + r.nights + '<br>' +
+    '<b>Total (incl. all discounts):</b> $' + finalT + '<br>' +
+    '<b>Payment:</b> ' + payLabel;
+  document.getElementById('b-form').style.display = 'none';
+  document.getElementById('b-confirm').style.display = 'block';
+}}
+
+document.addEventListener('DOMContentLoaded', function() { initCalendar(); initStripe(); });

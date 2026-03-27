@@ -1,9 +1,11 @@
 [build]
   functions = "netlify/functions"
   publish = "."
+  command = "npm install"
 
 [functions]
   node_bundler = "esbuild"
+  external_node_modules = ["stripe"]
 
 [build.processing]
   skip_processing = true
