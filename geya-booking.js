@@ -14,8 +14,9 @@ var LAST_MINUTE_PCT     = 10;
 var ADMIN_PASSWORD      = 'avani2025';
 
 // ── STATE ────────────────────────────────────────────────────
-var blockedDates  = new Set();
-var customPrices  = {};   // { 'YYYY-MM-DD': price } session overrides
+var blockedDates        = new Set();
+var directBookedDates   = new Set(); // dates blocked by direct bookings (deletable)
+var customPrices        = {};
 var checkIn       = null;
 var checkOut      = null;
 var viewYear      = null;
@@ -136,6 +137,55 @@ async function adminEditPrice(ds) {
   }
 }
 
+async function adminDeleteBooking(ds) {
+  // Find which booking covers this date
+  var confirmed = confirm('Remove direct booking covering ' + ds + '?\nThis will unblock these dates on your site.\n\nNote: If booked via Stripe, you will need to manually refund in Stripe dashboard.');
+  if (!confirmed) return;
+
+  try {
+    // Get current bookings to find which one covers this date
+    var r = await fetch('/.netlify/functions/geya-bookings');
+    var text = await r.text();
+    // Find booking ID from the iCal that contains this date
+    var lines = text.split('\n');
+    var bookingId = null;
+    var inEvent = false, evStart = '', evEnd = '', evUid = '';
+    for (var i = 0; i < lines.length; i++) {
+      var ln = lines[i].trim();
+      if (ln === 'BEGIN:VEVENT') { inEvent = true; evStart=''; evEnd=''; evUid=''; }
+      if (!inEvent) continue;
+      if (ln.startsWith('DTSTART')) evStart = ln.split(':').pop().trim();
+      if (ln.startsWith('DTEND'))   evEnd   = ln.split(':').pop().trim();
+      if (ln.startsWith('UID'))     evUid   = ln.split(':').pop().trim().replace('@avanibalivillas.com','');
+      if (ln === 'END:VEVENT') {
+        // Check if ds falls within this event
+        var dsClean = ds.replace(/-/g,'');
+        if (dsClean >= evStart && dsClean < evEnd) {
+          bookingId = evUid;
+        }
+        inEvent = false;
+      }
+    }
+
+    if (!bookingId) {
+      alert('Could not find booking ID for this date.');
+      return;
+    }
+
+    var res = await fetch('/.netlify/functions/delete-booking', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ villa: 'geya', password: ADMIN_PASSWORD, bookingId: bookingId })
+    });
+    var data = await res.json();
+    if (!res.ok) { alert('Error: ' + (data.error || res.status)); return; }
+    alert('Booking removed. ' + data.remaining + ' booking(s) remaining.');
+    await reloadCalendar();
+  } catch(e) {
+    alert('Error: ' + e.message);
+  }
+}
+
 // ── ICAL ─────────────────────────────────────────────────────
 function parseIcal(text) {
   var b = new Set();
@@ -167,6 +217,7 @@ async function reloadCalendar() {
     ]);
     var airbnbBlocked   = parseIcal(results[0]);
     var bookingsBlocked = parseIcal(results[1]);
+    directBookedDates   = bookingsBlocked;
     blockedDates = new Set([...airbnbBlocked, ...bookingsBlocked]);
     if (st) { st.textContent = 'Availability updated'; st.className = 'cal-status'; }
   } catch(e) {}
@@ -187,6 +238,7 @@ async function initCalendar() {
     // Merge blocked dates from both Airbnb and direct bookings
     var airbnbBlocked   = parseIcal(results[0]);
     var bookingsBlocked = parseIcal(results[1]);
+    directBookedDates   = bookingsBlocked;
     blockedDates = new Set([...airbnbBlocked, ...bookingsBlocked]);
     customPrices  = results[2] || {};
     st.textContent='Availability loaded — select your check-in date';
@@ -244,9 +296,15 @@ function renderMonth(yr,mo,slot,today) {
     if (adminMode && isAvail) c+=' cal-admin';
 
     var tooltip = isAvail ? '<span class="cal-tooltip">'+getPriceLabel(ds)+'</span>' : '';
-    var onclick  = adminMode && isAvail
-      ? 'data-date="'+ds+'" onclick="adminEditPrice(this.dataset.date)"'
-      : 'data-date="'+ds+'" onclick="pickDay(this.dataset.date)"';
+    var isDirectBooked = directBookedDates.has(ds);
+    var onclick;
+    if (adminMode && isAvail) {
+      onclick = 'data-date="'+ds+'" onclick="adminEditPrice(this.dataset.date)"';
+    } else if (adminMode && isDirectBooked) {
+      onclick = 'data-date="'+ds+'" onclick="adminDeleteBooking(this.dataset.date)" style="cursor:pointer;outline:2px dashed #c0392b;outline-offset:-1px;"';
+    } else {
+      onclick = 'data-date="'+ds+'" onclick="pickDay(this.dataset.date)"';
+    }
     h+='<div class="'+c+'" '+onclick+'>'+tooltip+d+'</div>';
   }
   h+='</div>';
