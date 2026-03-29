@@ -157,18 +157,38 @@ function parseIcal(text) {
   return b;
 }
 
+async function reloadCalendar() {
+  var st = document.getElementById('cal-status');
+  if (st) { st.textContent = 'Updating availability...'; st.className = 'cal-status loading'; }
+  try {
+    var results = await Promise.all([
+      fetch('/.netlify/functions/ical?villa=geya?nocache=' + Date.now()).then(function(r){ return r.ok ? r.text() : ''; }),
+      fetch('/.netlify/functions/geya-bookings?nocache=' + Date.now()).then(function(r){ return r.ok ? r.text() : ''; }).catch(function(){ return ''; }),
+    ]);
+    var airbnbBlocked   = parseIcal(results[0]);
+    var bookingsBlocked = parseIcal(results[1]);
+    blockedDates = new Set([...airbnbBlocked, ...bookingsBlocked]);
+    if (st) { st.textContent = 'Availability updated'; st.className = 'cal-status'; }
+  } catch(e) {}
+  renderCal();
+}
+
 async function initCalendar() {
   var st=document.getElementById('cal-status');
   if (!st) return;
   st.textContent='Loading availability...'; st.className='cal-status loading';
   try {
-    // Load iCal and server prices in parallel
+    // Load Airbnb iCal, bookings iCal and server prices in parallel
     var results = await Promise.all([
       fetch('/.netlify/functions/ical?villa=geya').then(function(r){ return r.ok ? r.text() : ''; }),
+      fetch('/.netlify/functions/geya-bookings').then(function(r){ return r.ok ? r.text() : ''; }).catch(function(){ return ''; }),
       fetch('/.netlify/functions/prices?villa=geya').then(function(r){ return r.ok ? r.json() : {}; }).catch(function(){ return {}; })
     ]);
-    blockedDates  = parseIcal(results[0]);
-    customPrices  = results[1] || {};
+    // Merge blocked dates from both Airbnb and direct bookings
+    var airbnbBlocked   = parseIcal(results[0]);
+    var bookingsBlocked = parseIcal(results[1]);
+    blockedDates = new Set([...airbnbBlocked, ...bookingsBlocked]);
+    customPrices  = results[2] || {};
     st.textContent='Availability loaded — select your check-in date';
     st.className='cal-status';
   } catch(e) {
@@ -316,8 +336,7 @@ function fmtCard(el) {
 
 
 // ── STRIPE PAYMENTS ──────────────────────────────────────────
-//var STRIPE_PK = 'pk_live_51TFi2nCLCuFFSewfVpX0sTupZTt29I6G96TIodkyngePYjBrHuCCREMeFGTX28Sa1pS2PkuQUOnwTMVhmuJVEDlH00ELkvuhle';
-var STRIPE_PK = 'pk_test_51TFi2nCLCuFFSewfHiJCZ0izOAVXmiA263dLFfuxXVpAxa0FCbprQTQaSJkU5w14sr0i2UAd9fcipvLMKuY5Zyqj00bsayKYHq';
+var STRIPE_PK = 'pk_live_51TFi2nCLCuFFSewfVpX0sTupZTt29I6G96TIodkyngePYjBrHuCCREMeFGTX28Sa1pS2PkuQUOnwTMVhmuJVEDlH00ELkvuhle';
 var stripeInstance = null;
 var stripeElements = null;
 var stripeCardElement = null;
@@ -413,6 +432,8 @@ async function confirmBooking() {
 
       // Payment succeeded
       showConfirmation(name, email, r, finalT, fmt, 'Credit/Debit Card');
+      // Reload calendar to reflect newly booked dates
+      setTimeout(function() { reloadCalendar(); }, 2000);
 
     } catch(e) {
       alert('Payment error: ' + e.message);
