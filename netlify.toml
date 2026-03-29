@@ -10,26 +10,6 @@
 [build.processing]
   skip_processing = true
 
-[[redirects]]
-  from = "/geya-bookings.ics"
-  to = "/.netlify/functions/bookings-ical?villa=geya"
-  status = 200
-
-[[redirects]]
-  from = "/bellis-bookings.ics"
-  to = "/.netlify/functions/bookings-ical?villa=bellis"
-  status = 200
-
-[[redirects]]
-  from = "/sandewa-bookings.ics"
-  to = "/.netlify/functions/bookings-ical?villa=sandewa"
-  status = 200
-
-[[redirects]]
-  from = "/linum-bookings.ics"
-  to = "/.netlify/functions/bookings-ical?villa=linum"
-  status = 200
-
 [[headers]]
   for = "/.netlify/functions/*"
   [headers.values]
