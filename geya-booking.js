@@ -516,4 +516,15 @@ function showConfirmation(name, email, r, finalT, fmt, payLabel) {
   document.getElementById('b-confirm').style.display = 'block';
 }
 
-document.addEventListener('DOMContentLoaded', function() { initCalendar(); initStripe(); });
+document.addEventListener('DOMContentLoaded', function() {
+  initCalendar();
+  initStripe();
+  // Hide delete-booking legend until admin mode is ON
+  var items = document.querySelectorAll('.price-legend-item');
+  items.forEach(function(el) {
+    if (el.textContent.indexOf('Click booked') !== -1) {
+      el.style.display = 'none';
+      el.id = 'delete-legend-item';
+    }
+  });
+});
