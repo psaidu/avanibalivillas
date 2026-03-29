@@ -527,6 +527,23 @@ function resetBookingForm() {
   if (btn) btn.textContent = 'Confirm Booking Request';
   var bar = document.getElementById('cal-bar');
   if (bar) bar.style.display = 'none';
+  // Clear all input fields
+  var name = document.getElementById('b-name');
+  if (name) name.value = '';
+  var email = document.getElementById('b-email');
+  if (email) email.value = '';
+  var phone = document.querySelector('input[type="tel"]');
+  if (phone) phone.value = '';
+  var guests = document.getElementById('b-guests');
+  if (guests) guests.selectedIndex = 0;
+  // Reset Stripe card element
+  if (stripeCardElement) {
+    stripeCardElement.clear();
+  }
+  var stripeError = document.getElementById('stripe-error');
+  if (stripeError) stripeError.textContent = '';
+  // Reset payment method to card
+  pickPay('card', document.querySelector('.pay-btn'));
   renderCal();
 }
 
