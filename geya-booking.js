@@ -381,10 +381,14 @@ function switchBookTab(tab,el) {
 function pickPay(method,el) {
   payMethod=method;
   document.querySelectorAll('.pay-btn').forEach(function(b){ b.classList.remove('active'); });
-  el.classList.add('active');
+  if (el) el.classList.add('active');
   document.getElementById('pf-card').style.display=method==='card'?'block':'none';
   document.getElementById('pf-paypal').style.display=method==='paypal'?'block':'none';
   document.getElementById('pf-bank').style.display=method==='bank'?'block':'none';
+  if (method === 'paypal') {
+    paypalButtonsRendered = false;
+    loadPayPalSDK(function() { renderPayPalButtons(); });
+  }
 }
 
 function fmtCard(el) {
@@ -543,6 +547,9 @@ function resetBookingForm() {
   var stripeError = document.getElementById('stripe-error');
   if (stripeError) stripeError.textContent = '';
   // Reset payment method to card
+  paypalButtonsRendered = false;
+  var ppContainer = document.getElementById('paypal-button-container');
+  if (ppContainer) ppContainer.innerHTML = '';
   pickPay('card', document.querySelector('.pay-btn'));
   renderCal();
 }
