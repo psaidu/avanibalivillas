@@ -516,6 +516,20 @@ function showConfirmation(name, email, r, finalT, fmt, payLabel) {
   document.getElementById('b-confirm').style.display = 'block';
 }
 
+function resetBookingForm() {
+  document.getElementById('b-confirm').style.display = 'none';
+  document.getElementById('b-form').style.display    = 'block';
+  checkIn  = null;
+  checkOut = null;
+  var summary = document.getElementById('b-summary');
+  if (summary) summary.style.display = 'none';
+  var btn = document.getElementById('b-submit-btn');
+  if (btn) btn.textContent = 'Confirm Booking Request';
+  var bar = document.getElementById('cal-bar');
+  if (bar) bar.style.display = 'none';
+  renderCal();
+}
+
 document.addEventListener('DOMContentLoaded', function() {
   initCalendar();
   initStripe();
