@@ -316,7 +316,8 @@ function fmtCard(el) {
 
 
 // ── STRIPE PAYMENTS ──────────────────────────────────────────
-var STRIPE_PK = 'pk_live_51TFi2nCLCuFFSewfVpX0sTupZTt29I6G96TIodkyngePYjBrHuCCREMeFGTX28Sa1pS2PkuQUOnwTMVhmuJVEDlH00ELkvuhle';
+//var STRIPE_PK = 'pk_live_51TFi2nCLCuFFSewfVpX0sTupZTt29I6G96TIodkyngePYjBrHuCCREMeFGTX28Sa1pS2PkuQUOnwTMVhmuJVEDlH00ELkvuhle';
+var STRIPE_PK = 'pk_test_51TFi2nCLCuFFSewfHiJCZ0izOAVXmiA263dLFfuxXVpAxa0FCbprQTQaSJkU5w14sr0i2UAd9fcipvLMKuY5Zyqj00bsayKYHq';
 var stripeInstance = null;
 var stripeElements = null;
 var stripeCardElement = null;
