@@ -317,7 +317,6 @@ function fmtCard(el) {
 
 // ── STRIPE PAYMENTS ──────────────────────────────────────────
 var STRIPE_PK = 'pk_live_51TFi2nCLCuFFSewfVpX0sTupZTt29I6G96TIodkyngePYjBrHuCCREMeFGTX28Sa1pS2PkuQUOnwTMVhmuJVEDlH00ELkvuhle';
-
 var stripeInstance = null;
 var stripeElements = null;
 var stripeCardElement = null;
