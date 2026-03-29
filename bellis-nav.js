@@ -23,3 +23,8 @@ document.querySelectorAll('.amenity-card,.service-card,.place-row,.review-card')
   el.style.transition='opacity 0.6s ease,transform 0.6s ease';
   obs.observe(el);
 });
+
+// Fix email links (prevents Netlify email obfuscation)
+document.querySelectorAll('.email-link').forEach(function(a) {
+  a.href = 'mailto:' + 'psaidu' + '@' + 'gmail.com';
+});
