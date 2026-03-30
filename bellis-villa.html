@@ -359,10 +359,41 @@ footer{background:#0f0e0b;padding:4rem 3rem 2.5rem;}
           <div id="paypal-button-container" style="min-height:50px"></div>
         </div>
         <div id="pf-bank" style="display:none;margin-top:0.5rem">
-          <div style="background:#f9f5ec;padding:1rem;font-size:0.8rem;line-height:1.9;color:#666">
-            <strong style="color:var(--ink);display:block;margin-bottom:0.3rem">Bank Transfer Details</strong>
-            Account Name: Avani Bali Villas<br>Reference: [Your Name + Check-in Date]
+          <p style="font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:#aaa;margin-bottom:0.8rem">Select your preferred bank</p>
+          <div style="display:flex;gap:0.5rem;margin-bottom:1rem">
+            <button class="pay-btn active" id="bank-bca-btn" onclick="switchBank('bca')" style="flex:1;font-size:0.7rem">&#127470;&#127465; BCA</button>
+            <button class="pay-btn" id="bank-wise-btn" onclick="switchBank('wise')" style="flex:1;font-size:0.7rem">&#128184; Wise</button>
           </div>
+          <!-- BCA -->
+          <div id="bank-bca" style="background:#f9f5ec;padding:1rem;font-size:0.82rem;line-height:2;color:#555">
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.6rem">
+              <span style="font-size:1.2rem">&#127470;&#127465;</span>
+              <strong style="color:var(--ink);font-size:0.88rem;letter-spacing:0.05em">Bank BCA</strong>
+            </div>
+            <table style="width:100%;font-size:0.8rem;border-collapse:collapse">
+              <tr><td style="color:#999;width:110px;padding:0.15rem 0">Account Name</td><td style="color:var(--ink);font-weight:500">AVANI SAHANA VENTURE PT</td></tr>
+              <tr><td style="color:#999;padding:0.15rem 0">Account No.</td><td style="color:var(--ink);font-weight:500;letter-spacing:0.05em">135-0952493</td></tr>
+              <tr><td style="color:#999;padding:0.15rem 0">Branch</td><td style="color:var(--ink)">Ubud, Bali</td></tr>
+              <tr><td style="color:#999;padding:0.15rem 0">Reference</td><td style="color:var(--terracotta);font-weight:500" id="bca-ref">Your Name + Check-in Date</td></tr>
+            </table>
+          </div>
+          <!-- Wise -->
+          <div id="bank-wise" style="display:none;background:#f9f5ec;padding:1rem;font-size:0.82rem;line-height:2;color:#555">
+            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.6rem">
+              <span style="font-size:1.2rem">&#128184;</span>
+              <strong style="color:var(--ink);font-size:0.88rem;letter-spacing:0.05em">Wise (International)</strong>
+            </div>
+            <table style="width:100%;font-size:0.8rem;border-collapse:collapse">
+              <tr><td style="color:#999;width:110px;padding:0.15rem 0">Account Name</td><td style="color:var(--ink);font-weight:500">Prashanth Saidu</td></tr>
+              <tr><td style="color:#999;padding:0.15rem 0">Account No.</td><td style="color:var(--ink);font-weight:500;letter-spacing:0.05em">654406098433064</td></tr>
+              <tr><td style="color:#999;padding:0.15rem 0">Routing No.</td><td style="color:var(--ink)">084009519</td></tr>
+              <tr><td style="color:#999;padding:0.15rem 0">Swift/BIC</td><td style="color:var(--ink)">TRWIUS35XXX</td></tr>
+              <tr><td style="color:#999;padding:0.15rem 0">Account Type</td><td style="color:var(--ink)">Deposit (Domestic) / Swift (International)</td></tr>
+              <tr><td style="color:#999;padding:0.15rem 0">Address</td><td style="color:var(--ink);font-size:0.75rem">Wise US Inc, 108 W 13th St,<br>Wilmington, DE 19801, USA</td></tr>
+              <tr><td style="color:#999;padding:0.15rem 0">Reference</td><td style="color:var(--terracotta);font-weight:500" id="wise-ref">Your Name + Check-in Date</td></tr>
+            </table>
+          </div>
+          <p style="font-size:0.7rem;color:#bbb;margin-top:0.8rem;line-height:1.5;text-align:center">Please send payment within 24 hours to secure your dates. Booking confirmed after payment verification.</p>
         </div>
         <button class="b-btn" id="b-submit-btn" onclick="confirmBooking()">Confirm Booking Request</button>
         <p style="font-size:0.68rem;color:#bbb;text-align:center;margin-top:0.5rem;line-height:1.5">Confirmed within 24 hours by email &amp; WhatsApp</p>

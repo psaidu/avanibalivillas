@@ -288,6 +288,7 @@ function pickDay(ds){
   if(st) st.textContent=checkIn&&checkOut?'Dates selected':checkIn?'Now select your check-out date':'Select your check-in date';
   renderCal();
   if(checkIn&&checkOut) calcBooking();
+  updateBankReference();
 }
 
 function calcBooking(){
@@ -467,6 +468,7 @@ async function confirmBooking() {
     // PayPal handled by PayPal buttons
     alert('Please use the PayPal button above to complete payment.');
   } else {
+    updateBankReference();
     showConfirmation(name, email, r, finalT, fmt, 'Bank Transfer');
   }
 }
