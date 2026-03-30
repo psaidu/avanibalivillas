@@ -566,3 +566,80 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+
+
+// ── PAYPAL PAYMENTS ──────────────────────────────────────────
+var PAYPAL_CLIENT_ID = 'AcGCQOlVff2xZqnyNZt7RrpUav0sJ7teBbpx1hDV6D91dK99dJEZxNYvJPi4w3oSgOCMrD8kkcGQzp7I';
+var paypalLoaded = false;
+var paypalButtonsRendered = false;
+
+function loadPayPalSDK(callback) {
+  if (paypalLoaded) { callback(); return; }
+  var s = document.createElement('script');
+  s.src = 'https://www.paypal.com/sdk/js?client-id=' + PAYPAL_CLIENT_ID + '&currency=USD';
+  s.onload = function() { paypalLoaded = true; callback(); };
+  s.onerror = function() { 
+    var c = document.getElementById('paypal-button-container');
+    if (c) c.innerHTML = '<p style="color:#c0392b;font-size:0.8rem;text-align:center">Could not load PayPal. Please try again.</p>';
+  };
+  document.head.appendChild(s);
+}
+
+function renderPayPalButtons() {
+  var container = document.getElementById('paypal-button-container');
+  if (!container) return;
+  if (paypalButtonsRendered) return;
+  if (!checkIn || !checkOut) {
+    container.innerHTML = '<p style="font-size:0.8rem;color:#aaa;text-align:center;padding:0.5rem">Please select dates first</p>';
+    return;
+  }
+  var name  = document.getElementById('b-name').value.trim();
+  var email = document.getElementById('b-email').value.trim();
+  if (!name || !email) {
+    container.innerHTML = '<p style="font-size:0.8rem;color:#aaa;text-align:center;padding:0.5rem">Please enter your name and email first</p>';
+    return;
+  }
+  var r      = getStayTotal(checkIn, checkOut);
+  var finalT = r.finalTotal - Math.round(r.finalTotal * 0.05);
+  container.innerHTML = '';
+  paypal.Buttons({
+    style: { layout:'vertical', color:'gold', shape:'rect', label:'pay', height:45 },
+    createOrder: async function() {
+      var res = await fetch('/.netlify/functions/paypal-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'create', amount: finalT, currency: 'USD',
+          villa: document.title.split('\u2014')[0].trim(),
+          checkIn: checkIn, checkOut: checkOut,
+          guestName: name, guestEmail: email, nights: r.nights,
+        })
+      });
+      var data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'PayPal order creation failed');
+      return data.orderID;
+    },
+    onApprove: async function(data) {
+      container.innerHTML = '<p style="text-align:center;color:var(--gold);padding:1rem">Processing payment...</p>';
+      var res = await fetch('/.netlify/functions/paypal-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'capture', orderID: data.orderID })
+      });
+      var result = await res.json();
+      if (!res.ok) throw new Error(result.error || 'Capture failed');
+      var fmt = function(s) { return new Date(s+'T00:00:00').toLocaleDateString('en-US',{day:'numeric',month:'long',year:'numeric'}); };
+      showConfirmation(name, email, r, finalT, fmt, 'PayPal');
+      setTimeout(function() { reloadCalendar(); }, 2000);
+    },
+    onError: function(err) {
+      container.innerHTML = '<p style="color:#c0392b;font-size:0.8rem;text-align:center">PayPal error. Please try again.</p>';
+      paypalButtonsRendered = false;
+    },
+    onCancel: function() {
+      paypalButtonsRendered = false;
+      renderPayPalButtons();
+    }
+  }).render('#paypal-button-container');
+  paypalButtonsRendered = true;
+}
