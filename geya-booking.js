@@ -313,24 +313,22 @@ function calcBooking(){
 // ── BOOKING FORM ─────────────────────────────────────────────
 
 function switchBank(bank) {
-  var bca  = document.getElementById('bank-bca');
-  var wise = document.getElementById('bank-wise');
-  var bcaBtn  = document.getElementById('bank-bca-btn');
-  var wiseBtn = document.getElementById('bank-wise-btn');
-  if (bca)  bca.style.display  = bank==='bca'  ? 'block' : 'none';
-  if (wise) wise.style.display = bank==='wise' ? 'block' : 'none';
-  if (bcaBtn)  bcaBtn.classList.toggle('active',  bank==='bca');
-  if (wiseBtn) wiseBtn.classList.toggle('active', bank==='wise');
+  ['bca','wise','zelle'].forEach(function(b) {
+    var panel = document.getElementById('bank-'+b);
+    var btn   = document.getElementById('bank-'+b+'-btn');
+    if (panel) panel.style.display = bank===b ? 'block' : 'none';
+    if (btn)   btn.classList.toggle('active', bank===b);
+  });
   updateBankReference();
 }
 
 function updateBankReference() {
   var name = document.getElementById('b-name').value.trim() || 'Your Name';
   var ref  = name + (checkIn ? ' ' + checkIn : '');
-  var bcaRef  = document.getElementById('bca-ref');
-  var wiseRef = document.getElementById('wise-ref');
-  if (bcaRef)  bcaRef.textContent  = ref;
-  if (wiseRef) wiseRef.textContent = ref;
+  ['bca-ref','wise-ref','zelle-ref'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = ref;
+  });
 }
 
 function switchBookTab(tab,el){
