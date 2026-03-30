@@ -378,7 +378,8 @@ function renderPayPalButtons() {
       setTimeout(function() { reloadCalendar(); }, 2000);
     },
     onError: function(err) {
-      container.innerHTML = '<p style="color:#c0392b;font-size:0.8rem;text-align:center;padding:0.5rem">PayPal error. Please try again.</p>';
+      console.error('PayPal error:', err);
+      container.innerHTML = '<p style="color:#c0392b;font-size:0.8rem;text-align:center;padding:0.5rem">PayPal error: ' + (err.message || JSON.stringify(err)) + '</p>';
       paypalButtonsRendered = false;
     },
     onCancel: function() {

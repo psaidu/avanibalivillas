@@ -1,6 +1,8 @@
 const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
 const PAYPAL_SECRET    = process.env.PAYPAL_SECRET;
-const PAYPAL_BASE      = 'https://api-m.paypal.com'; // Live
+const PAYPAL_BASE = process.env.PAYPAL_SANDBOX === 'true'
+  ? 'https://api-m.sandbox.paypal.com'
+  : 'https://api-m.paypal.com';
 
 async function getAccessToken() {
   const creds = Buffer.from(`${PAYPAL_CLIENT_ID}:${PAYPAL_SECRET}`).toString('base64');
