@@ -12,7 +12,7 @@ var EARLY_BIRD_PCT   = 10;
 var LAST_MINUTE_DAYS = 7;
 var LAST_MINUTE_PCT  = 10;
 var ADMIN_PASSWORD   = 'avani2025';
-var STRIPE_PK        = 'pk_test_51TFi2zFppRXm3rjrcVAHi43tkKRiN0X5glzv0WnLhfJWWunaF2D7fZfggVh1PqJdFwdOY4D3lsu0F7lnWuNv2dx500MCIoe1ix';
+var STRIPE_PK        = 'pk_live_51TFi2nCLCuFFSewfVpX0sTupZTt29I6G96TIodkyngePYjBrHuCCREMeFGTX28Sa1pS2PkuQUOnwTMVhmuJVEDlH00ELkvuhle';
 var PAYPAL_CLIENT_ID = 'AUi9rHB69zl2Agn7zVSC5hZG2fwAx7j1KWdgh4Mkrg6CGVI-Ayxc7V3dWCrZ-gswVzbaf6jHe4VP3F__';
 
 // ── STATE ────────────────────────────────────────────────────
